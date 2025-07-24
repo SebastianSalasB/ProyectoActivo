@@ -11,13 +11,18 @@ class Usuarios extends CI_Controller
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     }
     public function listarResponsable($pagina = 1) {
-        $limit = 8;
-        $offset = ($pagina - 1) * $limit;
+        $limit = 8; // Cantidad de registros por página
+        $offset = ($pagina - 1) * $limit; // Cálculo del desplazamiento
 
-        $this->load->model('RespoModel');
+        $this->load->model('RespoModel'); // Carga del modelo
+
+        // Obtiene los registros de responsables con paginación
         $responsables = $this->RespoModel->getResponsablesPaginados($limit, $offset);
-        $total = $this->RespoModel->contarResponsables(); // Cuenta total de registros
 
+        // Obtiene el total de registros (para calcular páginas en el frontend)
+        $total = $this->RespoModel->contarResponsables();
+
+        // Retorna los datos en formato JSON
         echo json_encode([
             'Responsable' => $responsables,
             'total' => $total
@@ -46,79 +51,38 @@ class Usuarios extends CI_Controller
             }
     }
     public function CrearUsuario(){
-        // CORS para desarrollo (ajustar en producción)
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: Content-Type');
-            header('Access-Control-Allow-Methods: POST, OPTIONS');
-            exit(0);
-        }
 
+        // Permitir CORS (solo si estás usando frontend separado)
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json');
 
-        // Decodificar JSON
-        $input = json_decode(file_get_contents('php://input'), true);
+        // Leer los datos JSON del frontend
+        $datos = json_decode(file_get_contents("php://input"), true);
 
-        // Log de depuración
-        log_message('error', 'JSON recibido: ' . print_r($input, true));
-
-        // Validación de estructura
-        if (!isset($input['activos']) || !is_array($input['activos'])) {
-            show_error('Datos inválidos. Se esperaba un arreglo de activos.', 400);
+        // Validación básica de estructura
+        if (!isset($datos['activos']) || !is_array($datos['activos'])) {
+            echo json_encode(['error' => 'Datos inválidos.']);
             return;
         }
 
-        foreach ($input['activos'] as $user) {
-            // Validación de campos mínimos obligatorios
+        // Validar que los campos requeridos no estén vacíos
+        foreach ($datos['activos'] as $index => $usuario) {
             if (
-                empty($user['user_nombre']) ||
-                empty($user['user_apellido']) ||
-                empty($user['user_email']) ||
-                empty($user['user_telefono']) ||
-                empty($user['user_rut']) ||
-                empty($user['user_id_sucursal'])
+                empty($usuario['user_nombre']) ||
+                empty($usuario['user_apellido']) ||
+                empty($usuario['user_rut']) ||
+                empty($usuario['user_correo'])
             ) {
-                log_message('error', 'Usuario incompleto: ' . print_r($user, true));
-                continue;
+                echo json_encode(['error' => "Faltan campos requeridos en el registro #$index"]);
+                return;
             }
-
-            // Si el usuario es tipo admin (user_id_tipos == 1) y no viene clave, ignorar
-            if (
-                isset($user['user_id_tipos']) &&
-                $user['user_id_tipos'] == 1 &&
-                empty($user['user_clave'])
-            ) {
-                log_message('error', 'Administrador sin clave: ' . print_r($user, true));
-                continue;
-            }
-
-            // Preparar datos para insertar
-            $data = [
-                'usr_nombre'        => $user['user_nombre'],
-                'usr_apellido'      => $user['user_apellido'],
-                'usr_correo'        => $user['user_email'],
-                'usr_telefono'      => $user['user_telefono'],
-                'usr_rut'           => $user['user_rut'],
-                'usr_id_sucursal'   => $user['user_id_sucursal'],
-                'usr_estado'        => 'activo',
-            ];
-
-            // Asignar tipo si viene
-            if (!empty($user['user_id_tipos'])) {
-                $data['usr_id_tipos'] = $user['user_id_tipos'];
-            }
-
-            // Hashear la clave si viene
-            if (!empty($user['user_clave'])) {
-                $data['usr_clave'] = password_hash($user['user_clave'], PASSWORD_BCRYPT);
-            }
-
-            // Guardar en BD
-            $this->RespoModel->insertarUsuario($data);
         }
 
-        echo json_encode(['status' => 'success']);
+        // Llama al modelo para insertar
+        $this->load->model('RespoModel');
+        $resultado = $this->RespoModel->insertarResponsables($datos['activos']);
+
+        echo json_encode(['success' => $resultado]);
     }
     public function EliminarUsuario($id) {
         $result = $this->RespoModel->eliminarUsuario($id);

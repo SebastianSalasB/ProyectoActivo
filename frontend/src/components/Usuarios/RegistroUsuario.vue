@@ -191,8 +191,8 @@ export default {
     async cargarEmpresasYSucursales() {
       try {
         const [resEmpresas, resSucursales] = await Promise.all([
-          axios.get('/Usuarios/listaE'),
-          axios.get('/Usuarios/listaS')
+          axios.get('http://localhost/activos/Backend/index.php/Usuarios/listaE'),
+          axios.get('http://localhost/activos/Backend/index.php/Usuarios/listaS')
         ]);
         console.log('Empresas crudas:', resEmpresas.data);
         console.log('Sucursales crudas:', resSucursales.data);
