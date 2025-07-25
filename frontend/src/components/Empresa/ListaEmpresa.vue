@@ -1,6 +1,6 @@
 <template>
   <!-- Barra de búsqueda -->
-  <b-navbar toggleable="lg" class="mb-4 shadow-sm">
+  <b-navbar toggleable="lg" class="mb-4">
     <b-container >
       <b-navbar-brand href="#" style="color: white;">Empresas</b-navbar-brand>
       <b-form class="d-flex ms-auto" @submit.prevent>

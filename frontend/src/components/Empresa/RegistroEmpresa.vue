@@ -14,9 +14,10 @@
           <small v-if="errors.emp_direccion" class="text-danger">{{ errors.emp_direccion }}</small>
         </b-form-group>
       </b-col>
-      <hr />
+      
       <b-form-group label="Sucursales" style="color:white;">
         <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-3" >
+          <hr />
           <b-form-group 
           label="Nombre de Sucursal" 
           style="color: white;">
@@ -28,7 +29,7 @@
           style="color: white;">
             <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
           </b-form-group>
-
+          <hr />
           <b-button
             v-if="empresa.sucursales.length > 1"
             size="sm"

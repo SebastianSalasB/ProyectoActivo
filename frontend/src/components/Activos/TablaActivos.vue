@@ -76,7 +76,7 @@
                   </div>
                 </b-col>
                 <b-col>
-                  <b-button  variant="outline-secondary" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
+                  <b-button  variant="outline-light" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
                     <i class="fa-solid fa-xmark"></i> Ocultar filtros
                   </b-button>
                 </b-col>
