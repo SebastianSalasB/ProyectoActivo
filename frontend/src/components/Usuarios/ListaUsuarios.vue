@@ -1,6 +1,6 @@
 <template>
   <!-- Barra de búsqueda -->
-  <b-navbar toggleable="lg" type="dark" variant="dark" class="mb-4 shadow-sm bg-primary">
+  <b-navbar toggleable="lg"  style="background-color: rgb(54, 97, 141) !important;" class="mb-4 bg-primary">
     <b-container>
       <b-navbar-brand class="text-white">Buscar Usuario</b-navbar-brand>
       <b-form class="d-flex ms-auto" @submit.prevent>
@@ -24,7 +24,6 @@
       responsive
       striped
       hover
-      dark
       class="text-center"
     >
       <template #cell(acciones)="data">
@@ -138,12 +137,12 @@ export default {
     const editarConfirmaModal = ref(false)
 
     const fields = [
-      { key: 'usr_id', label: 'ID' },
-      { key: 'usr_rut', label: 'RUT' },
-      { key: 'usr_nombre', label: 'Nombre' },
-      { key: 'usr_apellido', label: 'Apellido' },
-      { key: 'nombre_sucursal', label: 'Sucursal' },
-      { key: 'acciones', label: 'Acciones' }
+      { key: 'usr_id', label: 'ID' ,class:'bg-table'},
+      { key: 'usr_rut', label: 'RUT',class:'bg-table' },
+      { key: 'usr_nombre', label: 'Nombre' ,class:'bg-table'},
+      { key: 'usr_apellido', label: 'Apellido',class:'bg-table' },
+      { key: 'nombre_sucursal', label: 'Sucursal' ,class:'bg-table'},
+      { key: 'acciones', label: 'Acciones',class:'bg-table' }
     ]
 
     const cargarUsuario = async () => {
@@ -249,3 +248,20 @@ export default {
   }
 }
 </script>
+<style>
+  .custom-rounded-table {
+    border-radius: 12px;
+    overflow: hidden; /* importante para que las esquinas internas también se redondeen */
+  }
+  .bg-table{
+    --bs-table-color: #fcfcfc;
+    --bs-table-bg: #294969;
+    --bs-table-border-color: #294969 !important;
+    --bs-table-striped-bg: #294969 !important;
+    --bs-table-striped-color: #fffefe !important;
+    --bs-table-active-bg: #294969 !important;
+    --bs-table-active-color: #ffffff;
+    --bs-table-hover-bg: #294969 !;
+    --bs-table-hover-color: #ffffff;
+  }
+</style>

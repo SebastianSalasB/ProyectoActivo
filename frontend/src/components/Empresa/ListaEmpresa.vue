@@ -16,7 +16,7 @@
 
   <!-- Tabla de empresas -->
   <b-container >
-    <b-table :items="filtrarComputadoras" :fields="fields" dark responsive striped hover style="text-align: center;">
+    <b-table class="custom-rounded-table" :items="filtrarComputadoras" :fields="fields" dark responsive striped hover style="text-align: center;">
       <template #cell(acciones)="data">
         <b-button  variant="" size="sm" class="me-1" @click="editarEmpresa(data.item)">
           <i class="fa-solid fa-pen-to-square fa-lg" style="color: #258f24;"></i>
@@ -118,148 +118,166 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import axios from 'axios'
-// Datos reactivos
-const empresas = ref([])
-const seleccionarEmpresa = ref({
-  emp_nombre: '',
-  emp_direccion: '',
-  sucursales: [{}]
-})
-const Buscador = ref('')
-const modalShow = ref(false)
-const eliminarConfirmaModal = ref(false)
-const editarConfirmacionModal = ref(false)
-const eliminarSucursalConfirmarModal = ref(false)
-const sucursalEliminar = ref(null)
-// Columnas de la tabla
-const fields = [
-  { key: 'emp_nombre', label: 'Nombre' },
-  { key: 'emp_direccion', label: 'Dirección' },
-  { key: 'acciones', label: 'Acciones' }
-]
-// Obtener empresas
-const cargarEmpresa = async () => {
-  try {
-    const res = await fetch('http://localhost/activos/Backend/index.php/EmpresaR')
-    empresas.value = await res.json()
-  } catch (err) {
-    console.error('Error al obtener empresas:', err)
-  }
-}
-// Filtro de búsqueda
-const filtrarComputadoras = computed(() => {
-  if (!Buscador.value) return empresas.value
-  return empresas.value.filter(empresa =>
-    Object.values(empresa).some(val =>
-      String(val).toLowerCase().includes(Buscador.value.toLowerCase())
-    )
-  )
-})
-// Agregar una nueva sucursal vacía
-const agregarSucursal = () => {
-  seleccionarEmpresa.value.sucursales.push({
-    suc_id: null,
-    suc_nombre: '',
-    suc_direccion: ''
-  })
-}
-// Abrir modal de edición
-const editarEmpresa = (empresa) => {
-  seleccionarEmpresa.value = {
-    ...empresa,
-    sucursales: empresa.sucursales || []
-  }
-  modalShow.value = true
-}
-// Cancelar edición
-const cancelarEditor = () => {
-  modalShow.value = false
-  seleccionarEmpresa.value = {
+  import { ref, onMounted, computed } from 'vue'
+  import axios from 'axios'
+  // Datos reactivos
+  const empresas = ref([])
+  const seleccionarEmpresa = ref({
     emp_nombre: '',
     emp_direccion: '',
-    sucursales: []
-  }
-}
-// Confirmar guardar
-const confirmarEditor = () => {
-  editarConfirmacionModal.value = true
-}
-// Guardar empresas
-const GuardarEmpresa = async () => {
-  try {
-    console.log(seleccionarEmpresa)
-    const res = await axios.post(
-      `http://localhost/activos/Backend/index.php/EmpresaR/ActializarEmpresa/${seleccionarEmpresa.value.emp_id}`,
-      seleccionarEmpresa.value
-    )
-    if (res.data.status === 'updated') {
-      const index = empresas.value.findIndex(u => u.emp_id === seleccionarEmpresa.value.emp_id)
-      if (index !== -1) empresas.value[index] = { ...seleccionarEmpresa.value }
-      modalShow.value = false
-      editarConfirmacionModal.value = false
-      alert('Empresa actualizada correctamente')
-    } else {
-      alert('Error al actualizar la empresa')
+    sucursales: [{}]
+  })
+  const Buscador = ref('')
+  const modalShow = ref(false)
+  const eliminarConfirmaModal = ref(false)
+  const editarConfirmacionModal = ref(false)
+  const eliminarSucursalConfirmarModal = ref(false)
+  const sucursalEliminar = ref(null)
+  // Columnas de la tabla
+  const fields = [
+    { key: 'emp_nombre', label: 'Nombre',class:'bg-table' },
+    { key: 'emp_direccion', label: 'Dirección' ,class:'bg-table'},
+    { key: 'acciones', label: 'Acciones', class:'bg-table'}
+  ]
+  // Obtener empresas
+  const cargarEmpresa = async () => {
+    try {
+      const res = await fetch('http://localhost/activos/Backend/index.php/EmpresaR')
+      empresas.value = await res.json()
+    } catch (err) {
+      console.error('Error al obtener empresas:', err)
     }
-  } catch (err) {
-    console.error('Error al guardar:', err)
-    alert('Error de conexión al servidor')
   }
-}
-// Confirmar eliminación de empresa
-const ConfirmarEliminacion = (empresa) => {
-  seleccionarEmpresa.value = empresa
-  eliminarConfirmaModal.value = true
-}
-// Eliminar empresa
-const EliminarEmpresa = async () => {
-  try {
-    const res = await axios.put(
-      `/EmpresaR/Eliminar/${seleccionarEmpresa.value.emp_id}`
-    )
-    if (res.data.status === 'deleted') {
-      empresas.value = empresas.value.filter(u => u.emp_id !== seleccionarEmpresa.value.emp_id)
-      alert('Empresa eliminada correctamente')
-    } else {
-      alert('No se pudo eliminar la empresa')
-    }
-  } catch (err) {
-    console.error('Error al eliminar:', err)
-    alert('Error de conexión al servidor')
-  } finally {
-    eliminarConfirmaModal.value = false
-  }
-}
-// Confirmar eliminación de sucursal
-const ConfirmarEliminacionSucursal = (sucursal) => {
-  sucursalEliminar.value = sucursal
-  eliminarSucursalConfirmarModal.value = true
-}
-// Eliminar sucursal
-const eliminarSucursal = async () => {
-  try {
-    const id = sucursalEliminar.value?.suc_id
-    const res = await axios.put(
-      `/EmpresaR/eliminarSucursal/${id}`
-    )
-    if (res.data.status === 'deleted') {
-      seleccionarEmpresa.value.sucursales = seleccionarEmpresa.value.sucursales.filter(
-        s => s.suc_id !== id
+  // Filtro de búsqueda
+  const filtrarComputadoras = computed(() => {
+    if (!Buscador.value) return empresas.value
+    return empresas.value.filter(empresa =>
+      Object.values(empresa).some(val =>
+        String(val).toLowerCase().includes(Buscador.value.toLowerCase())
       )
-      alert('Sucursal eliminada correctamente')
-    } else {
-      alert('No se pudo eliminar la sucursal')
-    }
-  } catch (err) {
-    console.error('Error al eliminar:', err)
-    alert('Error de conexión al servidor')
-  } finally {
-    eliminarSucursalConfirmarModal.value = false
-    sucursalEliminar.value = null
+    )
+  })
+  // Agregar una nueva sucursal vacía
+  const agregarSucursal = () => {
+    seleccionarEmpresa.value.sucursales.push({
+      suc_id: null,
+      suc_nombre: '',
+      suc_direccion: ''
+    })
   }
-}
-// Al montar componente
-onMounted(cargarEmpresa)
+  // Abrir modal de edición
+  const editarEmpresa = (empresa) => {
+    seleccionarEmpresa.value = {
+      ...empresa,
+      sucursales: empresa.sucursales || []
+    }
+    modalShow.value = true
+  }
+  // Cancelar edición
+  const cancelarEditor = () => {
+    modalShow.value = false
+    seleccionarEmpresa.value = {
+      emp_nombre: '',
+      emp_direccion: '',
+      sucursales: []
+    }
+  }
+  // Confirmar guardar
+  const confirmarEditor = () => {
+    editarConfirmacionModal.value = true
+  }
+  // Guardar empresas
+  const GuardarEmpresa = async () => {
+    try {
+      console.log(seleccionarEmpresa)
+      const res = await axios.post(
+        `http://localhost/activos/Backend/index.php/EmpresaR/ActializarEmpresa/${seleccionarEmpresa.value.emp_id}`,
+        seleccionarEmpresa.value
+      )
+      if (res.data.status === 'updated') {
+        const index = empresas.value.findIndex(u => u.emp_id === seleccionarEmpresa.value.emp_id)
+        if (index !== -1) empresas.value[index] = { ...seleccionarEmpresa.value }
+        modalShow.value = false
+        editarConfirmacionModal.value = false
+        alert('Empresa actualizada correctamente')
+      } else {
+        alert('Error al actualizar la empresa')
+      }
+    } catch (err) {
+      console.error('Error al guardar:', err)
+      alert('Error de conexión al servidor')
+    }
+  }
+  // Confirmar eliminación de empresa
+  const ConfirmarEliminacion = (empresa) => {
+    seleccionarEmpresa.value = empresa
+    eliminarConfirmaModal.value = true
+  }
+  // Eliminar empresa
+  const EliminarEmpresa = async () => {
+    try {
+      const res = await axios.put(
+        `/EmpresaR/Eliminar/${seleccionarEmpresa.value.emp_id}`
+      )
+      if (res.data.status === 'deleted') {
+        empresas.value = empresas.value.filter(u => u.emp_id !== seleccionarEmpresa.value.emp_id)
+        alert('Empresa eliminada correctamente')
+      } else {
+        alert('No se pudo eliminar la empresa')
+      }
+    } catch (err) {
+      console.error('Error al eliminar:', err)
+      alert('Error de conexión al servidor')
+    } finally {
+      eliminarConfirmaModal.value = false
+    }
+  }
+  // Confirmar eliminación de sucursal
+  const ConfirmarEliminacionSucursal = (sucursal) => {
+    sucursalEliminar.value = sucursal
+    eliminarSucursalConfirmarModal.value = true
+  }
+  // Eliminar sucursal
+  const eliminarSucursal = async () => {
+    try {
+      const id = sucursalEliminar.value?.suc_id
+      const res = await axios.put(
+        `/EmpresaR/eliminarSucursal/${id}`
+      )
+      if (res.data.status === 'deleted') {
+        seleccionarEmpresa.value.sucursales = seleccionarEmpresa.value.sucursales.filter(
+          s => s.suc_id !== id
+        )
+        alert('Sucursal eliminada correctamente')
+      } else {
+        alert('No se pudo eliminar la sucursal')
+      }
+    } catch (err) {
+      console.error('Error al eliminar:', err)
+      alert('Error de conexión al servidor')
+    } finally {
+      eliminarSucursalConfirmarModal.value = false
+      sucursalEliminar.value = null
+    }
+  }
+  // Al montar componente
+  onMounted(cargarEmpresa)
 </script>
+<style>
+  .custom-rounded-table {
+    border-radius: 12px;
+    overflow: hidden; /* importante para que las esquinas internas también se redondeen */
+  }
+  .bg-table{
+    --bs-table-color: #fcfcfc;
+    --bs-table-bg: #294969;
+    --bs-table-border-color: #294969 !important;
+    --bs-table-striped-bg: #294969 !important;
+    --bs-table-striped-color: #fffefe !important;
+    --bs-table-active-bg: #294969 !important;
+    --bs-table-active-color: #ffffff;
+    --bs-table-hover-bg: #294969 !;
+    --bs-table-hover-color: #ffffff;
+  }
+</style>
+

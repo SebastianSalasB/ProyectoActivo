@@ -2,7 +2,7 @@
   <b-container >
   <b-row>
     <b-col md="12" id="NAG" >
-      <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 bg-dark" style="color: white;">
+      <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 " style="color: white;">
         <b-row>
           <b-col sm>
             <b-form-group label="Empresa" >

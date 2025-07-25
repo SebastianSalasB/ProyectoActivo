@@ -4,7 +4,7 @@
       <div
         v-for="(activo, index) in usuarios.activos"
         :key="index"
-        class="border rounded p-3 mb-3 bg-dark"
+        class="p-3 mb-3"
         style="color: white;"
       >
         <!-- Nombres y Apellidos -->

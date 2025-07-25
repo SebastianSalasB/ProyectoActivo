@@ -1,13 +1,13 @@
 <template>
-  <div  style=" background-color: #202428 !important;">
+  <div  >
     <div v-if="!isAuthenticated" class="login-container">
       <Login @login-success="handleLoginSuccess" />
     </div>
 
-    <div v-else style="height: 56rem; background-color: #202428 !important;">
+    <div v-else style="height: 56rem; background-color: rgb(54 97 141) !important;">
       
       <!-- Navbar superior -->
-      <b-navbar toggleable="md" class="bg-dark shadow-sm" fixed="top" s>
+      <b-navbar toggleable="md" class="bg-barra shadow-sm" fixed="top" s>
         <b-navbar-brand class="text-white" @click="currentView = 'registro'" >Sistema de Activos</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse">
@@ -65,7 +65,7 @@
       </b-navbar>
 
       <!-- Contenido -->
-      <main class=" mt-5 pt-4 " style="background-color: #202428!important;">
+      <main class="main mt-5 pt-4 " >
         <h2 class="mb-2" style="text-align: center; color: white;" >
           {{
             currentView === 'registro' ? 'Registro de Activos' :
@@ -180,8 +180,11 @@ function confirmLogout() {
 .navbar-link {
   color: rgb(0, 0, 0) !important;
 }
-.bg-dark {
-  background-color: rgb(255, 255, 255) !important;
+.main{
+  background-color: rgb(54, 97, 139) !important;
+}
+.bg-barra {
+  background-color: rgb(54 97 141) !important;
 }
 .text-white,
 .navbar-dark .navbar-nav .nav-link,
@@ -193,13 +196,15 @@ function confirmLogout() {
   color: white !important;
 }
 .dropdown-dark .dropdown-menu {
-  background-color: #212529 !important;
+  background-color: rgb(54, 97, 141) !important;
+  border-color: rgb(255, 255, 255,0.6);
 }
 .dropdown-dark .dropdown-item {
   color: white !important;
 }
 .dropdown-dark .dropdown-item:hover {
-  background-color: #343a40 !important;
+  background-color: rgb(54, 97, 141) !important;
   color: #fff !important;
+  border: none;
 }
 </style>

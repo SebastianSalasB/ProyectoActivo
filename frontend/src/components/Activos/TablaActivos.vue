@@ -1,6 +1,6 @@
 <template> 
   <!-- Barra de búsqueda -->
-    <b-navbar toggleable="lg" type="" variant="" class="mb-4 shadow-sm">
+    <b-navbar toggleable="lg" type="" variant="" class="mb-4 ">
       <b-container >
         <b-navbar-brand href="#" style="color: white;">Buscar Activos</b-navbar-brand>
         <b-input-group class="mt-2">
@@ -24,8 +24,8 @@
         <!-- Barra lateral izquierda -->
         <transition name="fade">
           <b-col cols="12" md="2"  v-if="mostrarFiltros">
-            <b-card class="shadow-sm">
-              <h5 class="mb-3" style="color: black;">Filtros</h5>              
+            <b-card class="bg-card shadow-sm" style="color:white ; border: none;">
+              <h5 class="mb-3" >Filtros</h5>              
               <!-- Filtro por Tipo -->
               <b-form-group label="Tipo">
                 <b-form-checkbox-group
@@ -82,6 +82,7 @@
                 </b-col>
               </b-row>
             </b-card>
+            <p></p>
           </b-col>
         </transition>
         <!-- Tabla de resultados -->
@@ -92,7 +93,7 @@
             variant="primary"
             style="width: 3rem; height: 3rem; margin: 2rem auto; display: block;"
           ></b-spinner>
-          <b-table v-else :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" variant="dark" striped responsive Small hover> 
+          <b-table  v-else :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
             <template #cell(act_id)="data" id="actID">
               <div>
                 <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
@@ -118,26 +119,41 @@
               <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
             </template>              
             <template #cell(acciones)="data" style="width: 0;">
-              <b-dropdown size="sm" style="margin-top: 12px;" variant="outline-light" text="Acciones" toggle-class="btn-sm" no-caret>
+              <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
                 <template #button-content >
                   <i class="fa-solid fa-gear fa-xl" ></i>
                 </template>
+                <!-- Editar: solo si NO está en baja ni eliminado -->
+              <b-dropdown-item
+                v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                @click="editarActivo(data.item)"
+              >
+                <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> Editar
+              </b-dropdown-item>
 
-                <b-dropdown-item @click="editarActivo(data.item)">
-                  <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> editar
-                </b-dropdown-item>
+              <!-- Eliminar: solo si NO está en baja ni eliminado -->
+              <b-dropdown-item
+                v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                @click="confirmarEliminar(data.item)"
+              >
+                <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
+              </b-dropdown-item>
 
-                <b-dropdown-item @click="confirmarEliminar(data.item)">
-                  <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
-                </b-dropdown-item>
+              <!-- Mantención: solo si está activo -->
+              <b-dropdown-item
+                v-if="data.item.act_estado === 'activo'"
+                @click="abrirModalMantencion(data.item)"
+              >
+                <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
+              </b-dropdown-item>
 
-                <b-dropdown-item  @click="abrirModalMantencion(data.item)">
-                  <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
-                </b-dropdown-item>
-
-                <b-dropdown-item v-if="selectedActivos==='eliminado'|| 'baja' || 'mantenimiento'" @click="activarActivo(data.item)">
-                  <i class="fa-solid fa-toggle-on" style="color: #007bff; "></i> Activar
-                </b-dropdown-item>
+              <!-- Activar: si está eliminado, baja o mantenimiento -->
+              <b-dropdown-item
+                v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
+                @click="activarActivo(data.item)"
+              >
+                <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
+              </b-dropdown-item>
               </b-dropdown>
             </template>
             <template #cell(act_estado)="data" style="width: 0; padding: 0.2rem 0.2rem !important;" id="estados">
@@ -529,7 +545,7 @@
       </div>
     </b-modal>
     <div>
-    <p>URL base: {{ $baseURL }}</p>
+    <p style=" color: rgb(0,0,0,0);">as</p>
   </div>
 </template>
 
@@ -604,14 +620,14 @@ export default
     const empresaOpciones = computed(() => empresa.value.map(e => ({ id: e.emp_id, nombre: e.emp_nombre })))
     const nombreTipoDisplay = computed(() => selectedActivos.nombre_tipo || 'No definido') 
     const fields = [
-      { key: 'act_id', label: 'ID' , thClass: 'actID', tdClass: 'actID'},   
-      { key: 'nombre_usuario', label: 'Nombre' , thClass: '', tdClass: 'usuario'},  
-      { key: 'nombre_empresa', label: 'Empresa' , class: 'd-none d-lg-table-cell' },           
-      { key: 'nombre_sucursal', label: 'Sucursal/Tipo' , thClass: '' , tdClass: 'tipo'},
-      { key: 'act_fecha_registro', label: 'Fecha' , class: 'd-none d-lg-table-cell' },         
-      { key: 'act_descripcion', label: 'Descricion' , class: 'd-none d-lg-table-cell' },
-      { key: 'acciones', label: '' , thClass: 'text-center', tdClass: 'acciones'},
-      { key: 'act_estado', label: '' , thClass: 'text-center' , tdClass: 'estados' },
+      { key: 'act_id', label: 'ID' , thClass: 'actID ', tdClass: 'actID', class:" bg-table"},   
+      { key: 'nombre_usuario', label: 'Nombre' , thClass: '', tdClass: 'usuario' , class:"bg-table"},  
+      { key: 'nombre_empresa', label: 'Empresa' , class: 'd-none bg-table d-lg-table-cell' },           
+      { key: 'nombre_sucursal', label: 'Sucursal/Tipo' , thClass: '' , tdClass: 'tipo', class:"bg-table"},
+      { key: 'act_fecha_registro', label: 'Fecha' , class: 'd-none d-lg-table-cell bg-table' },         
+      { key: 'act_descripcion', label: 'Descricion' , class: 'd-none d-lg-table-cell bg-table' },
+      { key: 'acciones', label: '' , thClass: 'text-center', tdClass: 'acciones', class:"bg-table"},
+      { key: 'act_estado', label: '' , thClass: 'text-center' , tdClass: 'estados', class:"bg-table" },
     ]
     const cargarActivoss = async () => {
       try {
@@ -1042,10 +1058,31 @@ export default
 }
 
 </script>
-<style>
+<style >
   /* Puedes agregar estilos específicos aquí */
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.1s;
+  }
+  .custom-rounded-table {
+    border-radius: 12px;
+    overflow: hidden; /* importante para que las esquinas internas también se redondeen */
+  }
+  .bg-table{
+    --bs-table-color: #fcfcfc;
+    --bs-table-bg: #294969;
+    --bs-table-border-color: #294969 !important;
+    --bs-table-striped-bg: #294969 !important;
+    --bs-table-striped-color: #fffefe !important;
+    --bs-table-active-bg: #294969 !important;
+    --bs-table-active-color: #ffffff;
+    --bs-table-hover-bg: #294969 !;
+    --bs-table-hover-color: #ffffff;
+    --bs-table-border-color: rgb(54, 97, 139) !important;
+  }
+  .bg-card{
+    background-color: rgba(41 ,73 ,105, 0.836) !important;
+    border: none;
+    color: #ffffff;
   }
   .navbar-brand {
     text-align: center;
@@ -1074,27 +1111,4 @@ export default
   td.tipo{
     text-align: start;
   }
-  .pagination  {
-    --bs-pagination-padding-x: 0.75rem !important;
-    --bs-pagination-padding-y: 0.375rem !important;
-    --bs-pagination-font-size: 1rem !important;
-    --bs-pagination-color: #000000 !important; 
-    --bs-pagination-bg: #616161 !important;
-    --bs-pagination-border-width: var(--bs-border-width) ;
-    --bs-pagination-border-color: var(--bs-border-color);
-    --bs-pagination-border-radius: var(--bs-border-radius) ;
-    --bs-pagination-hover-color: #000000 !important;
-    --bs-pagination-hover-bg: var(--bs-tertiary-bg) ;
-    --bs-pagination-hover-border-color: var(--bs-border-color) ;
-    --bs-pagination-focus-color: #000000 !important;
-    --bs-pagination-focus-bg: var(--bs-secondary-bg) ;
-    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.582) !important;
-    --bs-pagination-active-color: #000000 !important;
-    --bs-pagination-active-bg: #b6b6b6 !important;
-    --bs-pagination-active-border-color: #fdfdfd !important;
-    --bs-pagination-disabled-color: var(--bs-secondary-color) ;
-    --bs-pagination-disabled-bg: #616161 !important;
-    --bs-pagination-disabled-border-color: var(--bs-border-color) #000000 !important;
-  }
-  
 </style>

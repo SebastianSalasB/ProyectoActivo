@@ -23,7 +23,7 @@
         {{ mensaje }}
       </b-alert>
     </b-col>
-
+    <p></p>
     <!-- Tabla de Tipos -->
     <b-col>
       <b-container>
@@ -35,8 +35,9 @@
           :items="tipos"
           :fields="fields"
           small
-          class="w-100"
+          class="w-100 custom-rounded-table"
           style="text-align: center;"
+
         >
           <template #cell(tip_descripcion)="data">
             {{ data.item.tip_descripcion }}
@@ -143,9 +144,9 @@ const tipoAEditar = ref({})
 const tipoAEliminar = ref(null)
 
 const fields = [
-  { key: 'tip_id', label: 'ID', sortable: true, thClass: 'text-center', tdClass: 'text-center' },
-  { key: 'tip_descripcion', label: 'Descripción', sortable: true },
-  { key: 'actions', label: 'Acciones', thClass: 'text-center', tdClass: 'text-center' }
+  { key: 'tip_id', label: 'ID', sortable: true, thClass: 'text-center', tdClass: 'text-center', class:'bg-table' },
+  { key: 'tip_descripcion', label: 'Descripción', sortable: true , class:'bg-table'},
+  { key: 'actions', label: 'Acciones', thClass: 'text-center', tdClass: 'text-center', class:'bg-table' }
 ]
 
 // Validar datos del formulario
@@ -250,5 +251,16 @@ onMounted(fetchTipos)
 }
 .modal-title {
   color: #000;
+}
+.bg-table{
+  --bs-table-color: #fcfcfc;
+  --bs-table-bg: #294969;
+  --bs-table-border-color: #294969 !important;
+  --bs-table-striped-bg: #294969 !important;
+  --bs-table-striped-color: #fffefe !important;
+  --bs-table-active-bg: #294969 !important;
+  --bs-table-active-color: #ffffff;
+  --bs-table-hover-bg: #294969 !;
+  --bs-table-hover-color: #ffffff;
 }
 </style>

@@ -1,14 +1,11 @@
 <template>
   <b-container fluid class="login-container">
     <b-row class="h-100">
-      <!-- Imagen izquierda -->
-      <b-col md="8" class="p-0 d-none d-md-block">
-        <img src="../Activos/infor.jpg" class="img-fluid h-100 w-100 object-cover" alt="Imagen login" />
-      </b-col>
+      
 
       <!-- Panel login -->
-      <b-col md="4" class="login-panel d-flex flex-column justify-content-center align-items-center px-4">
-        <b-card class="w-100 shadow-lg rounded-lg p-4" bg-variant="dark" text-variant="white">
+      <b-col  class="login-panel d-flex flex-column justify-content-center align-items-center px-4">
+        <b-card class="login-card shadow-lg rounded-lg p-4"  text-variant="white">
           <div class="text-center mb-4">
             <h2 class="fw-bold">Sistema de Activos</h2>
           </div>
@@ -155,7 +152,13 @@ const onSubmit = async () => {
 <style scoped>
 .login-container {
   height: 100vh;
-  overflow: hidden;
+  background-color:rgb(59, 81, 130);
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-image: url(../Activos/3409297.jpg);
 }
 
 .object-cover {
@@ -163,8 +166,15 @@ const onSubmit = async () => {
 }
 
 .login-panel {
-  background-color: #212529; /* bg-dark */
+   /* bg-dark */
   color: white;
+}
+.login-card{
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  border: none;
+  background-color: rgb(84, 112, 186,0.4);
 }
 
 .b-form-input,
@@ -173,10 +183,13 @@ const onSubmit = async () => {
 }
 
 .btn-glow {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
   transition: box-shadow 0.3s ease;
 }
 .btn-glow:hover {
-  box-shadow: 0 0 10px #0d6efd;
+  box-shadow: 0 0 10px rgb(13, 110 , 253,0.8);
 }
 
 @media (max-width: 768px) {
@@ -185,6 +198,9 @@ const onSubmit = async () => {
   }
   .login-panel .b-card {
     padding: 1.5rem;
+  }
+  .login-card{
+    padding: 2rem 1.5rem;
   }
 }
 </style>

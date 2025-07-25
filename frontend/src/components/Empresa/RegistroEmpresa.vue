@@ -15,8 +15,8 @@
         </b-form-group>
       </b-col>
       <hr />
-      <b-form-group label="Sucursales" style="">
-        <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class="border rounded p-3 mb-3 bg-dark" >
+      <b-form-group label="Sucursales" style="color:white;">
+        <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-3" >
           <b-form-group 
           label="Nombre de Sucursal" 
           style="color: white;">
