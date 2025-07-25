@@ -9,7 +9,7 @@
           class="me-2"
           type="search"
           placeholder="Buscar por nombre, apellido o RUT..."
-          @input="paginaActual = 1"
+          
         />
       </b-form>
     </b-container>
@@ -19,7 +19,7 @@
   <b-container>
     <b-table
       id="tabla-usuarios"
-      :items="filtrarUsuarios"
+      :items="usuariosPaginados"
       :fields="fields"
       responsive
       striped
@@ -39,7 +39,7 @@
     <!-- Paginación -->
     <b-pagination
       v-model="paginaActual"
-      :total-rows="totalResponsables"
+      :total-rows="filtrarUsuarios.length"
       :per-page="porPagina"
       align="center"
       class="my-3"
@@ -147,9 +147,9 @@ export default {
 
     const cargarUsuario = async () => {
       try {
-        const { data } = await axios.get(`/Usuarios/listarResponsable/${paginaActual.value}`)
+        const { data } = await axios.get(`/Usuarios/listarResponsable`)
         usuarios.value = data.Responsable
-        totalResponsables.value = data.total
+        totalResponsables.value = data.Responsable.length
       } catch (error) {
         console.error('Error al cargar responsables:', error)
       }
@@ -158,14 +158,21 @@ export default {
 
     const filtrarUsuarios = computed(() => {
       if (!Buscador.value) return usuarios.value
+      
       return usuarios.value.filter(respo =>
         Object.values(respo).some(val =>
           String(val).toLowerCase().includes(Buscador.value.toLowerCase())
         )
       )
     })
-
-    
+    const usuariosPaginados = computed(() => {
+      const inicio = (paginaActual.value - 1) * porPagina
+      const fin = inicio + porPagina
+      return filtrarUsuarios.value.slice(inicio, fin)
+    })
+    watch(Buscador, () => {
+      paginaActual.value = 1
+    })
     watch(paginaActual, cargarUsuario)
     onMounted(cargarUsuario)
     
@@ -224,7 +231,6 @@ export default {
         ConfirmaEliminarModal.value = false
       }
     }
-
     return {
       usuarios,
       totalResponsables,
@@ -233,6 +239,7 @@ export default {
       Buscador,
       fields,
       filtrarUsuarios,
+      usuariosPaginados, // <- AÑADIR ESTO
       modalShow,
       ConfirmaEliminarModal,
       editarConfirmaModal,

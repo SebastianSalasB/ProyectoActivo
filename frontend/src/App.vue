@@ -9,16 +9,13 @@
       <!-- Navbar superior -->
       <b-navbar toggleable="md" class="bg-barra shadow-sm" fixed="top" s>
         <b-navbar-brand class="text-white" @click="currentView = 'registro'" >Sistema de Activos</b-navbar-brand>
-
         <b-navbar-toggle target="nav-collapse">
           <i class="fa-solid fa-bars fa-xl" style="color: #ffffff;"></i>
         </b-navbar-toggle>
-
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
             <!-- Menú Activos -->
             <b-nav-item-dropdown text="Activos" left class="text-white dropdown-dark">
-
               <b-dropdown-item @click="currentView = 'registro'">
                 <i class="fa-solid fa-file-pen fa-sm"></i> Activos
               </b-dropdown-item>
@@ -26,15 +23,12 @@
                 <i class="fa-solid fa-list fa-sm"></i> Lista
               </b-dropdown-item>
             </b-nav-item-dropdown>
-
             <!-- Menú Tipo -->
             <b-nav-item-dropdown text="Tipo" left class="text-white dropdown-dark">
               <b-dropdown-item @click="currentView = 'tipo'">Ver Tipos</b-dropdown-item>
             </b-nav-item-dropdown>
-
             <!-- Menú Empresa -->
             <b-nav-item-dropdown text="Empresa" left class="text-white dropdown-dark">
-
               <b-dropdown-item @click="currentView = 'Registro Empresa'">
                 <i class="fa-solid fa-file-pen fa-sm"></i> Empresa
               </b-dropdown-item>
@@ -42,10 +36,8 @@
                 <i class="fa-solid fa-list fa-sm"></i> Lista
               </b-dropdown-item>
             </b-nav-item-dropdown>
-            
             <!-- Menú Usuarios -->
             <b-nav-item-dropdown text="Usuarios" left class="text-white dropdown-dark">
-              
               <b-dropdown-item @click="currentView = 'RegistroResponsable'">
                 <i class="fa-solid fa-file-pen fa-sm"></i> Usuarios
               </b-dropdown-item>
@@ -54,7 +46,6 @@
               </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
-
           <!-- Logout -->
           <b-navbar-nav class="ms-auto text-white">
             <b-nav-item @click="showConfirmLogout = true" class="text-white">
@@ -63,7 +54,6 @@
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
-
       <!-- Contenido -->
       <main class="main mt-5 pt-4 " >
         <h2 class="mb-2" style="text-align: center; color: white;" >
@@ -80,7 +70,6 @@
             ''
           }}
         </h2>
-
         <ActivosRegistro v-if="currentView === 'registro'" />
         <TablaActivos v-else-if="currentView === 'lista'" />
         <Tipo v-else-if="currentView === 'tipo'" />

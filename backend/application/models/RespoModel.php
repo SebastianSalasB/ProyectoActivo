@@ -3,14 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class RespoModel extends CI_Model
 {
-    public function getResponsablesPaginados($limit, $offset) {
+    public function responsablesListado() {
         $this->db->select('u.*, s.suc_nombre as nombre_sucursal, t.tus_tipo as nombre_tipo');
         $this->db->from('activos.usuarios u');
         $this->db->join('activos.sucursales s', 's.suc_id = u.usr_id_sucursal', 'left');
         $this->db->join('activos.tipos_usuario t', 't.tus_id = u.usr_id_tipos', 'left');
         $this->db->where('u.usr_estado', 'activo');
         $this->db->order_by('u.usr_id');
-        $this->db->limit($limit, $offset);
         $query = $this->db->get();
         return $query->result();
     }

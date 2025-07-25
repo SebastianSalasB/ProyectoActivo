@@ -10,14 +10,9 @@ class Usuarios extends CI_Controller
         header('Content-Type: application/json');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     }
-    public function listarResponsable($pagina = 1) {
-        $limit = 8; // Cantidad de registros por página
-        $offset = ($pagina - 1) * $limit; // Cálculo del desplazamiento
-
-        $this->load->model('RespoModel'); // Carga del modelo
-
+    public function listarResponsable() {
         // Obtiene los registros de responsables con paginación
-        $responsables = $this->RespoModel->getResponsablesPaginados($limit, $offset);
+        $responsables = $this->RespoModel->responsablesListado();
 
         // Obtiene el total de registros (para calcular páginas en el frontend)
         $total = $this->RespoModel->contarResponsables();
