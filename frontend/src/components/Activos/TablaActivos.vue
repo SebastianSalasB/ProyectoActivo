@@ -87,113 +87,114 @@
         </transition>
         <!-- Tabla de resultados -->
         <b-col :md="mostrarFiltros ? 10 : 12"  style="text-align: left">
-          <b-spinner v-if="cargando" label="Cargando..." class="mb-3"></b-spinner>
-          <b-table v-else :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
-            <template #cell(act_id)="data" id="actID">
-              <div>
-                <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
-              </div>
-            </template>
-            <template #cell(nombre_usuario)="data" #cell(apellido_usuario)> 
-              <div>
-                <span >{{data.item.nombre_usuario}}</span>
-              </div>
-              <div>
-                <span style="font-size: 0.80rem; text-align: start;">{{ data.item.apellido_usuario }}</span>
-              </div>
-            </template>              
-            <template  #cell(nombre_sucursal)="data" #cell(nombre_tipo)="data">
-              <div>
-                <span style="font-size: 0.80rem; text-align: start;">{{ data.item.nombre_sucursal }}</span>
-              </div>
-              <div>
-                <span style="font-size: 0.60rem; text-align: start;">{{ data.item.nombre_tipo }}</span>
-              </div>
-            </template>
-            <template #cell(act_fecha_registro)="data">
-              <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
-            </template>              
-            <template #cell(acciones)="data" style="width: 0;">
-              <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
-                <template #button-content >
-                  <i class="fa-solid fa-gear fa-xl" ></i>
-                </template>
-                <!-- Editar: solo si NO está en baja ni eliminado -->
-              <b-dropdown-item
-                v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
-                @click="editarActivo(data.item)"
-              >
-                <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> Editar
-              </b-dropdown-item>
+          <b-overlay :show="cargando" rounded="sm" spinner-variant="primary" opacity="0.6">
+            <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
+              <template #cell(act_id)="data" id="actID">
+                <div>
+                  <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
+                </div>
+              </template>
+              <template #cell(nombre_usuario)="data" #cell(apellido_usuario)> 
+                <div>
+                  <span >{{data.item.nombre_usuario}}</span>
+                </div>
+                <div>
+                  <span style="font-size: 0.80rem; text-align: start;">{{ data.item.apellido_usuario }}</span>
+                </div>
+              </template>              
+              <template  #cell(nombre_sucursal)="data" #cell(nombre_tipo)="data">
+                <div>
+                  <span style="font-size: 0.80rem; text-align: start;">{{ data.item.nombre_sucursal }}</span>
+                </div>
+                <div>
+                  <span style="font-size: 0.60rem; text-align: start;">{{ data.item.nombre_tipo }}</span>
+                </div>
+              </template>
+              <template #cell(act_fecha_registro)="data">
+                <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
+              </template>              
+              <template #cell(acciones)="data" style="width: 0;">
+                <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
+                  <template #button-content >
+                    <i class="fa-solid fa-gear fa-xl" ></i>
+                  </template>
+                  <!-- Editar: solo si NO está en baja ni eliminado -->
+                <b-dropdown-item
+                  v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                  @click="editarActivo(data.item)"
+                >
+                  <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> Editar
+                </b-dropdown-item>
 
-              <!-- Eliminar: solo si NO está en baja ni eliminado -->
-              <b-dropdown-item
-                v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
-                @click="confirmarEliminar(data.item)"
-              >
-                <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
-              </b-dropdown-item>
+                <!-- Eliminar: solo si NO está en baja ni eliminado -->
+                <b-dropdown-item
+                  v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                  @click="confirmarEliminar(data.item)"
+                >
+                  <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
+                </b-dropdown-item>
 
-              <!-- Mantención: solo si está activo -->
-              <b-dropdown-item
-                v-if="data.item.act_estado === 'activo'"
-                @click="abrirModalMantencion(data.item)"
-              >
-                <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
-              </b-dropdown-item>
-
-              <!-- Activar: si está eliminado, baja o mantenimiento -->
-              <b-dropdown-item
-                v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
-                @click="activarActivo(data.item)"
-              >
-                <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
-              </b-dropdown-item>
-              </b-dropdown>
-            </template>
-            <template #cell(act_estado)="data" style="width: 0; padding: 0.2rem 0.2rem !important;" id="estados">
-              <div >
-                <i
+                <!-- Mantención: solo si está activo -->
+                <b-dropdown-item
                   v-if="data.item.act_estado === 'activo'"
-                  class="fa-solid fa-circle-check text-success"
-                  title="activo"
-                  style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i
-                  v-else-if="data.item.act_estado === 'eliminado'"
-                  class="fa-solid fa-circle-xmark text-danger"
-                  title="Eliminado"
-                  style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i
-                  v-else-if="data.item.act_estado === 'baja'"
-                  class="fa-solid fa-ban" 
-                  title="Baja"
-                  style="color: #ff4747;
-                  font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                
-                <i v-else-if="data.item.act_estado === 'mantenimiento'" class="fa-solid fa-circle-exclamation" title="mantenimiento" 
-                style="color: #ffe852; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i
-                  v-else
-                  class="fa-solid fa-circle-question text-secondary"
-                  title="Desconocido"
-                  style="font-size: 0.870em; padding: 0.2rem 0.2rem;"
-                ></i>
-              </div> 
-            </template>
-          </b-table> 
-          <div class="overflow-auto">
-            <b-pagination
-              v-model="paginaActual"
-              :current-page="paginaActual"
-              :total-rows="pagina"
-              :per-page="porPagina"       
-              align="center"
-              size="md"/>
-          </div>
+                  @click="abrirModalMantencion(data.item)"
+                >
+                  <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
+                </b-dropdown-item>
+
+                <!-- Activar: si está eliminado, baja o mantenimiento -->
+                <b-dropdown-item
+                  v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
+                  @click="activarActivo(data.item)"
+                >
+                  <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
+                </b-dropdown-item>
+                </b-dropdown>
+              </template>
+              <template #cell(act_estado)="data" style="width: 0; padding: 0.2rem 0.2rem !important;" id="estados">
+                <div >
+                  <i
+                    v-if="data.item.act_estado === 'activo'"
+                    class="fa-solid fa-circle-check text-success"
+                    title="activo"
+                    style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i
+                    v-else-if="data.item.act_estado === 'eliminado'"
+                    class="fa-solid fa-circle-xmark text-danger"
+                    title="Eliminado"
+                    style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i
+                    v-else-if="data.item.act_estado === 'baja'"
+                    class="fa-solid fa-ban" 
+                    title="Baja"
+                    style="color: #ff4747;
+                    font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  
+                  <i v-else-if="data.item.act_estado === 'mantenimiento'" class="fa-solid fa-circle-exclamation" title="mantenimiento" 
+                  style="color: #ffe852; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i
+                    v-else
+                    class="fa-solid fa-circle-question text-secondary"
+                    title="Desconocido"
+                    style="font-size: 0.870em; padding: 0.2rem 0.2rem;"
+                  ></i>
+                </div> 
+              </template>
+            </b-table> 
+            <div class="overflow-auto">
+              <b-pagination
+                v-model="paginaActual"
+                :current-page="paginaActual"
+                :total-rows="pagina"
+                :per-page="porPagina"       
+                align="center"
+                size="md"/>
+            </div>
+           </b-overlay>
         </b-col>
       </b-row>
     </b-container>
