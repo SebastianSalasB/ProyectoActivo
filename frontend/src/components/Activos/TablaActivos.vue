@@ -87,8 +87,8 @@
         </transition>
         <!-- Tabla de resultados -->
         <b-col :md="mostrarFiltros ? 10 : 12"  style="text-align: left">
-          
-          <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
+          <b-spinner v-if="cargando" label="Cargando..." class="mb-3"></b-spinner>
+          <b-table v-else :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
             <template #cell(act_id)="data" id="actID">
               <div>
                 <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
