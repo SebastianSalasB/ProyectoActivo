@@ -11,12 +11,12 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 // Establecer URL base global
-axios.defaults.baseURL = 'http://localhost/Activos/backend/index.php'
+axios.defaults.baseURL = 'http://localhost/Activos/Backend/index.php'
 
 const app = createApp(App)
 app.use(BootstrapVue3)
 app.config.globalProperties.$axios
 // Registrar axios como propiedad global (opcional)
-app.config.globalProperties.$baseURL = 'http://localhost/Activos/backend/index.php'
+app.config.globalProperties.$baseURL = 'http://localhost/Activos/Backend/index.php'
 
 app.mount('#app')

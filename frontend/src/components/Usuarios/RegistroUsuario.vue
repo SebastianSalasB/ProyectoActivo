@@ -48,11 +48,11 @@
           <b-col sm>
             <b-form-group label="Correo">
               <b-form-input
-                v-model="activo.user_email"
-                :class="{ 'is-invalid': inputErrors[index]?.email }"
-                type="email"
+                v-model="activo.user_correo"
+                :class="{ 'is-invalid': inputErrors[index]?.correo }"
+                type="correo"
                 placeholder="ejemplo@correo.cl"
-                @input="validarCampo(index, 'email', activo.user_email)"
+                @input="validarCampo(index, 'correo', activo.user_correo)"
               />
             </b-form-group>
           </b-col>
@@ -108,11 +108,12 @@
           <b-col sm>
             <b-form-group label="Sucursal">
               <b-form-select
+                placeholder="Seleccione sucursal"
                 v-model="activo.user_id_sucursal"
                 :options="sucursalesFiltradas(activo.user_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
                 :class="{ 'is-invalid': inputErrors[index]?.sucursal }"
                 @change="val => { activo.user_id_sucursal = val; validarCampo(index, 'sucursal', val) }"
-                placeholder="Seleccione sucursal"
+                
                 :disabled="!activo.user_id_empresa"
               />
             </b-form-group>
@@ -158,7 +159,7 @@ export default {
             user_nombre: '',
             user_apellido: '',
             user_rut: '',
-            user_email: '',
+            user_correo: '',
             user_telefono: '',
             user_clave: '',
             user_id_empresa: null,
@@ -175,7 +176,7 @@ export default {
           nombre: false,
           apellido: false,
           rut: false,
-          email: false,
+          correo: false,
           telefono: false,
           clave: false,
           empresa: false,
@@ -223,7 +224,7 @@ export default {
         user_nombre: '',
         user_apellido: '',
         user_rut: '',
-        user_email: '',
+        user_correo: '',
         user_telefono: '',
         user_clave: '',
         user_id_empresa: null,
@@ -234,7 +235,7 @@ export default {
         nombre: false,
         apellido: false,
         rut: false,
-        email: false,
+        correo: false,
         telefono: false,
         clave: false,
         empresa: false,
@@ -269,9 +270,9 @@ export default {
 
       return dv.toUpperCase() === dvFinal
     },
-    validarEmail(email) {
+    validarEmail(correo) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return re.test(email)
+      return re.test(correo)
     },
     validarCampo(index, campo, valor) {
       if (!this.inputErrors[index]) return
@@ -286,8 +287,8 @@ export default {
         case 'rut':
           error.rut = !this.validarRut(valor)
           break
-        case 'email':
-          error.email = !this.validarEmail(valor)
+        case 'correo':
+          error.correo = !this.validarEmail(valor)
           break
         case 'telefono':
           error.telefono = valor.trim().length < 7
@@ -301,6 +302,7 @@ export default {
         case 'sucursal':
           error.sucursal = !valor
           break
+
       }
 
       this.inputErrors[index] = {
@@ -316,7 +318,7 @@ export default {
           nombre: activo.user_nombre.trim() === '',
           apellido: activo.user_apellido.trim() === '',
           rut: !this.validarRut(activo.user_rut),
-          email: !this.validarEmail(activo.user_email),
+          correo: !this.validarEmail(activo.user_correo),
           telefono: activo.user_telefono.trim().length < 7,
           clave:
             activo.tipoactivo &&
@@ -343,7 +345,7 @@ export default {
         user_nombre: activo.user_nombre,
         user_apellido: activo.user_apellido,
         user_rut: this.formatearRut(activo.user_rut),
-        user_email: activo.user_email,
+        user_correo: activo.user_correo,
         user_telefono: activo.user_telefono,
         user_id_empresa: activo.user_id_empresa,
         user_id_sucursal: activo.user_id_sucursal,
@@ -352,9 +354,15 @@ export default {
       }))
 
       try {
-        const response = await axios.post('/Usuarios/CrearUsuario', {
+        console.log("Payload que se envía al backend:", {
           activos: activosConDatos
-        })
+        });
+        const response = await axios.post(
+          'http://localhost/activos/backend/index.php/Usuarios/CrearUsuario',
+          { activos: this.usuarios.activos },
+          { headers: { 'Content-Type': 'application/json' } }
+        )
+
         console.log('Respuesta del servidor:', response.data)
         this.modalShow = true
 
@@ -364,7 +372,7 @@ export default {
             user_nombre: '',
             user_apellido: '',
             user_rut: '',
-            user_email: '',
+            user_correo: '',
             user_telefono: '',
             user_clave: '',
             user_id_empresa: null,
@@ -377,7 +385,7 @@ export default {
             nombre: false,
             apellido: false,
             rut: false,
-            email: false,
+            correo: false,
             telefono: false,
             clave: false,
             empresa: false,

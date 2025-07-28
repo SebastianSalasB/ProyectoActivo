@@ -28,10 +28,10 @@
             </b-form-group>
           </b-col>
           <b-col sm>
-            <b-form-group label="Usuario">
+            <b-form-group label="Rut de usuario">
               <b-form-select
                 v-model="activo.usuario_id"
-                :options="usuariosFiltrados.map(u => ({ value: u.usr_id, text: u.usr_nombre }))"
+                :options="usuariosFiltrados.map(u => ({ value: u.usr_id, text: u.usr_rut }))"
                 :class="{ 'is-invalid': inputErrors[index]?.usuario }"
                 @change="val => validarCampo(index, 'usuario', val)"
               />
