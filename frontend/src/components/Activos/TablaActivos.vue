@@ -87,13 +87,8 @@
         </transition>
         <!-- Tabla de resultados -->
         <b-col :md="mostrarFiltros ? 10 : 12"  style="text-align: left">
-          <b-spinner
-            v-if="cargando"
-            label="Cargando activos..."
-            variant="primary"
-            style="width: 3rem; height: 3rem; margin: 2rem auto; display: block;"
-          ></b-spinner>
-          <b-table  v-else :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
+          
+          <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
             <template #cell(act_id)="data" id="actID">
               <div>
                 <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
@@ -579,7 +574,7 @@ export default
       nombre_tipo: '',
       nombre_usuario:'' ,
       tipoactivo: null,
-
+      
       bjs_descripcion: '',
       apellido_usuario:'',
       nombre_sucursal:'' ,
@@ -610,6 +605,7 @@ export default
       empresa:[]
     })
     const activos = ref([])
+    const activoss = ref([])
     const cargando = ref(false)
     const error = ref(null)
     const Buscador = ref('')
@@ -634,12 +630,13 @@ export default
         const res = await fetch('http://localhost/activos/Backend/index.php/Activos');
         const text = await res.text(); // primero lee como texto
         const data = JSON.parse(text); // parsea el JSON explícitamente
-        activos.value = data;
+        activoss.value = data;
       } catch (err) {
         console.error('Error cargando activos:', err);
       }
     } 
     const cargarActivos = async () => {
+      
       cargando.value = true;
       try {
         const payload = {
@@ -664,6 +661,7 @@ export default
 
         activos.value = res.data;
       } catch (err) {
+        
         console.error('Error cargando activos:', err.response?.data || err.message);
       } finally {
         cargando.value = false;  // <--- Esto es clave para ocultar el spinner al terminar
@@ -707,6 +705,7 @@ export default
     const editarActivo = (activo) => { 
      // Reemplazamos selectedActivos con la copia del objeto para mantener reactividad
       Object.assign(selectedActivos, activo)
+      console.log(selectedActivos)
       // Aseguramos que sea número (en caso que venga string)
       selectedActivos.act_id_tipo = Number(activo.act_id_tipo) || null 
       selectedActivos.act_id_empresa = activo.emp_id || null
@@ -845,12 +844,12 @@ export default
       editorConfirmaModal.value = true
     }
     const editar = async () => {
-      
+      console.log(selectedActivos)
       try {
         const payload = { ...selectedActivos }
         // POST para actualizar el activo
         
-        await axios.put(`/activos/ActualizarActivo/${selectedActivos.act_id}`, payload)
+        await axios.put(`/activos/ActualizarActivo/${selectedActivos.act_id}`, payload)        
         cargarActivos()
            // recargar lista para actualizar tabla
         modalShow.value = false

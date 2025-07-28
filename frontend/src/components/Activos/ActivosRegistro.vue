@@ -57,8 +57,7 @@
               value-field="tip_id"
               text-field="tip_descripcion"
               placeholder="Seleccione un tipo"
-              :class="{ 'is-invalid': inputErrors[index]?.tipoactivo }"
-              @change="val => validarCampo(index, 'tipoactivo', val)"
+              
             />
             <small v-if="errors.tipoactivo" class="text-danger">Tipo requerido</small></b-form-group>
           </b-col>

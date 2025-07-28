@@ -103,21 +103,73 @@ class Activos extends CI_Controller {
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
-        if (!$input) {
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'Entrada JSON inválida']);
-            return;
-        }
+       
 
         $buscador = $input['buscador'];
         $filtros = $input['filtros'];
 
         // Cargar modelo
         $activos = $this->ActivosModel->filtrar_activos($buscador, $filtros);
-
-        // Respuesta JSON
-        header('Content-Type: application/json');
-        echo json_encode($activos);
+        $computadores = $this->CompuModel->obtenerComputador();
+        $servidores = $this->ServerModel->obtenerServidor();
+        $ips = $this->ActivosModel->obtenerIp();
+        // Mapear datos por ID
+        $MapaComputadores = [];
+        foreach ($computadores as $com) {
+            $MapaComputadores[$com->com_id_activo] = $com;
+        }
+        $MapaServidores = [];
+        foreach ($servidores as $ser) {
+            $MapaServidores[$ser->ser_id_activo] = $ser;
+        }
+        $mapaIps = [];
+        foreach ($ips as $ip) {
+            $mapaIps[$ip->dip_id_activo][] = $ip->dip_ip;
+        }
+        $resultado = [];
+        foreach ($activos as $act) {
+            $fila = [
+                'act_id' => $act->act_id,
+                'act_fecha_registro' => $act->act_fecha_registro,
+                'act_marca' => $act->act_marca,
+                'act_modelo' => $act->act_modelo,
+                'act_fabricante' => $act->act_fabricante,
+                'act_numero_serie' => $act->act_numero_serie,
+                'act_ubicacion' => $act->act_ubicacion,
+                'act_id_usuario' => $act->act_id_usuario,
+                'act_id_sucursal' => $act->act_id_sucursal,
+                'act_id_tipo' => $act->act_id_tipo,
+                'act_descripcion' => $act->act_descripcion,
+                'act_factura' => $act->act_factura,
+                'act_estado' => $act->act_estado,
+                // JOINs
+                
+                'nombre_usuario' => $act->nombre_usuario,
+                'apellido_usuario' => $act->apellido_usuario,
+                'nombre_tipo' => $act->nombre_tipo,
+                'nombre_sucursal' => $act->nombre_sucursal,
+                'nombre_empresa' => $act->nombre_empresa,
+                // Inicializa vacíos
+                'tipo_equipo' => null,
+                'datos_computador' => new stdClass(),
+                'datos_servidor' => new stdClass(),
+                'direcciones_ip' => [], 
+            ];
+            // Datos específicos
+            if (isset($MapaComputadores[$act->act_id])) {
+                $fila['tipo_equipo'] = 'computador';
+                $fila['datos_computador'] = $MapaComputadores[$act->act_id];
+            }
+            if (isset($MapaServidores[$act->act_id])) {
+                $fila['tipo_equipo'] = 'servidor';
+                $fila['datos_servidor'] = $MapaServidores[$act->act_id];
+            }
+            if (isset($mapaIps[$act->act_id])) {
+                $fila['direcciones_ip'] = $mapaIps[$act->act_id];
+            }
+            $resultado[] = $fila;
+        }
+        echo json_encode($resultado);
     }
 
     public function contarActivos($pagina = 1) {

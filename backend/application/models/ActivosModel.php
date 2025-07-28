@@ -37,15 +37,14 @@ class ActivosModel extends CI_Model {
             u.usr_apellido AS apellido_usuario,
             t.tip_descripcion AS nombre_tipo,
             s.suc_nombre AS nombre_sucursal,
-            e.emp_nombre AS nombre_empresa,
-            d.dip_ip AS dip_ip
+            e.emp_nombre AS nombre_empresa
         ');
         $this->db->from('activos.activos a');
-        $this->db->join('activos.usuarios u', 'u.usr_id = a.act_id_usuario');
-        $this->db->join('activos.tiposactivos t', 't.tip_id = a.act_id_tipo');
-        $this->db->join('activos.sucursales s', 's.suc_id = a.act_id_sucursal');
-        $this->db->join('activos.empresas e', 'e.emp_id = s.suc_id_empresa');  // <- CORRECCIÓN: aquí antes tenías s.suc_id_empresa y estaba bien
-        $this->db->join('activos.direccionesip d', 'd.dip_id_activo = a.act_id', 'left'); 
+        $this->db->join('activos.usuarios u', 'u.usr_id = a.act_id_usuario', 'left');
+        $this->db->join('activos.tiposactivos t', 't.tip_id = a.act_id_tipo', 'left');
+        $this->db->join('activos.sucursales s', 's.suc_id = a.act_id_sucursal', 'left');
+        $this->db->join('activos.empresas e', 'e.emp_id = s.suc_id_empresa', 'left');
+        $this->db->join('activos.direccionesip d', 'd.dip_id_activo = a.act_id', 'left');
         $this->db->where('e.emp_estado', 'activo');
         $this->db->order_by('a.act_id');
 
@@ -54,28 +53,24 @@ class ActivosModel extends CI_Model {
             $this->db->like('a.act_nombre', $buscador);
         }
 
-        // Filtro por sucursales
         if (!empty($filtros['sucursales'])) {
             $this->db->where_in('a.act_id_sucursal', $filtros['sucursales']);
         }
 
-        // Filtro por usuarios
         if (!empty($filtros['usuarios'])) {
             $this->db->where_in('u.usr_id', $filtros['usuarios']);
         }
 
-        // Filtro por estados
         if (!empty($filtros['estados'])) {
             $this->db->where_in('a.act_estado', $filtros['estados']);
         }
 
-        // Filtro por tipos
         if (!empty($filtros['Tipos'])) {
             $this->db->where_in('a.act_id_tipo', $filtros['Tipos']);
         }
 
         $query = $this->db->get();
-        return $query->result_array();
+        return $query->result(); // OBJETOS, no arrays
     }
 
 
