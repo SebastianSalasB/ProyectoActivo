@@ -127,8 +127,6 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost/activos/Backend/index.php/tiposactivos'
-
 const Tipo = ref({ Nombre: '' })
 const errors = ref({})
 const mensaje = ref('')

@@ -640,8 +640,7 @@ export default
             empresa: filtros.empresa
           }
         };
-        const res = await axios.post(
-          '/Activos/filtros',
+        const res = await axios.post('/Activos/filtros',
           JSON.stringify(payload),
           {
             headers: {
@@ -864,7 +863,7 @@ export default
       try {
         const payload = { ...selectedActivos }
         // POST para actualizar el activo
-        const res = await axios.put(`http://localhost/activos/Backend/index.php/activos/Eliminar/${selectedActivos.act_id}`)
+        const res = await axios.put(`/activos/Eliminar/${selectedActivos.act_id}`)
         cargarActivos()
         if (res.data.status === 'update') {
           activos.value = activos.value.filter(a => a.act_id !== selectedActivos.value.act_id)}
@@ -884,8 +883,8 @@ export default
     const EmpresasConSucursales = async () => {
       try {
         const [empresaRes, sucursalesRes] = await Promise.all([
-          axios.get('http://localhost/activos/Backend/index.php/Activos/listaEmpresa'),
-          axios.get('http://localhost/activos/Backend/index.php/Activos/listaSucursal')
+          axios.get('/Activos/listaEmpresa'),
+          axios.get('/Activos/listaSucursal')
         ])
         const empresasActivas = empresaRes.data.filter(e => e.emp_estado === 'activo')
         empresasConSucursales.value = empresasActivas.map(empresa => {

@@ -22,7 +22,7 @@ class RespoModel extends CI_Model
         return $this->db->insert('activos.usuarios', $data);
     }
     public function actualizaUsuario($id,$data) {
-        $this->db->where('act_id', $id);
+        $this->db->where('usr_id', $id);
         return $this->db->update('activos.usuarios', $data);
     }
     public function eliminarUsuario($id) {

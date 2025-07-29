@@ -1,6 +1,6 @@
 <template>
   <!-- Barra de búsqueda -->
-  <b-navbar toggleable="lg"  style="background-color: rgb(54, 97, 141) !important;" class="mb-4 bg-primary">
+  <b-navbar toggleable="lg"  style="background-color: rgb(38, 61, 85) !important;" class="mb-4 bg-primary">
     <b-container>
       <b-navbar-brand class="text-white">Buscar Usuario</b-navbar-brand>
       <b-form class="d-flex ms-auto" @submit.prevent>
@@ -61,17 +61,7 @@
       ¿Estás seguro de que deseas eliminar este responsable?
     </b-modal>
 
-    <!-- Modal de confirmación de edición -->
-    <b-modal
-      v-model="editarConfirmaModal"
-      title="Confirmar modificación"
-      @ok="actualizarUsuario"
-      ok-title="Sí, guardar cambios"
-      cancel-title="Cancelar"
-      ok-variant="success"
-    >
-      ¿Estás seguro de que deseas guardar los cambios?
-    </b-modal>
+
 
     <!-- Modal de edición -->
     <b-modal v-model="modalShow" title="Editar Responsable" size="lg" hide-footer>
@@ -116,6 +106,18 @@
           <b-button variant="secondary" @click="cancelarEditar">Cancelar</b-button>
         </div>
       </b-form>
+    </b-modal>
+
+    <!-- Modal de confirmación de edición -->
+    <b-modal
+      v-model="editarConfirmaModal"
+      title="Confirmar modificación"
+      @ok="actualizarUsuario"
+      ok-title="Sí, guardar cambios"
+      cancel-title="Cancelar"
+      ok-variant="success"
+    >
+      ¿Estás seguro de que deseas guardar los cambios?
     </b-modal>
   </b-container>
 </template>

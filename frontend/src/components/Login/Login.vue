@@ -74,6 +74,7 @@ const validacionRut = (valor) => {
   if (!valor || typeof valor !== 'string') return false;
 
   const rutClean = valor.replace(/[^0-9kK]/g, '').toUpperCase();
+
   if (rutClean.length < 8 || !/^[0-9]+[kK0-9]{1}$/.test(rutClean)) return false;
 
   const cuerpo = rutClean.slice(0, -1);
@@ -81,15 +82,18 @@ const validacionRut = (valor) => {
 
   let suma = 0;
   let multiplicador = 2;
+
   for (let i = cuerpo.length - 1; i >= 0; i--) {
     suma += parseInt(cuerpo.charAt(i)) * multiplicador;
     multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
   }
 
   const dvEsperado = 11 - (suma % 11);
+
   const dvFinal = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
 
   return dv === dvFinal;
+  
 };
 
 const validacionPassword = (valor) => {
