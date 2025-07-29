@@ -209,7 +209,6 @@ export default {
     },
     sucursalesFiltradas(empId) {
       if (!empId) return []
-      // OJO: el campo debe coincidir con tu backend (aquí 'suc_id_empresa')
       return this.sucursales.filter(s => String(s.suc_id_empresa) === String(empId))
     },
     onEmpresaChange(index, value) {
@@ -358,7 +357,7 @@ export default {
           activos: activosConDatos
         });
         const response = await axios.post(
-          'http://localhost/activos/backend/index.php/Usuarios/CrearUsuario',
+          '/Usuarios/CrearUsuario',
           { activos: this.usuarios.activos },
           { headers: { 'Content-Type': 'application/json' } }
         )

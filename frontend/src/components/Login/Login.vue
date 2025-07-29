@@ -123,7 +123,7 @@ const onSubmit = async () => {
       rut: rut.value,
       password: password.value
     };
-    const response = await axios.post(baseUrl + 'IniciarSession', dataToSend, {
+    const response = await axios.post('/Auth/IniciarSession', dataToSend, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true
     });

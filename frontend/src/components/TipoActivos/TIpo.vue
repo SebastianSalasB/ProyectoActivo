@@ -162,7 +162,7 @@ const guardarTipo = async () => {
   if (!validadatos()) return
 
   try {
-    const res = await axios.post(`${BASE_URL}/CrearTipo`, {
+    const res = await axios.post(`/tiposactivos/CrearTipo`, {
       tip_descripcion: Tipo.value.Nombre.trim()
     })
     
@@ -185,8 +185,8 @@ const resetForm = () => {
 // Obtener todos los tipos
 const fetchTipos = async () => {
   try {
-    const res = await fetch(`${BASE_URL}`)
-    tipos.value = await res.json()
+    const res = await axios.get(`/tiposactivos`)
+    tipos.value =  res.data
   } catch (err) {
     console.error('Error al obtener tipos:', err)
   }
@@ -203,7 +203,7 @@ const cerrarModalEditar = () => {
 // Guardar edición
 const saveEdit = async () => {
   try {
-    const res = await axios.post(`${BASE_URL}/ActualizarTipos/${tipoAEditar.value.tip_id}`, tipoAEditar.value)
+    const res = await axios.post(`/tiposactivos/ActualizarTipos/${tipoAEditar.value.tip_id}`, tipoAEditar.value)
     if (res.data.status === 'updated') {
       const index = tipos.value.findIndex(t => t.tip_id === tipoAEditar.value.tip_id)
       if (index !== -1) tipos.value[index] = { ...tipoAEditar.value }
@@ -227,7 +227,7 @@ const confirmacionEliminado = (tipo) => {
 // Eliminar tipo
 const deleteTipo = async () => {
   try {
-    const res = await axios.delete(`${BASE_URL}/EliminarTipo/${tipoAEliminar.value.tip_id}`)
+    const res = await axios.delete(`/tiposactivos/EliminarTipo/${tipoAEliminar.value.tip_id}`)
     if (res.data.status === 'deleted') {
       tipos.value = tipos.value.filter(t => t.tip_id !== tipoAEliminar.value.tip_id)
     } else {

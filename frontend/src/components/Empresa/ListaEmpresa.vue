@@ -142,8 +142,8 @@
   // Obtener empresas
   const cargarEmpresa = async () => {
     try {
-      const res = await fetch('http://localhost/activos/Backend/index.php/EmpresaR')
-      empresas.value = await res.json()
+      const res = await axios.get('/EmpresaR')
+      empresas.value = res.data
     } catch (err) {
       console.error('Error al obtener empresas:', err)
     }
@@ -219,7 +219,7 @@
       const res = await axios.put(
         `/EmpresaR/Eliminar/${seleccionarEmpresa.value.emp_id}`
       )
-      if (res.data.status === 'deleted') {
+      if (res.data.status === 'update') {
         empresas.value = empresas.value.filter(u => u.emp_id !== seleccionarEmpresa.value.emp_id)
         alert('Empresa eliminada correctamente')
       } else {

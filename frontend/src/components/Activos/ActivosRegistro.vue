@@ -1,7 +1,7 @@
 <template>
   <b-container >
   <b-row>
-    <b-col md="12" id="NAG" >
+    <b-col id="NAG" >
       <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 " style="color: white;">
         <b-row>
           <b-col sm>
@@ -11,7 +11,7 @@
                 v-model="empresaSeleccionada"
                 :options="empresasConSucursales.map(e => ({ value: e.emp_id, text: e.emp_nombre }))" 
                 :class="{ 'is-invalid' : inputErrors[index]?.empresa }"
-                @change="value => validarCampo(index, value)"
+                @input="validarCampo(index, value)"
               />
               <small v-if="errors.empresaSeleccionada" class="text-danger">falta empresa</small>       
             </b-form-group>
@@ -383,6 +383,7 @@ export default {
           }
         ]
       },
+      
       empresasConSucursales: [],
       usuariosDisponibles: [],
       empresaSeleccionada: '',
@@ -480,9 +481,9 @@ export default {
       }
 
       this.inputErrors[index] = {
-        ...this.inputErrors[index],
-        ...error
-      };
+      ...this.inputErrors[index],
+      ...error
+      }
     },
     validadatos() {
       this.errors = {}

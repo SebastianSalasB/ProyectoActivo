@@ -144,9 +144,9 @@ class EmpresaR extends CI_Controller {
         }
     }
     public function Eliminar($id) {
-        $result = $this->EmpresaModel->eliminarEmpresa();
+        $result = $this->EmpresaModel->eliminarEmpresa($id);
         if ($result) {
-            echo json_encode(['status' => 'deleted']);
+            echo json_encode(['status' => 'update']);
         } else {
             echo json_encode(['status' => 'error']);
         }

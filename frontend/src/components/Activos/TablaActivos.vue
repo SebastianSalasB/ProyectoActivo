@@ -625,17 +625,7 @@ export default
       { key: 'act_descripcion', label: 'Descricion' , class: 'd-none d-lg-table-cell bg-table' },
       { key: 'acciones', label: '' , thClass: 'text-center', tdClass: 'acciones', class:"bg-table"},
       { key: 'act_estado', label: '' , thClass: 'text-center' , tdClass: 'estados', class:"bg-table" },
-    ]
-    const cargarActivoss = async () => {
-      try {
-        const res = await fetch('http://localhost/activos/Backend/index.php/Activos');
-        const text = await res.text(); // primero lee como texto
-        const data = JSON.parse(text); // parsea el JSON explícitamente
-        activoss.value = data;
-      } catch (err) {
-        console.error('Error cargando activos:', err);
-      }
-    } 
+    ] 
     const cargarActivos = async () => {
       
       cargando.value = true;
@@ -651,7 +641,7 @@ export default
           }
         };
         const res = await axios.post(
-          'http://localhost/activos/Backend/index.php/Activos/filtros',
+          '/Activos/filtros',
           JSON.stringify(payload),
           {
             headers: {
@@ -743,6 +733,7 @@ export default
     const cargarEstados = async () => {
       try {
         const res = await axios.get('/Activos/listaActivos')
+        
         estados.value = res.data
       } catch (error) {
         console.error('Error cargando estados:', error)
@@ -951,6 +942,7 @@ export default
       errors: {},
       activos,
       Buscador,
+      
       activosPaginados,
       selectedActivos,
       modalShow,
