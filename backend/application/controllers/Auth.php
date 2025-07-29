@@ -27,19 +27,21 @@ class Auth extends CI_Controller {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return $this->output
                 ->set_status_header(405)
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Metodo no permitido.']));
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Método no permitido.']));
         }
 
         $datos = json_decode(file_get_contents("php://input"), true);
-
+        
         if (!isset($datos['rut']) || !isset($datos['password'])) {
             return $this->output
                 ->set_status_header(400)
-                ->set_output(json_encode(['status' => 'error', 'message' => 'RUT y contrasena son obligatorios.']));
+                ->set_output(json_encode(['status' => 'error', 'message' => 'RUT y contraseña son obligatorios.']));
         }
 
         $rut = $datos['rut'];
         $password = $datos['password'];
+
+        json_decode($rut);
 
         $usuarios = $this->IniciarSession->VeridicacionDatos($rut, $password); // <-- cambia a usar RUT
 

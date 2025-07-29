@@ -34,18 +34,18 @@
 
         <!-- RUT y Correo -->
         <b-row>
-          <b-col sm>
+          <b-col class="sm-2">
             <b-form-group label="RUT">
               <b-form-input
                 v-model="activo.user_rut"
                 :class="{ 'is-invalid': inputErrors[index]?.rut }"
-                placeholder="12345678-9"
+                placeholder="12.345.678-9"
                 @input="validarCampo(index, 'rut', activo.user_rut)"
               />
             </b-form-group>
           </b-col>
 
-          <b-col sm>
+          <b-col sm-2>
             <b-form-group label="Correo">
               <b-form-input
                 v-model="activo.user_correo"
@@ -249,6 +249,7 @@ export default {
       return rut.replace(/[.-]/g, '').toUpperCase()
     },
     validarRut(rut) {
+      
       if (!rut) return false
       const cleanRut = this.formatearRut(rut)
       if (cleanRut.length < 2) return false
@@ -266,7 +267,7 @@ export default {
 
       const dvEsperado = 11 - (suma % 11)
       const dvFinal = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString()
-
+      console.log(cuerpo,"-",dvFinal)
       return dv.toUpperCase() === dvFinal
     },
     validarEmail(correo) {

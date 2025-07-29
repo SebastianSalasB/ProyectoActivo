@@ -136,8 +136,10 @@ const onSubmit = async () => {
       withCredentials: true,
       validateStatus: () => true // <-- esto permite capturar 401, 405, etc
     });
-
+    
     console.log('Respuesta:', response.data.message); // 👈 VERIFICA en consola
+    console.log('Respuesta:', rut.value);
+    console.log('Respuesta:', password.value);
 
     if (response.data.status === 'success') {
       loginError.value = '';
