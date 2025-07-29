@@ -21,7 +21,7 @@
             </b-form-group>
 
             <b-form-group label="Dirección de sucursal">
-              <b-form-input v-model="sucursal.suc_direccion" placeholder="Ej: Calle 123, Ciudad" />
+              <b-form-input v-model="sucursal.direccion" placeholder="Ej: Calle 123, Ciudad" />
             </b-form-group>
 
             <b-form-group label="Región">

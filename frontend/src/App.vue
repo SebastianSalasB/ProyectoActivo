@@ -4,7 +4,7 @@
       <Login @login-success="handleLoginSuccess" />
     </div>
 
-    <div v-else style="height: 56rem; background-color: rgb(54 97 141) !important;">
+    <div v-else style="height: 56rem; background-color: rgb(38 61 85)!important;">
       
       <!-- Navbar superior -->
       <b-navbar toggleable="md" class="bg-barra shadow-sm" fixed="top" s>
@@ -58,13 +58,13 @@
       <main class="main mt-5 pt-4 " >
         <h2 class="mb-2" style="text-align: center; color: white;" >
           {{
-            currentView === 'registro' ? 'Registro de Activos' :
+            currentView === 'registro' ? '' :
             currentView === 'lista' ? 'Lista de Activos' :
             currentView === 'tipo' ? 'Tipo de Activos' :
             currentView === 'Registro de Tipo' ? 'Registro de Tipo' :
             currentView === 'editar Tipo' ? 'Editar Tipo' :
             currentView === 'Empresa' ? 'Lista De Empresas' :
-            currentView === 'Registro Empresa' ? 'Registrar Empresa' :
+            currentView === 'Registro Empresa' ? '' :
             currentView === 'Responsable' ? 'Lista Usuarios' :
             currentView === 'RegistroResponsable' ? 'Registro Responsable' :
             ''
@@ -170,10 +170,10 @@ function confirmLogout() {
   color: rgb(0, 0, 0) !important;
 }
 .main{
-  background-color: rgb(54, 97, 139) !important;
+  background-color: rgb(38 61 85) !important;
 }
 .bg-barra {
-  background-color: rgb(54 97 141) !important;
+  background-color: rgb(35, 62, 90) !important;
 }
 .text-white,
 .navbar-dark .navbar-nav .nav-link,

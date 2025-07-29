@@ -1,8 +1,6 @@
 <template>
   <b-container fluid class="login-container">
     <b-row class="h-100">
-      
-
       <!-- Panel login -->
       <b-col  class="login-panel d-flex flex-column justify-content-center align-items-center px-4">
         <b-card class="login-card shadow-lg rounded-lg p-4"  text-variant="white">
@@ -40,17 +38,21 @@
 
             <!-- Botón -->
             <div class="d-grid">
-              <b-button type="submit" variant="primary" class="btn-glow">Iniciar Sesión</b-button>
+              <b-button
+                type="submit"
+                variant="primary"
+                class="btn-glow"
+                :disabled="cargando"
+              >
+                {{ cargando ? 'Ingresando...' : 'Iniciar Sesión' }}
+              </b-button>
             </div>
 
             <!-- Mensaje error -->
-            <b-alert v-if="loginError" variant="danger" class="mt-3" dismissible>
-              {{ loginError }}
-            </b-alert>
-            <b-alert v-if="loginError" variant="danger" show class="mt-3 text-center">
-              {{ loginError }}
-            </b-alert>
-          </b-form>
+            <div class="text-white mt-2" v-if="loginError"> {{ loginError }}</div>
+        
+          </b-form> 
+            
         </b-card>
       </b-col>
     </b-row>
@@ -108,45 +110,49 @@ const campoPasswordState = computed(() => {
   return campoPasswordValido.value ? true : false;
 });
 
+const cargando = ref(false);
+
 const onSubmit = async () => {
   intentadoEnviar.value = true;
   loginError.value = '';
+  cargando.value = true;
 
   if (!campoRutValido.value || !campoPasswordValido.value) {
     loginError.value = 'Por favor, completa todos los campos correctamente.';
+    cargando.value = false;
     return;
   }
 
   try {
-    const baseUrl = 'http://localhost/activos/Backend/index.php/Auth/';
-    const dataToSend = {
+    const response = await axios.post('/Auth/IniciarSession', {
       rut: rut.value,
       password: password.value
-    };
-    const response = await axios.post('/Auth/IniciarSession', dataToSend, {
+    }, {
       headers: { 'Content-Type': 'application/json' },
-      withCredentials: true
+      withCredentials: true,
+      validateStatus: () => true // <-- esto permite capturar 401, 405, etc
     });
 
-    if (response.data && response.data.status === 'success') {
+    console.log('Respuesta:', response.data.message); // 👈 VERIFICA en consola
+
+    if (response.data.status === 'success') {
       loginError.value = '';
+      rut.value = '';
+      password.value = '';
       emit('login-success', response.data.user);
-    } else if (response.data && response.data.message) {
-      loginError.value = response.data.message;
+    } else if (response.data.message === 'Credenciales inválidas.') {
+      loginError.value = 'RUT o contraseña incorrectos.';
     } else {
       loginError.value = 'Error desconocido.';
-    }
-
+    } 
   } catch (error) {
-    if (error.response && error.response.data && error.response.data.message) {
-      loginError.value = error.response.data.message;
-    } else if (error.request) {
-      loginError.value = 'Error de conexión: No se pudo contactar al servidor.';
-    } else {
-      loginError.value = 'Error: ' + error.message;
-    }
+    loginError.value = 'Error de red o servidor.';
+    console.error(error);
+  } finally {
+    cargando.value = false;
   }
 };
+
 </script>
 
 <style scoped>

@@ -1,6 +1,8 @@
 <template>
   <b-container >
   <b-row>
+    <b-card class="mb-2 bg-card" style="color: white;">
+        <h3 class="mb-3">Registro de Activos</h3>
     <b-col id="NAG" >
       <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 " style="color: white;">
         <b-row>
@@ -355,6 +357,7 @@
         </div>
       </b-modal>
     </b-col>
+    </b-card>
   </b-row>
   </b-container>
 </template>
