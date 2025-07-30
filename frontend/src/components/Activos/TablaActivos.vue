@@ -2,7 +2,7 @@
   <!-- Barra de búsqueda -->
     <b-navbar toggleable="lg" type="" variant="" class="mb-4 ">
       <b-container >
-        <b-navbar-brand href="#" style="color: white;">Buscar Activos</b-navbar-brand>
+        <b-navbar-brand href="#">Buscar Activos</b-navbar-brand>
         <b-input-group class="mt-2">
           <b-form-input 
             v-model="Buscador" 
@@ -11,8 +11,8 @@
             @input="paginaActual = 1"  
           />
           <b-input-group-append v-if="!mostrarFiltros">
-            <b-button variant="outline-light" @click="mostrarFiltros = true">
-              <i class="fa-solid fa-filter fa-sm" style="color: rgb(255 255 255);"></i>   filtros
+            <b-button variant="outline-secondary" @click="mostrarFiltros = true">
+              <i class="fa-solid fa-filter fa-sm" ></i>   filtros
             </b-button>
           </b-input-group-append>
         </b-input-group>
@@ -24,8 +24,8 @@
         <!-- Barra lateral izquierda -->
         <transition name="fade">
           <b-col  md="2"  v-if="mostrarFiltros">
-            <b-card class="bg-card shadow-sm" style="color:white ; border: none;">
-              <h5 class="mb-3" >Filtros</h5>              
+            <b-card class="shadow-sm" style="border: none; color:black;">
+              <h5 class="mb-3" style="color: black;" >Filtros</h5>              
               <!-- Filtro por Tipo -->
               <b-form-group label="Tipo">
                 <b-form-checkbox-group
@@ -71,12 +71,12 @@
                 <b-col>
                   <div class="d-grid gap-2 small">
                     <b-button size="sm" class="mb-3"  variant="danger" @click="limpiarFiltros">
-                      <i class="fa-solid fa-brush fa-sm" style="color: #ffffff;"></i> Limpiar Filtros
+                      <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
                     </b-button>
                   </div>
                 </b-col>
                 <b-col>
-                  <b-button  variant="outline-light" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
+                  <b-button  variant="outline-secondary" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
                     <i class="fa-solid fa-xmark"></i> Ocultar filtros
                   </b-button>
                 </b-col>
@@ -87,8 +87,8 @@
         </transition>
         <!-- Tabla de resultados -->
         <b-col :md="mostrarFiltros ? 10 : 12" >
-          <b-overlay :show="cargando" rounded="sm" spinner-variant="primary" opacity="0.6">
-            <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
+          <b-overlay :show="cargando" rounded="sm" spinner-variant="secondary" opacity="0.6">
+            <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table "   > 
               <template #cell(act_id)="data" id="actID">
                 <div>
                   <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
@@ -113,13 +113,13 @@
               <template #cell(act_fecha_registro)="data">
                 <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
               </template>              
-              <template #cell(acciones)="data" style="width: 0;">
+              <template #cell(acciones)="data" style="width: 0; color: black;">
                 <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
                   <template #button-content >
                     <i class="fa-solid fa-gear fa-xl" ></i>
                   </template>
                   <!-- Editar: solo si NO está en baja ni eliminado -->
-                <b-dropdown-item
+                <b-dropdown-item  style="color: black;"
                   v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
                   @click="editarActivo(data.item)"
                 >
@@ -127,7 +127,7 @@
                 </b-dropdown-item>
 
                 <!-- Eliminar: solo si NO está en baja ni eliminado -->
-                <b-dropdown-item
+                <b-dropdown-item style="color: black;"
                   v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
                   @click="confirmarEliminar(data.item)"
                 >
@@ -135,7 +135,7 @@
                 </b-dropdown-item>
 
                 <!-- Mantención: solo si está activo -->
-                <b-dropdown-item
+                <b-dropdown-item style="color: black;"
                   v-if="data.item.act_estado === 'activo'"
                   @click="abrirModalMantencion(data.item)"
                 >
@@ -143,9 +143,9 @@
                 </b-dropdown-item>
 
                 <!-- Activar: si está eliminado, baja o mantenimiento -->
-                <b-dropdown-item
+                <b-dropdown-item 
                   v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
-                  @click="activarActivo(data.item)"
+                  @click="activarActivo(data.item) " 
                 >
                   <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
                 </b-dropdown-item>
@@ -540,9 +540,7 @@
         </b-col>
       </div>
     </b-modal>
-    <div>
-    <p style=" color: rgb(0,0,0,0);">as</p>
-  </div>
+    
 </template>
 
 <script>
@@ -617,14 +615,14 @@ export default
     const empresaOpciones = computed(() => empresa.value.map(e => ({ id: e.emp_id, nombre: e.emp_nombre })))
     const nombreTipoDisplay = computed(() => selectedActivos.nombre_tipo || 'No definido') 
     const fields = [
-      { key: 'act_id', label: 'ID' , thClass: 'actID ', tdClass: 'actID', class:" bg-table"},   
-      { key: 'nombre_usuario', label: 'Nombre' , thClass: '', tdClass: 'usuario' , class:"bg-table"},  
-      { key: 'nombre_empresa', label: 'Empresa' , class: 'd-none bg-table d-lg-table-cell' },           
-      { key: 'nombre_sucursal', label: 'Sucursal/Tipo' , thClass: '' , tdClass: 'tipo', class:"bg-table"},
-      { key: 'act_fecha_registro', label: 'Fecha' , class: 'd-none d-lg-table-cell bg-table' },         
-      { key: 'act_descripcion', label: 'Descricion' , class: 'd-none d-lg-table-cell bg-table' },
-      { key: 'acciones', label: '' , thClass: 'text-center', tdClass: 'acciones', class:"bg-table"},
-      { key: 'act_estado', label: '' , thClass: 'text-center' , tdClass: 'estados', class:"bg-table" },
+      { key: 'act_id', label: 'ID' , thClass: 'actID ', tdClass: 'actID'},  
+      { key: 'nombre_usuario', label: 'Nombre' , thClass: '', tdClass: 'usuario' },  
+      { key: 'nombre_empresa', label: 'Empresa' , class: 'd-none d-lg-table-cell' },           
+      { key: 'nombre_sucursal', label: 'Sucursal/Tipo' , thClass: '' , tdClass: 'tipo'},
+      { key: 'act_fecha_registro', label: 'Fecha' , class: 'd-none d-lg-table-cell' },         
+      { key: 'act_descripcion', label: 'Descricion' , class: 'd-none d-lg-table-cell ' },
+      { key: 'acciones', label: '' , thClass: 'text-center', tdClass: 'acciones' ,style:"color: black;"},
+      { key: 'act_estado', label: '' , thClass: 'text-center' , tdClass: 'estados' },
     ] 
     const cargarActivos = async () => {
       
@@ -1049,35 +1047,22 @@ export default
 }
 
 </script>
+
 <style >
   /* Puedes agregar estilos específicos aquí */
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.1s;
   }
+  
   .custom-rounded-table {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
   }
-  .bg-table{
-    --bs-table-color: #fcfcfc;
-    --bs-table-bg: #294969;
-    --bs-table-border-color: #294969 !important;
-    --bs-table-striped-bg: #294969 !important;
-    --bs-table-striped-color: #fffefe !important;
-    --bs-table-active-bg: #294969 !important;
-    --bs-table-active-color: #ffffff;
-    --bs-table-hover-bg: #294969 !;
-    --bs-table-hover-color: #ffffff;
-    --bs-table-border-color: rgb(54, 97, 139) !important;
-  }
   .bg-card{
-    background-color: rgba(41 ,73 ,105, 0.836) !important;
     border: none;
-    color: #ffffff;
   }
   .navbar-brand {
     text-align: center;
-    color: rgb(255 255 255);
   }
   .estados {
     width: 0px;

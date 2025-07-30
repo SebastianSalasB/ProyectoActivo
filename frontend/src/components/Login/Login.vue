@@ -59,129 +59,133 @@
     </b-row>
   </b-container>
 </template>
-
-<script setup>
-import { ref, computed } from 'vue';
+<script>
 import axios from 'axios';
 
-const password = ref('');
-const loginError = ref('');
-const intentadoEnviar = ref(false);
-
-const emit = defineEmits(['login-success']);
-const validacionRut = (valor) => {
-  if (!valor || typeof valor !== 'string') return false;
-
-  const rutClean = valor.replace(/[^0-9kK]/g, '').toUpperCase();
-
-  if (rutClean.length < 8 || !/^[0-9]+[kK0-9]{1}$/.test(rutClean)) return false;
-
-  const cuerpo = rutClean.slice(0, -1);
-  const dv = rutClean.slice(-1);
-
-  let suma = 0;
-  let multiplicador = 2;
-
-  for (let i = cuerpo.length - 1; i >= 0; i--) {
-    suma += parseInt(cuerpo.charAt(i)) * multiplicador;
-    multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
-  }
-
-  const dvEsperado = 11 - (suma % 11);
-
-  const dvFinal = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
-
-  return dv === dvFinal;
-  
-};
-const validacionPassword = (valor) => {
-  return typeof valor === 'string' && valor.length >= 6;
-};
-// Computed para estados visuales
-const campoRutValido = computed(() => validacionRut(rutFormateado.value));
-const campoPasswordValido = computed(() => validacionPassword(password.value));
-const campoRutState = computed(() => {
-  if (!intentadoEnviar.value) return null;
-  return campoRutValido.value ? true : false;
-});
-const campoPasswordState = computed(() => {
-  if (!intentadoEnviar.value) return null;
-  return campoPasswordValido.value ? true : false;
-});
-const cargando = ref(false);
-
-const rutLimpio = ref('')
-// Computed que muestra el RUT formateado en el input
-const rutFormateado = computed({
-  get() {
-    const clean = rutLimpio.value.replace(/[^\dkK]/gi, '').toUpperCase()
-    if (clean.length <= 1) return clean
-
-    const cuerpo = clean.slice(0, -1)
-    const dv = clean.slice(-1)
-
-    let formateado = ''
-    let i = cuerpo.length
-
-    while (i > 3) {
-      formateado = '.' + cuerpo.slice(i - 3, i) + formateado
-      i -= 3
-    }
-    formateado = cuerpo.slice(0, i) + formateado
-
-    return `${formateado}-${dv}`
+export default {
+  data() {
+    return {
+      rutLimpio: '',
+      password: '',
+      loginError: '',
+      intentadoEnviar: false,
+      cargando: false
+    };
   },
-  set(val) {
-    rutLimpio.value = val.replace(/[^\dkK]/gi, '').toUpperCase()
-  }
-})
+  computed: {
+    rutFormateado: {
+      get() {
+        const clean = this.rutLimpio.replace(/[^\dkK]/gi, '').toUpperCase();
+        if (clean.length <= 1) return clean;
 
-const onSubmit = async () => {
-  intentadoEnviar.value = true;
-  loginError.value = '';
-  cargando.value = true;
+        const cuerpo = clean.slice(0, -1);
+        const dv = clean.slice(-1);
 
-  if (!campoRutValido.value || !campoPasswordValido.value) {
-    loginError.value = 'Por favor, completa todos los campos correctamente.';
-    cargando.value = false;
-    return;
-  }
+        let formateado = '';
+        let i = cuerpo.length;
 
-  try {
-    const response = await axios.post('/Auth/IniciarSession', {
-      rut: rutFormateado.value,
-      password: password.value
-    }, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-      validateStatus: () => true // <-- esto permite capturar 401, 405, etc
-    });
-    
+        while (i > 3) {
+          formateado = '.' + cuerpo.slice(i - 3, i) + formateado;
+          i -= 3;
+        }
+        formateado = cuerpo.slice(0, i) + formateado;
 
-    if (response.data.status === 'success') {
-      loginError.value = '';
-      rutFormateado.value = '';
-      password.value = '';
-      emit('login-success', response.data.user);
-    } else if (response.data.message === 'Credenciales inválidas.') {
-      loginError.value = 'RUT o contraseña incorrectos.';
-    } else {
-      loginError.value = 'Error desconocido.';
-    } 
-  } catch (error) {
-    loginError.value = 'Error de red o servidor.';
-    console.error(error);
-  } finally {
-    cargando.value = false;
+        return `${formateado}-${dv}`;
+      },
+      set(val) {
+        this.rutLimpio = val.replace(/[^\dkK]/gi, '').toUpperCase();
+      }
+    },
+    campoRutValido() {
+      return this.validacionRut(this.rutFormateado);
+    },
+    campoPasswordValido() {
+      return this.validacionPassword(this.password);
+    },
+    campoRutState() {
+      if (!this.intentadoEnviar) return null;
+      return this.campoRutValido ? true : false;
+    },
+    campoPasswordState() {
+      if (!this.intentadoEnviar) return null;
+      return this.campoPasswordValido ? true : false;
+    }
+  },
+  methods: {
+    validacionRut(valor) {
+      if (!valor || typeof valor !== 'string') return false;
+
+      const rutClean = valor.replace(/[^0-9kK]/g, '').toUpperCase();
+      if (rutClean.length < 8 || !/^[0-9]+[kK0-9]{1}$/.test(rutClean)) return false;
+
+      const cuerpo = rutClean.slice(0, -1);
+      const dv = rutClean.slice(-1);
+
+      let suma = 0;
+      let multiplicador = 2;
+
+      for (let i = cuerpo.length - 1; i >= 0; i--) {
+        suma += parseInt(cuerpo.charAt(i)) * multiplicador;
+        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+      }
+
+      const dvEsperado = 11 - (suma % 11);
+      const dvFinal = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
+
+      return dv === dvFinal;
+    },
+    validacionPassword(valor) {
+      return typeof valor === 'string' && valor.length >= 6;
+    },
+    async onSubmit() {
+      this.intentadoEnviar = true;
+      this.loginError = '';
+      this.cargando = true;
+
+      if (!this.campoRutValido || !this.campoPasswordValido) {
+        this.loginError = 'Por favor, completa todos los campos correctamente.';
+        this.cargando = false;
+        return;
+      }
+
+      try {
+        const response = await axios.post('/Auth/IniciarSession', {
+          rut: this.rutFormateado,
+          password: this.password
+        }, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+          validateStatus: () => true
+        });
+
+        if (response.data.status === 'success') {
+          this.loginError = '';
+          this.rutFormateado = '';
+          this.password = '';
+          this.$emit('login-success', response.data.user);
+        } else if (response.data.message === 'Credenciales inválidas.') {
+          this.loginError = 'RUT o contraseña incorrectos.';
+        } else {
+          this.loginError = 'Error desconocido.';
+        }
+      } catch (error) {
+        this.loginError = 'Error de red o servidor.';
+        console.error(error);
+      } finally {
+        this.cargando = false;
+      }
+    }
+  },
+  mounted() {
+    // Puedes agregar aquí lógica si necesitas algo al montar el componente
   }
 };
-
 </script>
+
 
 <style scoped>
 .login-container {
   height: 100vh;
-  background-color:rgb(59, 81, 130);
   background-size: cover;
   display: flex;
   align-items: center;

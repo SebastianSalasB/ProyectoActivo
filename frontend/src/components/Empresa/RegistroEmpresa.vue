@@ -1,15 +1,17 @@
 <template>
   <div>
     <b-container>
-      <b-card class="mb-2 bg-card" style="color: white;">
-        <h3 class="mb-3">Registro de Empresas y Sucursales</h3>
-        <b-form @submit.prevent="crearEmpresa">
+
+        <h3 class="mb-3" style="color: black;">Registro de Empresas y Sucursales</h3>
+        <b-form @submit.prevent="crearEmpresa" style="color: black;">
           <b-form-group label="Nombre de la empresa">
-            <b-form-input v-model="empresa.emp_nombre" placeholder="Ej: Mi Empresa Ltda" />
+            <b-form-input style="color: black;"
+            v-model="empresa.emp_nombre" placeholder="Ej: Mi Empresa Ltda" />
           </b-form-group>
 
           <b-form-group label="Dirección de la empresa">
-            <b-form-input v-model="empresa.emp_direccion" placeholder="Ej: Av. Principal 1234" />
+            <b-form-input style="color: black;"
+            v-model="empresa.emp_direccion" placeholder="Ej: Av. Principal 1234" />
           </b-form-group>
 
           <hr>
@@ -17,15 +19,18 @@
           <h5>Sucursales</h5>
           <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class="mb-4 p-3">
             <b-form-group label="Nombre de sucursal">
-              <b-form-input v-model="sucursal.suc_nombre" placeholder="Ej: Sucursal Norte" />
+              <b-form-input style="color: black;"
+              v-model="sucursal.suc_nombre" placeholder="Ej: Sucursal Norte" />
             </b-form-group>
 
             <b-form-group label="Dirección de sucursal">
-              <b-form-input v-model="sucursal.direccion" placeholder="Ej: Calle 123, Ciudad" />
+              <b-form-input style="color: black;"
+              v-model="sucursal.direccion" 
+              placeholder="Ej: Calle 123, Ciudad" />
             </b-form-group>
 
             <b-form-group label="Región">
-              <b-form-select
+              <b-form-select style="color: black;"
                 v-model="sucursal.regionComuna.region"
                 :options="regiones"
                 @change="sucursal.regionComuna.comuna = ''"
@@ -33,7 +38,7 @@
             </b-form-group>
 
             <b-form-group label="Comuna">
-              <b-form-select
+              <b-form-select style="color: black;"
                 v-model="sucursal.regionComuna.comuna"
                 :options="comunasDisponibles(sucursal.regionComuna.region)"
                 :disabled="!sucursal.regionComuna.region"
@@ -50,7 +55,7 @@
           <br><br>
           <b-button type="submit" variant="primary">Guardar Empresa</b-button>
         </b-form>
-      </b-card>
+     
     </b-container>
   </div>
 </template>
@@ -225,9 +230,5 @@ export default {
 </script>
 
 <style>
-.bg-card {
-  background-color: rgba(41 ,73 ,105, 0.836) !important;
-  border: none;
-  color: #ffffff;
-}
+
 </style>

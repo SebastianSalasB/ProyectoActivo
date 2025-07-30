@@ -2,9 +2,9 @@
   <b-container fluid>
     <!-- Formulario de creación -->
     <b-col>
-      <b-container fluid="sm" id="NAG" style="color: white;">
+      <b-container fluid="sm" id="NAG" >
         <b-form-group label="Nombre de Tipo">
-          <b-form-input v-model="Tipo.Nombre" id="Nombre" name="Nombre" placeholder="" />
+          <b-form-input v-model="Tipo.Nombre" id="Nombre" style="color: black;" name="Nombre" placeholder="" />
           <small v-if="errors.Nombre" class="text-danger">{{ errors.Nombre }}</small>
         </b-form-group>
       </b-container>
@@ -30,7 +30,6 @@
         <b-table
           striped
           hover
-          dark
           responsive
           :items="tipos"
           :fields="fields"
@@ -108,7 +107,7 @@
       <b-modal
         v-model="modalEliminar"
         title="Confirmar eliminación"
-        @ok="deleteTipo"
+        @ok="EliminarTipo"
         ok-title="Eliminar"
         ok-variant="danger"
         cancel-title="Cancelar"
@@ -123,125 +122,130 @@
   </b-container>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script>
 import axios from 'axios'
 
-const Tipo = ref({ Nombre: '' })
-const errors = ref({})
-const mensaje = ref('')
+export default {
+  data() {
+    return {
+      Tipo: { Nombre: '' },
+      errors: {},
+      mensaje: '',
 
-const tipos = ref([])
-const selectedTipo = ref(null)
+      tipos: [],
+      selectedTipo: null,
 
-const modalEditar = ref(false)
-const modalEliminar = ref(false)
-const modalConfirmarEditar = ref(false)
+      modalEditar: false,
+      modalEliminar: false,
+      modalConfirmarEditar: false,
 
-const tipoAEditar = ref({})
-const tipoAEliminar = ref(null)
+      tipoAEditar: {},
+      tipoAEliminar: null,
 
-const fields = [
-  { key: 'tip_id', label: 'ID', sortable: true, thClass: 'text-center', tdClass: 'text-center', class:'bg-table' },
-  { key: 'tip_descripcion', label: 'Descripción', sortable: true , class:'bg-table'},
-  { key: 'actions', label: 'Acciones', thClass: 'text-center', tdClass: 'text-center', class:'bg-table' }
-]
-
-// Validar datos del formulario
-const validadatos = () => {
-  if (!Tipo.value.Nombre || Tipo.value.Nombre.trim().length < 3) {
-    mensaje.value = 'El nombre del tipo debe tener al menos 3 caracteres.'
-    return false
-  }
-  return true
-}
-// Guardar nuevo tipo
-const guardarTipo = async () => {
-  if (!validadatos()) return
-
-  try {
-    const res = await axios.post(`/tiposactivos/CrearTipo`, {
-      tip_descripcion: Tipo.value.Nombre.trim()
-    })
-    
-    if (res.data.status === 'success') {
-      mensaje.value = '✅ Tipo de Activo guardado con éxito'
-      fetchTipos()           // Refrescar lista
-      resetForm()            // Limpiar campos
-    } else {
-      mensaje.value = '⚠️ Error al guardar tipo de activo'
+      fields: [
+        { key: 'tip_id', label: 'ID', sortable: true, thClass: 'text-center', tdClass: 'text-center' },
+        { key: 'tip_descripcion', label: 'Descripción', sortable: true },
+        { key: 'actions', label: 'Acciones', thClass: 'text-center', tdClass: 'text-center' }
+      ]
     }
-  } catch (error) {
-    console.error('Error en guardarTipo:', error)
-    mensaje.value = '❌ Error del servidor al guardar tipo'
-  }
-}
-const resetForm = () => {
-  Tipo.value.Nombre = ''
-  mensaje.value = ''
-}
-// Obtener todos los tipos
-const fetchTipos = async () => {
-  try {
-    const res = await axios.get(`/tiposactivos`)
-    tipos.value =  res.data
-  } catch (err) {
-    console.error('Error al obtener tipos:', err)
-  }
-}
-// Editar tipo
-const EditarModal = (tipo) => {
-  tipoAEditar.value = { ...tipo }
-  modalEditar.value = true
-}
-const cerrarModalEditar = () => {
-  modalEditar.value = false
-  tipoAEditar.value = {}
-}
-// Guardar edición
-const saveEdit = async () => {
-  try {
-    const res = await axios.post(`/tiposactivos/ActualizarTipos/${tipoAEditar.value.tip_id}`, tipoAEditar.value)
-    if (res.data.status === 'updated') {
-      const index = tipos.value.findIndex(t => t.tip_id === tipoAEditar.value.tip_id)
-      if (index !== -1) tipos.value[index] = { ...tipoAEditar.value }
-      alert('Tipo actualizado correctamente')
-    } else {
-      alert('Error al actualizar el tipo')
+  },
+  computed: {
+    // Aquí puedes agregar propiedades computadas si necesitas
+  },
+  methods: {
+    validadatos() {
+      if (!this.Tipo.Nombre || this.Tipo.Nombre.trim().length < 3) {
+        this.mensaje = 'El nombre del tipo debe tener al menos 3 caracteres.'
+        return false
+      }
+      this.mensaje = ''
+      return true
+    },
+    async guardarTipo() {
+      if (!this.validadatos()) return
+
+      try {
+        const res = await axios.post(`/tiposactivos/CrearTipo`, {
+          tip_descripcion: this.Tipo.Nombre.trim()
+        })
+
+        if (res.data.status === 'success') {
+          this.mensaje = '✅ Tipo de Activo guardado con éxito'
+          this.fetchTipos()   // Refrescar lista
+          this.resetForm()    // Limpiar campos
+        } else {
+          this.mensaje = '⚠️ Error al guardar tipo de activo'
+        }
+      } catch (error) {
+        console.error('Error en guardarTipo:', error)
+        this.mensaje = '❌ Error del servidor al guardar tipo'
+      }
+    },
+    resetForm() {
+      this.Tipo.Nombre = ''
+      this.mensaje = ''
+    },
+    async fetchTipos() {
+      try {
+        const res = await axios.get(`/tiposactivos`)
+        this.tipos = res.data
+      } catch (err) {
+        console.error('Error al obtener tipos:', err)
+      }
+    },
+    EditarModal(tipo) {
+      this.tipoAEditar = { ...tipo }
+      this.modalEditar = true
+    },
+    cerrarModalEditar() {
+      this.modalEditar = false
+      this.tipoAEditar = {}
+    },
+    async saveEdit() {
+      try {
+        const res = await axios.post(`/tiposactivos/ActualizarTipos/${this.tipoAEditar.tip_id}`, this.tipoAEditar)
+        if (res.data.status === 'updated') {
+          const index = this.tipos.findIndex(t => t.tip_id === this.tipoAEditar.tip_id)
+          if (index !== -1) this.tipos.splice(index, 1, { ...this.tipoAEditar })
+          alert('Tipo actualizado correctamente')
+        } else {
+          alert('Error al actualizar el tipo')
+        }
+      } catch (err) {
+        console.error('Error al actualizar:', err)
+        alert('Error en la conexión al servidor')
+      } finally {
+        this.modalEditar = false
+        this.modalConfirmarEditar = false
+      }
+    },
+    confirmacionEliminado(tipo) {
+      this.tipoAEliminar = tipo
+      this.modalEliminar = true
+    },
+    async EliminarTipo() {
+      try {
+        const res = await axios.delete(`/tiposactivos/EliminarTipo/${this.tipoAEliminar.tip_id}`)
+        if (res.data.status === 'deleted') {
+          this.tipos = this.tipos.filter(t => t.tip_id !== this.tipoAEliminar.tip_id)
+        } else {
+          alert('No se pudo eliminar el tipo')
+        }
+      } catch (err) {
+        console.error('Error al eliminar:', err)
+        alert('Error en la conexión al servidor')
+      } finally {
+        this.modalEliminar = false
+        this.tipoAEliminar = null
+      }
     }
-  } catch (err) {
-    console.error('Error al actualizar:', err)
-    alert('Error en la conexión al servidor')
-  } finally {
-    modalEditar.value = false
-    modalConfirmarEditar.value = false
+  },
+  mounted() {
+    this.fetchTipos()
   }
 }
-// Confirmación de eliminación
-const confirmacionEliminado = (tipo) => {
-  tipoAEliminar.value = tipo
-  modalEliminar.value = true
-}
-// Eliminar tipo
-const deleteTipo = async () => {
-  try {
-    const res = await axios.delete(`/tiposactivos/EliminarTipo/${tipoAEliminar.value.tip_id}`)
-    if (res.data.status === 'deleted') {
-      tipos.value = tipos.value.filter(t => t.tip_id !== tipoAEliminar.value.tip_id)
-    } else {
-      alert('No se pudo eliminar el tipo')
-    }
-  } catch (err) {
-    console.error('Error al eliminar:', err)
-    alert('Error en la conexión al servidor')
-  } finally {
-    modalEliminar.value = false
-    tipoAEliminar.value = null
-  }
-}
-// Cargar tipos al iniciar
-onMounted(fetchTipos)
 </script>
+
 
 <style>
 .h5 {
@@ -250,15 +254,5 @@ onMounted(fetchTipos)
 .modal-title {
   color: #000;
 }
-.bg-table{
-  --bs-table-color: #fcfcfc;
-  --bs-table-bg: #294969;
-  --bs-table-border-color: #294969 !important;
-  --bs-table-striped-bg: #294969 !important;
-  --bs-table-striped-color: #fffefe !important;
-  --bs-table-active-bg: #294969 !important;
-  --bs-table-active-color: #ffffff;
-  --bs-table-hover-bg: #294969 !;
-  --bs-table-hover-color: #ffffff;
-}
+
 </style>
