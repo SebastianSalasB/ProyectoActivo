@@ -23,7 +23,7 @@
       <b-row>
         <!-- Barra lateral izquierda -->
         <transition name="fade">
-          <b-col cols="12" md="2"  v-if="mostrarFiltros">
+          <b-col  md="2"  v-if="mostrarFiltros">
             <b-card class="bg-card shadow-sm" style="color:white ; border: none;">
               <h5 class="mb-3" >Filtros</h5>              
               <!-- Filtro por Tipo -->
@@ -86,7 +86,7 @@
           </b-col>
         </transition>
         <!-- Tabla de resultados -->
-        <b-col :md="mostrarFiltros ? 10 : 12"  style="text-align: left">
+        <b-col :md="mostrarFiltros ? 10 : 12" >
           <b-overlay :show="cargando" rounded="sm" spinner-variant="primary" opacity="0.6">
             <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table" > 
               <template #cell(act_id)="data" id="actID">

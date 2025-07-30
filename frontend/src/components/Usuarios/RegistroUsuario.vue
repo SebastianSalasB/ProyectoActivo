@@ -35,16 +35,17 @@
         <!-- RUT y Correo -->
         <b-row>
           <b-col class="sm-2">
-            <b-form-group label="RUT">
+            <div v-for="(usuario, index) in usuarios.activos" :key="index" class="mb-3">
+              <b-form-group label="RUT">
               <b-form-input
-                v-model="activo.user_rut"
+                :value="activo.user_rut"
+                @input="formatearRut($event, index)"
                 :class="{ 'is-invalid': inputErrors[index]?.rut }"
-                placeholder="12.345.678-9"
-                @input="validarCampo(index, 'rut', activo.user_rut)"
+                placeholder="Ej: 20.356.341-8"
               />
-            </b-form-group>
+              </b-form-group>
+            </div>
           </b-col>
-
           <b-col sm-2>
             <b-form-group label="Correo">
               <b-form-input
@@ -245,13 +246,9 @@ export default {
       this.usuarios.activos.splice(index, 1)
       this.inputErrors.splice(index, 1)
     },
-    formatearRut(rut) {
-      return rut.replace(/[.-]/g, '').toUpperCase()
-    },
     validarRut(rut) {
-      
       if (!rut) return false
-      const cleanRut = this.formatearRut(rut)
+      const cleanRut = rut.replace(/[^\dkK]/g, '').toUpperCase()
       if (cleanRut.length < 2) return false
 
       const cuerpo = cleanRut.slice(0, -1)
@@ -338,13 +335,38 @@ export default {
 
       return valido
     },
+    formatearRut(value, index) {
+
+      let rut = value.replace(/[^\dkK]/g, '').toUpperCase()
+      if (!rut) {
+        this.usuarios.activos[index].user_rut = ''
+        return
+      }
+      let cuerpo = rut.slice(0, -1)
+      let dv = rut.slice(-1)
+
+      // Formatear con puntos cada 3 cifras desde el final
+      let formateado = ''
+      let i = cuerpo.length
+      while (i > 3) {
+        formateado = '.' + cuerpo.slice(i - 3, i) + formateado
+        i -= 3
+      }
+      formateado = cuerpo.slice(0, i) + formateado
+
+      this.usuarios.activos[index].user_rut = `${formateado}-${dv}`
+      
+      this.usuarios.activos.user_rut=this.usuarios.activos[index].user_rut
+      console.log(this.usuarios.activos.user_rut)
+      return this.usuarios.activos.user_rut
+    },
     async GuardarUsuario() {
       if (!this.validadatos()) return
 
       const activosConDatos = this.usuarios.activos.map(activo => ({
         user_nombre: activo.user_nombre,
         user_apellido: activo.user_apellido,
-        user_rut: this.formatearRut(activo.user_rut),
+        user_rut: activo.user_rut,
         user_correo: activo.user_correo,
         user_telefono: activo.user_telefono,
         user_id_empresa: activo.user_id_empresa,
@@ -352,6 +374,7 @@ export default {
         user_id_tipos: activo.tipoactivo ? 1 : 2,
         ...(activo.tipoactivo && activo.user_clave ? { user_clave: activo.user_clave } : {})
       }))
+      console.log(activosConDatos)
 
       try {
         console.log("Payload que se envía al backend:", {
@@ -396,6 +419,9 @@ export default {
         console.error('Error al registrar usuarios:', error)
       }
     }
+  },
+  computed:{
+
   }
 }
 </script>

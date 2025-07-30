@@ -7,16 +7,17 @@
           <div class="text-center mb-4">
             <h2 class="fw-bold">Sistema de Activos</h2>
           </div>
-
           <b-form @submit.prevent="onSubmit" novalidate>
             <!-- RUT -->
-            <b-form-group label="RUT" label-for="rut" class="fw-bold">
+            <b-form-group label="RUT"  class="fw-bold">
               <b-form-input
                 id="rut"
-                v-model="rut"
-                :state="campoRutState"
+                type="text"
+                :value="rutFormateado"
+                v-model="rutFormateado"
                 placeholder="Ej: 12.345.678-9"
-              ></b-form-input>
+                :state="campoRutState"
+              />
               <b-form-invalid-feedback>
                 Ingresa un RUT válido (ej: 12.345.678-9).
               </b-form-invalid-feedback>
@@ -63,13 +64,11 @@
 import { ref, computed } from 'vue';
 import axios from 'axios';
 
-const rut = ref('');
 const password = ref('');
 const loginError = ref('');
 const intentadoEnviar = ref(false);
 
 const emit = defineEmits(['login-success']);
-
 const validacionRut = (valor) => {
   if (!valor || typeof valor !== 'string') return false;
 
@@ -95,26 +94,47 @@ const validacionRut = (valor) => {
   return dv === dvFinal;
   
 };
-
 const validacionPassword = (valor) => {
   return typeof valor === 'string' && valor.length >= 6;
 };
-
 // Computed para estados visuales
-const campoRutValido = computed(() => validacionRut(rut.value));
+const campoRutValido = computed(() => validacionRut(rutFormateado.value));
 const campoPasswordValido = computed(() => validacionPassword(password.value));
-
 const campoRutState = computed(() => {
   if (!intentadoEnviar.value) return null;
   return campoRutValido.value ? true : false;
 });
-
 const campoPasswordState = computed(() => {
   if (!intentadoEnviar.value) return null;
   return campoPasswordValido.value ? true : false;
 });
-
 const cargando = ref(false);
+
+const rutLimpio = ref('')
+// Computed que muestra el RUT formateado en el input
+const rutFormateado = computed({
+  get() {
+    const clean = rutLimpio.value.replace(/[^\dkK]/gi, '').toUpperCase()
+    if (clean.length <= 1) return clean
+
+    const cuerpo = clean.slice(0, -1)
+    const dv = clean.slice(-1)
+
+    let formateado = ''
+    let i = cuerpo.length
+
+    while (i > 3) {
+      formateado = '.' + cuerpo.slice(i - 3, i) + formateado
+      i -= 3
+    }
+    formateado = cuerpo.slice(0, i) + formateado
+
+    return `${formateado}-${dv}`
+  },
+  set(val) {
+    rutLimpio.value = val.replace(/[^\dkK]/gi, '').toUpperCase()
+  }
+})
 
 const onSubmit = async () => {
   intentadoEnviar.value = true;
@@ -129,7 +149,7 @@ const onSubmit = async () => {
 
   try {
     const response = await axios.post('/Auth/IniciarSession', {
-      rut: rut.value,
+      rut: rutFormateado.value,
       password: password.value
     }, {
       headers: { 'Content-Type': 'application/json' },
@@ -137,13 +157,10 @@ const onSubmit = async () => {
       validateStatus: () => true // <-- esto permite capturar 401, 405, etc
     });
     
-    console.log('Respuesta:', response.data.message); // 👈 VERIFICA en consola
-    console.log('Respuesta:', rut.value);
-    console.log('Respuesta:', password.value);
 
     if (response.data.status === 'success') {
       loginError.value = '';
-      rut.value = '';
+      rutFormateado.value = '';
       password.value = '';
       emit('login-success', response.data.user);
     } else if (response.data.message === 'Credenciales inválidas.') {
