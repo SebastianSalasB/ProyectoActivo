@@ -24,6 +24,19 @@
       responsive hover
       class="text-center custom-rounded-table"
     >
+      <template #cell(usr_id)="data">
+        <div>
+          <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
+        </div>
+      </template>       
+      <template #cell(usr_nombre)="data"> 
+        <div>
+          <span>{{ data.item.usr_nombre }}</span>
+        </div>
+        <div>
+          <span style="font-size: 0.80rem; text-align: start;">{{ data.item.usr_apellido }}</span>
+        </div>
+      </template>
       <template #cell(acciones)="data">
         <b-button size="sm" variant="success" class="me-1" @click="editarUsuario(data.item)">
           <i class="fa-solid fa-pen-to-square fa-lg"></i>
@@ -139,7 +152,6 @@ export default {
         { key: 'usr_id', label: 'ID' },
         { key: 'usr_rut', label: 'RUT' },
         { key: 'usr_nombre', label: 'Nombre' },
-        { key: 'usr_apellido', label: 'Apellido' },
         { key: 'nombre_sucursal', label: 'Sucursal' },
         { key: 'acciones', label: 'Acciones' }
       ]
