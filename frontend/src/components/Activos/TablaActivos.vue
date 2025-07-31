@@ -90,7 +90,11 @@
       <!-- Tabla de resultados -->
       <b-col :md="mostrarFiltros ? 10 : 12">
         <b-overlay :show="cargando" rounded="sm" spinner-variant="secondary" opacity="0.6">
-          <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table"> 
+          <b-table 
+          :items="activosPaginados" 
+          :fields="fields" 
+          responsive hover
+          class="custom-rounded-table"> 
             <template #cell(act_id)="data">
               <div>
                 <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
@@ -196,10 +200,12 @@
           <div class="overflow-auto">
             <b-pagination
               v-model="paginaActual"
-              :current-page="paginaActual"
-              :total-rows="activosFiltrados.length"
+              :total-rows="filtrarActivos.length"
               :per-page="porPagina"       
               align="center"
+              class="my-3"
+              first-number
+              last-number
               size="md"/>
           </div>
         </b-overlay>
@@ -629,11 +635,9 @@ export default {
     empresaOpciones() {
       return this.empresa.map(e => ({ id: e.emp_id, nombre: e.emp_nombre }))
     },
-
     nombreTipoDisplay() {
       return this.selectedActivos.nombre_tipo || 'No definido'
     },
-
     fields() {
       return [
         { key: 'act_id', label: 'ID', thClass: 'actID', tdClass: 'actID' },
@@ -646,7 +650,6 @@ export default {
         { key: 'act_estado', label: '', thClass: 'text-center', tdClass: 'estados' }
       ]
     },
-
     filtrarActivos() {
       return this.activos.filter(activo => {
         const query = this.Buscador.toLowerCase()
@@ -663,13 +666,11 @@ export default {
         return Query && filtroSucursales && filtroUsuarios && filtroEstados && filtroTipos && filtroEmpresa
       })
     },
-
     sucursalesFiltradas() {
       if (!this.selectedActivos.act_id_empresa) return []
       const empresa = this.empresasConSucursales.find(e => e.emp_id === this.selectedActivos.act_id_empresa)
       return empresa ? empresa.sucursales : []
     },
-
     contarActivosPorSucursal() {
       const conteo = {}
       this.activos.forEach(activo => {
@@ -682,7 +683,6 @@ export default {
       })
       return conteo
     },
-
     activosFiltrados() {
       if (!this.Buscador) return this.activos
       return this.activos.filter(a =>
@@ -691,14 +691,12 @@ export default {
         a.act_estado?.toLowerCase().includes(this.Buscador.toLowerCase())
       )
     },
-
     activosPaginados() {
       const start = (this.paginaActual - 1) * this.porPagina
       const end = start + this.porPagina;
       
-      return this.activosFiltrados.slice(start, end)
+      return this.filtrarActivos.slice(start, end)
     },
-
     sucursalesOpciones() {
       return this.sucursales
         .filter(s => {
@@ -715,7 +713,6 @@ export default {
           }
         })
     },
-
     estadosOpciones() {
       const unicos = new Set()
       this.activos.forEach(activo => {
@@ -728,21 +725,18 @@ export default {
         nombre: estado
       }))
     },
-
     usuariosOpciones() {
       return this.usuariosDisponibles.map(u => ({
         id: u.usr_id_usuario,
         nombre: u.nombre_usuario || u.usr_nombre
       }))
     },
-
     usuariosNombreApellido() {
       return this.usuariosDisponibles.map(u => ({
         id: u.usr_id_usuario,
         nombre: `${u.usr_nombre} ${u.usr_apellido}`
       }))
     },
-
     TiposOpciones() {
       const unicos = new Map()
       this.activos.forEach(activo => {
