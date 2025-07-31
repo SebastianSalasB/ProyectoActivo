@@ -99,8 +99,23 @@
             <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_rut" required />
           </b-col>
           <b-col md="6" class="mb-2">
-            <label>Sucursal</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.nombre_sucursal" />
+            <b-form-group label="Empresa" style="color: black;">
+              <b-form-select style="color: black;"
+                v-model="usuarios.usr_id_empresa"
+                :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
+                placeholder="Seleccione empresa"
+              />
+            </b-form-group>
+          </b-col>
+          <b-col md="6" class="mb-2">
+            <b-form-group label="Sucursal" >
+              <b-form-select style="color: black;"
+                placeholder="Seleccione sucursal"
+                v-model="UsuarioSeleccionado.usr_id_sucursal"
+                :options="sucursalesFiltradas(UsuarioSeleccionado.usr_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
+               
+              />
+            </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">
             <label>Tipo de Responsable</label>
@@ -140,6 +155,8 @@ export default {
   data() {
     return {
       usuarios: [],
+      sucursales:[],
+      empresas:[],
       totalResponsables: 0,
       paginaActual: 1,
       porPagina: 8,
@@ -182,6 +199,28 @@ export default {
       } catch (error) {
         console.error('Error al cargar responsables:', error)
       }
+    },
+    async cargarEmpresasYSucursales() {
+      try {
+        const [resEmpresas, resSucursales] = await Promise.all([
+          axios.get('/Usuarios/listaE'),
+          axios.get('/Usuarios/listaS')
+        ]);
+        console.log('Empresas crudas:', resEmpresas.data);
+        console.log('Sucursales crudas:', resSucursales.data);
+
+        this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo');
+        this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo');
+
+        console.log('Empresas filtradas:', this.empresas);
+        console.log('Sucursales filtradas:', this.sucursales);
+      } catch (error) {
+        console.error('Error cargando empresas o sucursales:', error);
+      }
+    },
+    sucursalesFiltradas(empId) {
+      if (!empId) return []
+      return this.sucursales.filter(s => String(s.suc_id_empresa) === String(empId))
     },
     editarUsuario(respo) {
       this.UsuarioSeleccionado = { ...respo }
@@ -244,6 +283,7 @@ export default {
   },
   mounted() {
     this.cargarUsuario()
+    this.cargarEmpresasYSucursales()
   }
 }
 </script>

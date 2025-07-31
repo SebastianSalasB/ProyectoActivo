@@ -132,7 +132,7 @@
         </b-button>
       </div>
 
-      <b-button @click="anadirActivo" variant="success" class="me-2">+ Agregar otro activo</b-button>
+      <b-button @click="anadirActivo" variant="success" class="me-2">+ Agregar otro usuario</b-button>
       <b-button @click="GuardarUsuario" variant="primary">Guardar</b-button>
     </b-container>
 
@@ -167,12 +167,12 @@ export default {
             user_clave: '',
             user_id_empresa: null,
             user_id_sucursal: null,
-            tipoactivo: false // 👈 Aquí
+            tipoactivo: false 
           }
         ]
       },
-      empresas: [], // Listado de empresas
-      sucursales: [], // Listado de sucursales
+      empresas: [],
+      sucursales: [],
       modalShow: false,
       inputErrors: [
         {

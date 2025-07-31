@@ -31,10 +31,10 @@
             </b-form-group>
           </b-col>
           <b-col sm>
-            <b-form-group label="Rut de usuario">
+            <b-form-group label="Responsable">
               <b-form-select style="color: black;"
                 v-model="activo.usuario_id"
-                :options="usuariosFiltrados.map(u => ({ value: u.usr_id, text: u.usr_rut }))"
+                :options="usuariosFiltrados.map(u => ({ value: u.usr_id, text:u.usr_rut }))"
                 :class="{ 'is-invalid': inputErrors[index]?.usuario }"
                 @change="val => validarCampo(index, 'usuario', val)"
               />
@@ -70,50 +70,30 @@
             <b-row>
             <b-col sm>
               <b-form-group label="RAM">
-                <b-form-select
+                <b-form-input
                   v-model="activo.com_ram" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.ram }"
                   @change="validarCampo(index, 'ram', activo.com_ram)"
-                  :options="[
-                    { value: '4GB', text: '4 GB' },
-                    { value: '8GB', text: '8 GB' },
-                    { value: '16GB', text: '16 GB' },
-                    { value: '32GB', text: '32 GB' },
-                    { value: '64GB', text: '64 GB' }
-                  ]"
                 />
                 <small v-if="errors.com_ram" class="text-danger">{{ errors.com_ram }}</small>
               </b-form-group>
             </b-col>
             <b-col sm>
               <b-form-group label="CPU">
-                <b-form-select
+                <b-form-input
                   v-model="activo.com_cpu" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.cpu }"
                   @input="validarCampo(index, 'cpu', activo.com_cpu)"
-                  :options="[
-                    { value: 'i3', text: 'Intel i3' },
-                    { value: 'i5', text: 'Intel i5' },
-                    { value: 'i7', text: 'Intel i7' },
-                    { value: 'Ryzen5', text: 'Ryzen 5' },
-                    { value: 'Ryzen7', text: 'Ryzen 7' }
-                  ]"
                 />
                 <small v-if="errors.com_cpu" class="text-danger">{{ errors.com_cpu }}</small>
               </b-form-group>
             </b-col>
             <b-col sm>
              <b-form-group label="Disco">
-                <b-form-select
+                <b-form-input
                   v-model="activo.com_disco" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.disco }"
                   @input="validarCampo(index, 'disco', activo.com_disco)"
-                  :options="[
-                    { value: '256GB_SSD', text: '256 GB SSD' },
-                    { value: '512GB_SSD', text: '512 GB SSD' },
-                    { value: '1TB_HDD', text: '1 TB HDD' },
-                    { value: '1TB_SSD', text: '1 TB SSD' }
-                  ]"
                 />
                 <small v-if="errors.com_disco" class="text-danger">{{ errors.com_disco }}</small>
               </b-form-group>
@@ -126,7 +106,9 @@
                   @input="validarCampo(index, 'cpu', activo.com_cpu)"
                   :options="[
                     { value: 'Windows', text: 'Windows' },
-                    { value: 'Linux', text: 'Linux' }
+                    { value: 'Linux', text: 'Linux' },
+                    { value: 'MacOS', text: 'MacOS' },
+                    { value: 'Unix', text: 'Unix' }
                   ]"
                 />
                 <small v-if="errors.com_sistema_operativo" class="text-danger">{{ errors.com_sistema_operativo }}</small>
@@ -144,55 +126,32 @@
                 </b-col>
                 <b-col sm>
                 <b-form-group label="RAM">
-                  <b-form-select
+                  <b-form-input
                   v-model="activo.ser_ram" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.RAM }"
                   @input="validarCampo(index, 'cpu', activo.ser_ram)"
-                  :options="[
-                    { value: '4GB', text: '4 GB' },
-                    { value: '8GB', text: '8 GB' },
-                    { value: '16GB', text: '16 GB' },
-                    { value: '32GB', text: '32 GB' },
-                    { value: '64GB', text: '64 GB' }
-                  ]"
                 />
                 <small v-if="errors.ser_ram" class="text-danger">{{ errors.ser_ram }}</small>
                 </b-form-group>
                 </b-col>
                 <b-col sm>
                   <b-form-group label="CPU">
-                    <b-form-select
-                  v-model="activo.ser_cpu" style="color: black;"
-                  :class="{ 'is-invalid': inputErrors[index]?.cpuServidor }"
-                  @input="validarCampo(index, 'cpuServidor', activo.ser_cpu)"
-                  :options="[
-                    { value: 'Intel Xeon', text: 'Intel Xeon' },
-                    { value: 'AMD EPYC', text: 'AMD EPYC' },
-                    { value: 'ARM', text: 'ARM' },
-                    { value: 'PowerPC', text: 'PowerPC' }
-                  ]"
-                />
-                <small v-if="errors.ser_cpu" class="text-danger">{{ errors.ser_cpu }}</small>
+                    <b-form-input
+                      v-model="activo.ser_cpu" style="color: black;"
+                      :class="{ 'is-invalid': inputErrors[index]?.cpuServidor }"
+                      @input="validarCampo(index, 'cpuServidor', activo.ser_cpu)"
+                    />
+                    <small v-if="errors.ser_cpu" class="text-danger">{{ errors.ser_cpu }}</small>
                   </b-form-group>
               </b-col>
             </b-row>
             <b-row>
               <b-col sm>
                 <b-form-group label="Disco">
-                  <b-form-select
+                  <b-form-input
                   v-model="activo.ser_disco" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.discoServidor }"
                   @input="validarCampo(index, 'discoServidor', activo.ser_disco)"
-                  :options="[
-                    { value: '256GB_SSD', text: '256 GB SSD' },
-                    { value: '512GB_SSD', text: '512 GB SSD' },
-                    { value: '1TB_HDD', text: '1 TB HDD' },
-                    { value: '2TB_SSD', text: '2 TB SSD' },
-                    { value: '10TB_HDD', text: '10 TB HDD' },
-                    { value: '15TB_SSD', text: '15 TB SSD' },
-                    { value: '20TB_HDD', text: '20 TB HDD' },
-                    { value: '24TB_SSD', text: '25 TB SSD' }
-                  ]"
                 />
                 <small v-if="errors.ser_disco" class="text-danger">{{ errors.ser_disco }}</small>
                 </b-form-group>
@@ -205,40 +164,29 @@
                   @input="validarCampo(index, 'sistemaOperativoServidor', activo.ser_sistema_operativo)"
                   :options="[
                     { value: 'Windows', text: 'Windows' },
-                    { value: 'linux', text: 'Ubuntu' },
-                    { value: 'FreeBSD', text: 'FreeBSD' }
+                    { value: 'Linux', text: 'Linux' }
                   ]"
-                />
+                  />
                 <small v-if="errors.ser_sistema_operativo" class="text-danger">{{ errors.ser_sistema_operativo }}</small>
                 </b-form-group>
               </b-col>
               <b-col sm>
                 <b-form-group label="Ranuras">
-                 <b-form-select
+                 <b-form-input
                   v-model="activo.ser_ranuras_ram" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.ramServidor }"
                   @input="validarCampo(index, 'ramServidor', activo.ser_ranuras_ram)"
-                  :options="[
-                    { value: '8 Ranuras', text: '8 Ranuras' },
-                    { value: '16 Ranuras', text: '16 Ranuras' },
-                    { value: '32 Ranuras', text: '32 Ranuras' }
-                  ]"
                 />
                 <small v-if="errors.ser_ranuras_ram" class="text-danger">{{ errors.ser_ranuras_ram }}</small>
                 </b-form-group>
               </b-col>
               <b-col sm>
                 <b-form-group label="Cantidad Max CPU">
-                  <b-form-select
+                  <b-form-input
                   v-model="activo.ser_cantidad_max_cpu" style="color: black;"
                   :class="{ 'is-invalid': inputErrors[index]?.maxCpu }"
                   @input="validarCampo(index, 'maxCpu', activo.ser_cantidad_max_cpu)"
-                  :options="[
-                    { value: '2 CPU', text: '2 CPU' },
-                    { value: '4 CPU', text: '4 CPU' },
-                    { value: '8 CPU', text: '8 CPU' },
-                    { value: '16 CPU', text: '16 CPU' }
-                  ]"
+                  
                 />
                 <small v-if="errors.ser_cantidad_max_cpu" class="text-danger">{{ errors.ser_cantidad_max_cpu }}</small>
                 </b-form-group>

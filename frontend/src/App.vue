@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="modoOscuro ? 'modo-oscuro' : 'modo-claro'">
     <div v-if="!isAuthenticated" class="login-container">
       <Login @login-success="handleLoginSuccess" />
     </div>
@@ -28,9 +28,7 @@
 
             <!-- Menú Tipo -->
             <b-nav-item-dropdown text="Tipo" left class="dropdown-dark">
-              <b-dropdown-item @click="currentView = 'tipo'">
-                Ver Tipos
-              </b-dropdown-item>
+              <b-dropdown-item @click="currentView = 'tipo'">Ver Tipos</b-dropdown-item>
             </b-nav-item-dropdown>
 
             <!-- Menú Empresa -->
@@ -54,8 +52,17 @@
             </b-nav-item-dropdown>
           </b-navbar-nav>
 
-          <!-- Logout -->
+          <!-- Botones a la derecha -->
           <b-navbar-nav class="ms-auto">
+            <!-- Botón modo oscuro -->
+            <b-nav-item @click="toggleModoOscuro" title="Cambiar modo">
+              <i
+                class="fa-solid fa-xl"
+                :class="modoOscuro ? 'fa-sun text-warning' : 'fa-moon text-white'"
+              ></i>
+            </b-nav-item>
+
+            <!-- Botón cerrar sesión -->
             <b-nav-item @click="showConfirmLogout = true">
               <i class="fa-solid fa-right-from-bracket fa-xl" style="color: #c20000;"></i>
             </b-nav-item>
@@ -64,8 +71,8 @@
       </b-navbar>
 
       <!-- Contenido -->
-      <main class="main mt-5 pt-4">
-        <h2 class="mb-2 text-center text-black">
+      <main :class="['main', 'mt-5', 'pt-4', modoOscuro ? 'modo-oscuro' : 'modo-claro']">
+        <h2 class="mb-2 text-center" :class="modoOscuro ? 'text-white' : 'text-black'">
           {{ tituloActual }}
         </h2>
         <ActivosRegistro v-if="currentView === 'registro'" />
@@ -77,7 +84,7 @@
         <RegistroRespo v-else-if="currentView === 'RegistroResponsable'" />
       </main>
 
-      <!-- Modal de confirmación Cerrar Sesión -->
+      <!-- Modal de confirmación -->
       <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered>
         ¿Estás seguro que deseas cerrar tu sesión?
         <template #footer>
@@ -103,15 +110,21 @@ import ListaEmpresa from './components/Empresa/ListaEmpresa.vue'
 import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
 
-// FontAwesome
 import '@fortawesome/fontawesome-free/css/all.css'
 
-// Estados
+// Estado general
 const currentView = ref('lista')
 const isAuthenticated = ref(false)
 const showConfirmLogout = ref(false)
 
-// Computed para el título dinámico
+// Modo oscuro
+const modoOscuro = ref(localStorage.getItem('modoOscuro') === 'true')
+function toggleModoOscuro() {
+  modoOscuro.value = !modoOscuro.value
+  localStorage.setItem('modoOscuro', modoOscuro.value)
+}
+
+// Título dinámico
 const tituloActual = computed(() => {
   switch (currentView.value) {
     case 'lista': return 'Lista de Activos'
@@ -125,7 +138,7 @@ const tituloActual = computed(() => {
   }
 })
 
-// Verificar sesión al cargar
+// Comprobación de sesión
 onMounted(() => {
   axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
     .then(res => {
@@ -144,13 +157,12 @@ onMounted(() => {
     })
 })
 
-// Al iniciar sesión
+// Funciones sesión
 function handleLoginSuccess() {
   isAuthenticated.value = true
   currentView.value = 'lista'
 }
 
-// Al cerrar sesión
 function confirmLogout() {
   axios.post('/Auth/CerrarSession', {}, { withCredentials: true })
     .finally(() => {
@@ -172,7 +184,7 @@ function confirmLogout() {
 }
 
 .bg-barra {
-  background-color: rgb(0, 0, 0) !important;
+  background-color: #000 !important;
   color: white !important;
 }
 
@@ -191,7 +203,50 @@ function confirmLogout() {
 }
 
 .bg-barra .dropdown-item:hover {
-  background-color: #343a40 !important;
+  background-color: #000000 !important;
   color: white !important;
+}
+
+/* MODO CLARO / OSCURO */
+.modo-claro {
+  background-color: #ffffff;
+  color: black;
+}
+
+.modo-oscuro {
+  background-color: #121212;
+  color: white;
+}
+
+.modo-oscuro .card,
+.modo-oscuro .table,
+.modo-oscuro .dropdown-menu,
+.modo-oscuro .modal-content {
+  background-color: #000000 !important;
+  color: white !important;
+}
+
+.modo-oscuro .dropdown-item:hover {
+  background-color: #000000 !important;
+  color: white !important;
+}
+
+.modo-oscuro .form-control,
+.modo-oscuro input,
+.modo-oscuro textarea,
+.modo-oscuro select {
+  background-color: #929292 !important;
+  color: white !important;
+  border-color: #c9c9c9 !important;
+}
+
+.modo-oscuro .btn {
+  color: white;
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.modo-oscuro .btn:hover {
+  background-color: #000000;
 }
 </style>

@@ -2,7 +2,7 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" type="" variant="" class="mb-4">
     <b-container>
-      <b-navbar-brand href="#">Buscar Activos</b-navbar-brand>
+      <b-navbar-brand href="#" >Buscar Activos</b-navbar-brand>
       <b-input-group class="mt-2">
         <b-form-input 
           v-model="Buscador" 
@@ -25,8 +25,8 @@
       <!-- Barra lateral izquierda -->
       <transition name="fade">
         <b-col md="2" v-if="mostrarFiltros">
-          <b-card class="shadow-sm" style="border: none; color:black;">
-            <h5 class="mb-3" style="color: black;">Filtros</h5>              
+          <b-card class="shadow-sm" style="border: none;" >
+            <h5 class="mb-3" style="">Filtros</h5>              
             <!-- Filtro por Tipo -->
             <b-form-group label="Tipo">
               <b-form-checkbox-group
