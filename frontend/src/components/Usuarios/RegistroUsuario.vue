@@ -142,6 +142,7 @@
       title="Registro exitoso"
       ok-only
       v-model="modalShow"
+      style="color: black;"
     >
       Usuarios registrados correctamente.
     </b-modal>

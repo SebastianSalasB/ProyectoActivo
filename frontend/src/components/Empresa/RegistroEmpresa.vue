@@ -104,6 +104,7 @@ export default {
       try {
         const res = await axios.post('/EmpresaR/CrearEmpresa', this.empresa)
         this.resetForm()
+        this.mensaje = 'Guardado con exito'
       } catch (error) {
         this.mensaje = 'Error al guardar la empresa'
         console.error(error)

@@ -94,8 +94,8 @@
             <b-form-input style="color: black;" v-model="UsuarioSeleccionado.nombre_tipo" />
           </b-col>
           <b-col v-if="UsuarioSeleccionado.nombre_tipo=== 'admin'" md="6" class="mb-2">
-            <label>Clave</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_clave" />
+            <label>Clave nueva</label>
+            <b-form-input style="color: black;" @input="UsuarioSeleccionado.usr_clave" />
           </b-col>
 
         </b-row>
@@ -240,8 +240,5 @@ export default {
   .custom-rounded-table {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
-  }
-  .form-control {
-    width: 30%;
   }
 </style>
