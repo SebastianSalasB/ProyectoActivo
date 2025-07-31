@@ -87,6 +87,7 @@
       ok-title="Sí, guardar cambios"
       cancel-title="Cancelar"
       ok-variant="success"
+      style="color: black;"
     >
       ¿Estás seguro de que deseas guardar los cambios a la empresa <strong>{{ seleccionarEmpresa.emp_nombre }}</strong>?
     </b-modal>
@@ -99,6 +100,7 @@
       ok-title="Sí, eliminar"
       cancel-title="Cancelar"
       ok-variant="danger"
+      style="color: black;"
     >
       ¿Estás seguro de que deseas eliminar la empresa <strong>{{ seleccionarEmpresa.emp_nombre }}</strong>?
     </b-modal>
@@ -111,6 +113,7 @@
       ok-title="Sí, eliminar sucursal"
       cancel-title="Cancelar"
       ok-variant="danger"
+      style="color: black;"
     >
       ¿Estás seguro de que deseas eliminar la sucursal <strong>{{ sucursalEliminar?.suc_nombre }}</strong>?
     </b-modal>
@@ -214,14 +217,16 @@ export default {
       try {
         const res = await axios.put(`/EmpresaR/Eliminar/${this.seleccionarEmpresa.emp_id}`)
         if (res.data.status === 'update') {
-          this.empresas = this.empresas.filter(e => e.emp_id !== this.seleccionarEmpresa.emp_id)
           alert('Empresa eliminada correctamente')
-        } else {
-          alert('No se pudo eliminar la empresa')
+          this.cargarEmpresa() 
+        } else if (res.data.status === 'delete') {
+          alert('Empresa eliminada correctamente')
+          this.cargarEmpresa() 
         }
+        
       } catch (err) {
         console.error('Error al eliminar:', err)
-        alert('Error de conexión al servidor')
+        this.cargarEmpresa() 
       } finally {
         this.eliminarConfirmaModal = false
       }
@@ -234,7 +239,7 @@ export default {
       try {
         const id = this.sucursalEliminar?.suc_id
         const res = await axios.put(`/EmpresaR/eliminarSucursal/${id}`)
-        if (res.data.status === 'deleted') {
+        if (res.data.status === 'update') {
           this.seleccionarEmpresa.sucursales = this.seleccionarEmpresa.sucursales.filter(
             s => s.suc_id !== id
           )
@@ -262,8 +267,6 @@ export default {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
   }
-  .form-control {
-    width: 30%;
-  }
+  
 </style>
 
