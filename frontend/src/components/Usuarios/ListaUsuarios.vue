@@ -2,7 +2,7 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" class="mb-4">
     <b-container style="color: black;">
-      <b-navbar-brand>Buscar Usuario</b-navbar-brand>
+      <b-navbar-brand style="text-align: left;">Buscar Usuario</b-navbar-brand>
       <b-form class="d-flex ms-auto" @submit.prevent>
         <b-form-input style="color: black;"
           v-model="Buscador"
@@ -21,10 +21,8 @@
       id="tabla-usuarios"
       :items="usuariosPaginados"
       :fields="fields"
-      responsive
-      striped
-      hover
-      class="text-center"
+      responsive hover
+      class="text-center custom-rounded-table"
     >
       <template #cell(acciones)="data">
         <b-button size="sm" variant="success" class="me-1" @click="editarUsuario(data.item)">
@@ -238,9 +236,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .custom-rounded-table {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
+  }
+  .form-control {
+    width: 30%;
   }
 </style>

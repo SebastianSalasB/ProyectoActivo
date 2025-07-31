@@ -1,133 +1,67 @@
 <template>
   <div>
-    <b-container>
+    <b-container fluid="sm" id="NAG">
+      <h3>Registrar Empresa</h3>
+      <b-col class="row row-cols-2">
+        <b-form-group label="Nombre de la Empresa" style="color: black;">
+          <b-form-input v-model="empresa.emp_nombre" id="emp_nombre" name="emp_nombre" />
+          <small v-if="errors.emp_nombre" class="text-danger">{{ errors.emp_nombre }}</small>
+        </b-form-group>
 
-        <h3 class="mb-3" style="color: black;">Registro de Empresas y Sucursales</h3>
-        <b-form @submit.prevent="crearEmpresa" style="color: black;">
-          <b-form-group label="Nombre de la empresa">
-            <b-form-input style="color: black;"
-            v-model="empresa.emp_nombre" placeholder="Ej: Mi Empresa Ltda" />
+        <b-form-group label="Dirección de la Empresa" style="color: black;">
+          <b-form-input 
+          v-model="empresa.emp_direccion" 
+          id="emp_direccion" name="emp_direccion" />
+          <small v-if="errors.emp_direccion" class="text-danger">{{ errors.emp_direccion }}</small>
+        </b-form-group>
+      </b-col>
+      
+      <b-form-group label="Sucursales" style="color:black;">
+        <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-3" >
+          <hr />
+          <b-form-group 
+          label="Nombre de Sucursal" 
+          style="color: black;">
+            <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
           </b-form-group>
 
-          <b-form-group label="Dirección de la empresa">
-            <b-form-input style="color: black;"
-            v-model="empresa.emp_direccion" placeholder="Ej: Av. Principal 1234" />
+          <b-form-group 
+          label="Dirección de Sucursal" 
+          style="color: black;">
+            <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
           </b-form-group>
+          <hr />
+          <b-button
+            v-if="empresa.sucursales.length > 1"
+            size="sm"
+            variant="danger"
+            @click="eliminarSucursal(index)"
+          >Eliminar</b-button>
+        </div>
 
-          <hr>
+        <b-button size="sm" variant="primary" @click="añadirSucursal">
+          + Agregar otra sucursal
+        </b-button>
+        <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
+      </b-form-group>
 
-          <h5>Sucursales</h5>
-          <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class="mb-4 p-3">
-            <b-form-group label="Nombre de sucursal">
-              <b-form-input style="color: black;"
-              v-model="sucursal.suc_nombre" placeholder="Ej: Sucursal Norte" />
-            </b-form-group>
+      <div class="text-center mt-4">
+        <b-button
+          id="Guarda"
+          @click="crearEmpresa"
+          style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);"
+        >Guardar</b-button>
+      </div>
 
-            <b-form-group label="Dirección de sucursal">
-              <b-form-input style="color: black;"
-              v-model="sucursal.direccion" 
-              placeholder="Ej: Calle 123, Ciudad" />
-            </b-form-group>
-
-            <b-form-group label="Región">
-              <b-form-select style="color: black;"
-                v-model="sucursal.regionComuna.region"
-                :options="regiones"
-                @change="sucursal.regionComuna.comuna = ''"
-              />
-            </b-form-group>
-
-            <b-form-group label="Comuna">
-              <b-form-select style="color: black;"
-                v-model="sucursal.regionComuna.comuna"
-                :options="comunasDisponibles(sucursal.regionComuna.region)"
-                :disabled="!sucursal.regionComuna.region"
-              />
-            </b-form-group>
-
-            <b-button variant="danger" size="sm" @click="eliminarSucursal(index)" v-if="empresa.sucursales.length > 1">
-              Eliminar sucursal
-            </b-button>
-            <hr>
-          </div>
-
-          <b-button variant="secondary" @click="añadirSucursal">Agregar otra sucursal</b-button>
-          <br><br>
-          <b-button type="submit" variant="primary">Guardar Empresa</b-button>
-        </b-form>
-     
+      <b-modal v-model="modalShow" title="Resultado del registro" ok-only ok-title="Aceptar">
+        {{ mensaje }}
+      </b-modal>
     </b-container>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-const RegionesYcomunas = [
-  {
-    "NombreRegion": "Arica y Parinacota",
-    "comunas": ["Arica", "Camarones", "Putre", "General Lagos"]
-  },
-  {
-    "NombreRegion": "Tarapacá",
-    "comunas": ["Iquique", "Alto Hospicio", "Pozo Almonte", "Camiña", "Colchane", "Huara", "Pica"]
-  },
-  {
-    "NombreRegion": "Antofagasta",
-    "comunas": ["Antofagasta", "Mejillones", "Sierra Gorda", "Taltal", "Calama", "Ollagüe", "San Pedro de Atacama", "Tocopilla", "María Elena"]
-  },
-  {
-    "NombreRegion": "Atacama",
-    "comunas": ["Copiapó", "Caldera", "Tierra Amarilla", "Chañaral", "Diego de Almagro", "Vallenar", "Alto del Carmen", "Freirina", "Huasco"]
-  },
-  {
-    "NombreRegion": "Coquimbo",
-    "comunas": ["La Serena", "Coquimbo", "Andacollo", "La Higuera", "Paiguano", "Vicuña", "Illapel", "Canela", "Los Vilos", "Salamanca", "Ovalle", "Combarbalá", "Monte Patria", "Punitaqui", "Río Hurtado"]
-  },
-  {
-    "NombreRegion": "Valparaíso",
-    "comunas": ["Valparaíso", "Casablanca", "Concón", "Juan Fernández", "Puchuncaví", "Quintero", "Viña del Mar", "Isla de Pascua", "Los Andes", "Calle Larga", "Rinconada", "San Esteban", "La Ligua", "Cabildo", "Papudo", "Petorca", "Zapallar", "Quillota", "Calera", "Hijuelas", "La Cruz", "Nogales", "San Antonio", "Algarrobo", "Cartagena", "El Quisco", "El Tabo", "Santo Domingo", "San Felipe", "Catemu", "Llaillay", "Panquehue", "Putaendo", "Santa María", "Quilpué", "Limache", "Olmué", "Villa Alemana"]
-  },
-  {
-    "NombreRegion": "Libertador General Bernardo O'Higgins",
-    "comunas": ["Rancagua", "Codegua", "Coinco", "Coltauco", "Doñihue", "Graneros", "Las Cabras", "Machalí", "Malloa", "Mostazal", "Olivar", "Peumo", "Pichidegua", "Quinta de Tilcoco", "Rengo", "Requínoa", "San Vicente", "Pichilemu", "La Estrella", "Litueche", "Marchihue", "Navidad", "Paredones", "San Fernando", "Chépica", "Chimbarongo", "Lolol", "Nancagua", "Palmilla", "Peralillo", "Placilla", "Pumanque", "Santa Cruz"]
-  },
-  {
-    "NombreRegion": "Maule",
-    "comunas": ["Talca", "Constitución", "Curepto", "Empedrado", "Maule", "Pelarco", "Pencahue", "Río Claro", "San Clemente", "San Rafael", "Cauquenes", "Chanco", "Pelluhue", "Curicó", "Hualañé", "Licantén", "Molina", "Rauco", "Romeral", "Sagrada Familia", "Teno", "Vichuquén", "Linares", "Colbún", "Longaví", "Parral", "Retiro", "San Javier", "Villa Alegre", "Yerbas Buenas"]
-  },
-  {
-    "NombreRegion": "Ñuble",
-    "comunas": ["Chillán", "Bulnes", "Cobquecura", "Coelemu", "Coihueco", "Chillán Viejo", "El Carmen", "Ninhue", "Ñiquén", "Pemuco", "Pinto", "Portezuelo", "Quillón", "Quirihue", "Ránquil", "San Carlos", "San Fabián", "San Ignacio", "San Nicolás", "Treguaco", "Yungay"]
-  },
-  {
-    "NombreRegion": "Biobío",
-    "comunas": ["Concepción", "Coronel", "Chiguayante", "Florida", "Hualqui", "Lota", "Penco", "San Pedro de la Paz", "Santa Juana", "Talcahuano", "Tomé", "Hualpén", "Lebu", "Arauco", "Cañete", "Contulmo", "Curanilahue", "Los Álamos", "Tirúa", "Los Ángeles", "Antuco", "Cabrero", "Laja", "Mulchén", "Nacimiento", "Negrete", "Quilaco", "Quilleco", "San Rosendo", "Santa Bárbara", "Tucapel", "Yumbel", "Alto Biobío"]
-  },
-  {
-    "NombreRegion": "La Araucanía",
-    "comunas": ["Temuco", "Carahue", "Cunco", "Curarrehue", "Freire", "Galvarino", "Gorbea", "Lautaro", "Loncoche", "Melipeuco", "Nueva Imperial", "Padre las Casas", "Perquenco", "Pitrufquén", "Pucón", "Saavedra", "Teodoro Schmidt", "Toltén", "Vilcún", "Villarrica", "Cholchol", "Angol", "Collipulli", "Curacautín", "Ercilla", "Lonquimay", "Los Sauces", "Lumaco", "Purén", "Renaico", "Traiguén", "Victoria"]
-  },
-  {
-    "NombreRegion": "Los Ríos",
-    "comunas": ["Valdivia", "Corral", "Lanco", "Los Lagos", "Máfil", "Mariquina", "Paillaco", "Panguipulli", "La Unión", "Futrono", "Lago Ranco", "Río Bueno"]
-  },
-  {
-    "NombreRegion": "Los Lagos",
-    "comunas": ["Puerto Montt", "Calbuco", "Cochamó", "Fresia", "Frutillar", "Los Muermos", "Llanquihue", "Maullín", "Puerto Varas", "Castro", "Ancud", "Chonchi", "Curaco de Vélez", "Dalcahue", "Puqueldón", "Queilén", "Quellón", "Quemchi", "Quinchao", "Osorno", "Puerto Octay", "Purranque", "Puyehue", "Río Negro", "San Juan de la Costa", "San Pablo", "Chaitén", "Futaleufú", "Hualaihué", "Palena"]
-  },
-  {
-    "NombreRegion": "Aysén del General Carlos Ibáñez del Campo",
-    "comunas": ["Coihaique", "Lago Verde", "Aysén", "Cisnes", "Guaitecas", "Cochrane", "O'Higgins", "Tortel", "Chile Chico", "Río Ibáñez"]
-  },
-  {
-    "NombreRegion": "Magallanes y de la Antártica Chilena",
-    "comunas": ["Punta Arenas", "Laguna Blanca", "Río Verde", "San Gregorio", "Cabo de Hornos", "Antártica", "Porvenir", "Primavera", "Timaukel", "Natales", "Torres del Paine"]
-  },
-  {
-    "NombreRegion": "Región Metropolitana de Santiago",
-    "comunas": ["Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Pedro Aguirre Cerda", "Peñalolén", "Providencia", "Pudahuel", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "San Joaquín", "San Miguel", "San Ramón", "Vitacura", "Puente Alto", "Pirque", "San José de Maipo", "Colina", "Lampa", "Tiltil", "San Bernardo", "Buin", "Calera de Tango", "Paine", "Melipilla", "Alhué", "Curacaví", "María Pinto", "San Pedro", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"]
-  }
-]
+import axios from 'axios'
 
 export default {
   data() {
@@ -136,51 +70,20 @@ export default {
         emp_nombre: '',
         emp_direccion: '',
         sucursales: [
-          {
-            suc_nombre: '',
-            suc_direccion: '',
-            regionComuna: {
-              region: '',
-              comuna: ''
-            }
-          }
+          { suc_nombre: '', suc_direccion: '' }
         ]
       },
-      errors: {}
-    }
-  },
-  computed: {
-    regiones() {
-      return [
-        { value: '', text: 'Seleccione Región' },
-        ...RegionesYcomunas.map(region => ({
-          value: region.NombreRegion,
-          text: region.NombreRegion
-        }))
-      ];
+      errors: {},
+      mensaje: '',
+      modalShow: false
     }
   },
   methods: {
-    comunasDisponibles(region) {
-      const regionData = RegionesYcomunas.find(r => r.NombreRegion === region);
-      if (!regionData) return [];
-      return [
-        { value: '', text: 'Seleccione Comuna' },
-        ...regionData.comunas.map(c => ({ value: c, text: c }))
-      ];
-    },
     añadirSucursal() {
-      this.empresa.sucursales.push({
-        suc_nombre: '',
-        suc_direccion: '',
-        regionComuna: {
-          region: '',
-          comuna: ''
-        }
-      });
+      this.empresa.sucursales.push({ suc_nombre: '', suc_direccion: '' })
     },
     eliminarSucursal(index) {
-      this.empresa.sucursales.splice(index, 1);
+      this.empresa.sucursales.splice(index, 1)
     },
     validadatos() {
       this.errors = {}
@@ -189,15 +92,14 @@ export default {
       if (!this.empresa.emp_direccion) this.errors.emp_direccion = 'La dirección es obligatoria'
 
       const sucursalesInvalidas = this.empresa.sucursales.some(
-        s => !s.suc_nombre || !s.suc_direccion || !s.regionComuna.region || !s.regionComuna.comuna
+        s => !s.suc_nombre || !s.suc_direccion
       )
-      if (sucursalesInvalidas) this.errors.sucursales = 'Todas las sucursales deben tener nombre, dirección, región y comuna'
+      if (sucursalesInvalidas) this.errors.sucursales = 'Todas las sucursales deben tener nombre y dirección'
 
       return Object.keys(this.errors).length > 0
     },
-    //Error 
     async crearEmpresa() {
-      if (this.validadatos()) return;
+      if (this.validadatos()) return
 
       try {
         const res = await axios.post('/EmpresaR/CrearEmpresa', this.empresa)
@@ -214,22 +116,18 @@ export default {
         emp_nombre: '',
         emp_direccion: '',
         sucursales: [
-          {
-            suc_nombre: '',
-            suc_direccion: '',
-            regionComuna: {
-              region: '',
-              comuna: ''
-            }
-          }
+          { suc_direccionnombre: '', suc_direccion: '' }
         ]
-      };
+      }
       this.errors = {}
     }
   }
 }
 </script>
-
 <style>
+.bg-light {
+    --bs-bg-opacity: 1;
+    background-color: rgb(255 255 255 / 50%) !important;
+}
 
 </style>

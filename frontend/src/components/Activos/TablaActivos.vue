@@ -88,7 +88,7 @@
         <!-- Tabla de resultados -->
         <b-col :md="mostrarFiltros ? 10 : 12" >
           <b-overlay :show="cargando" rounded="sm" spinner-variant="secondary" opacity="0.6">
-            <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table "   > 
+            <b-table :items="filtrarActivos" :fields="fields" :per-page="porPagina" :current-page="paginaActual" class="custom-rounded-table "> 
               <template #cell(act_id)="data" id="actID">
                 <div>
                   <span  style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
@@ -114,7 +114,7 @@
                 <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
               </template>              
               <template #cell(acciones)="data" style="width: 0; color: black;">
-                <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
+                <b-dropdown size="sm" style="margin-top: 12px;" variant="" text="Acciones" toggle-class="btn-sm" no-caret>
                   <template #button-content >
                     <i class="fa-solid fa-gear fa-xl" ></i>
                   </template>
@@ -1060,6 +1060,10 @@ export default
   }
   .bg-card{
     border: none;
+    background-color: rgb(33 37 41); 
+    color: white; 
+    border-radius: 12px;
+    overflow: hidden;
   }
   .navbar-brand {
     text-align: center;

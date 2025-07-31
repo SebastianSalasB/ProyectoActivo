@@ -16,7 +16,7 @@
 
   <!-- Tabla de empresas -->
   <b-container >
-    <b-table class="custom-rounded-table" :items="filtrarComputadoras" :fields="fields"responsive striped hover style="text-align: center;">
+    <b-table class="custom-rounded-table" :items="filtrarComputadoras" :fields="fields"responsive hover style="text-align: center;">
       <template #cell(acciones)="data">
         <b-button  variant="" size="sm" class="me-1" @click="editarEmpresa(data.item)">
           <i class="fa-solid fa-pen-to-square fa-lg" style="color: #258f24;"></i>
@@ -257,11 +257,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .custom-rounded-table {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
   }
-  
+  .form-control {
+    width: 30%;
+  }
 </style>
 

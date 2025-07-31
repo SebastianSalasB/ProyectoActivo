@@ -27,16 +27,11 @@
     <!-- Tabla de Tipos -->
     <b-col>
       <b-container>
-        <b-table
-          striped
-          hover
-          responsive
+        <b-table hover small responsive
           :items="tipos"
           :fields="fields"
-          small
           class="w-100 custom-rounded-table"
           style="text-align: center;"
-
         >
           <template #cell(tip_descripcion)="data">
             {{ data.item.tip_descripcion }}
