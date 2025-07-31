@@ -108,13 +108,14 @@ import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
 const currentView = ref('lista')
 const isAuthenticated = ref(false)
 const showConfirmLogout = ref(false)
 
 onMounted(() => {
-  fetch("http://localhost/activos/Backend/index.php/Auth/ConfirmacionSession", {
+  axios.get("/Auth/ConfirmacionSession", {
     credentials: "include"
   })
     .then(async res => {
@@ -139,7 +140,7 @@ function handleLoginSuccess() {
 }
 
 function confirmLogout() {
-  fetch("http://localhost/activos/Backend/index.php/Auth/CerrarSession", {
+  axios.get("/Auth/CerrarSession", {
     method: "POST",
     credentials: "include"
   })
