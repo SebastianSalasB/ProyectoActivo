@@ -2,7 +2,7 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" type="" variant="" class="mb-4">
     <b-container>
-      <b-navbar-brand href="#" >Buscar Activos</b-navbar-brand>
+      <h6 href="#" >Buscar Activos</h6>
       <b-input-group class="mt-2">
         <b-form-input 
           v-model="Buscador" 
@@ -129,7 +129,7 @@
                   <i class="fa-solid fa-gear fa-xl"></i>
                 </template>
                 <!-- Editar: solo si NO está en baja ni eliminado -->
-                <b-dropdown-item style="color: black;"
+                <b-dropdown-item 
                   v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
                   @click="editarActivo(data.item)"
                 >
@@ -137,7 +137,7 @@
                 </b-dropdown-item>
 
                 <!-- Eliminar: solo si NO está en baja ni eliminado -->
-                <b-dropdown-item style="color: black;"
+                <b-dropdown-item 
                   v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
                   @click="confirmarEliminar(data.item)"
                 >
@@ -145,7 +145,7 @@
                 </b-dropdown-item>
 
                 <!-- Mantención: solo si está activo -->
-                <b-dropdown-item style="color: black;"
+                <b-dropdown-item 
                   v-if="data.item.act_estado === 'activo'"
                   @click="abrirModalMantencion(data.item)"
                 >

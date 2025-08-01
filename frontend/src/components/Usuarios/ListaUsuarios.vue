@@ -1,10 +1,10 @@
 <template>
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" class="mb-4">
-    <b-container style="color: black;">
-      <b-navbar-brand style="text-align: left;">Buscar Usuario</b-navbar-brand>
+    <b-container>
+      <b-navbar-brand style="text-align: left;" >Buscar Usuario</b-navbar-brand>
       <b-form class="d-flex ms-auto" @submit.prevent>
-        <b-form-input style="color: black;"
+        <b-form-input 
           v-model="Buscador"
           class="me-2"
           type="search"
@@ -67,7 +67,7 @@
       @ok="EliminarUsuario"
       ok-title="Sí, eliminar"
       cancel-title="Cancelar"
-      ok-variant="danger" style="color: black;"
+      ok-variant="danger" 
     >
       ¿Estás seguro de que deseas eliminar este responsable?
     </b-modal>
@@ -76,32 +76,32 @@
 
     <!-- Modal de edición -->
     <b-modal v-model="modalShow" title="Editar Responsable" size="lg" hide-footer>
-      <b-form style="color: black;">
+      <b-form >
         <b-row>
           <b-col md="6" class="mb-2">            
             <b-form-group label="Nombre">
-              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_nombre" required />
+              <b-form-input  v-model="UsuarioSeleccionado.usr_nombre" required />
             </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">            
             <b-form-group label="Apellido">
-              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_apellido" required />
+              <b-form-input  v-model="UsuarioSeleccionado.usr_apellido" required />
             </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">            
             <b-form-group label="Correo">
-              <b-form-input style="color: black;" type="email" v-model="UsuarioSeleccionado.usr_correo" required />
+              <b-form-input  type="email" v-model="UsuarioSeleccionado.usr_correo" required />
             </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">            
             <b-form-group label="Teléfono">
-              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_telefono" required />
+              <b-form-input  v-model="UsuarioSeleccionado.usr_telefono" required />
             </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">            
             <b-form-group label="RUT">
               <b-form-input
-                style="color: black;"
+                
                 v-model="UsuarioSeleccionado.usr_rut"
                 @blur="UsuarioSeleccionado.usr_rut = formatearRut(UsuarioSeleccionado.usr_rut)"
                 placeholder="Ej: 20.356.341-8"
@@ -109,8 +109,8 @@
             </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">
-            <b-form-group label="Empresa" style="color: black;">
-              <b-form-select style="color: black;"
+            <b-form-group label="Empresa" >
+              <b-form-select 
                 v-model="UsuarioSeleccionado.usr_id_empresa"
                 placeholder="selecciona empresa"
                 :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
@@ -129,14 +129,14 @@
           </b-col>
           <b-col md="6" class="mb-2">
             <b-form-group label="Tipo Usuario">
-              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.nombre_tipo" disabled />
+              <b-form-input  v-model="UsuarioSeleccionado.nombre_tipo" disabled />
             </b-form-group>
           </b-col>
           <b-col v-if="UsuarioSeleccionado.nombre_tipo=== 'admin'" md="6" class="mb-2">
             <b-form-group label="Clave nueva">
               <b-form-input
                 v-if="UsuarioSeleccionado.nombre_tipo === 'admin'"
-                style="color: black;"
+                
                 v-model="UsuarioSeleccionado.usr_clave"
                 type="password"
                 placeholder="Dejar vacío si no desea cambiar la clave"

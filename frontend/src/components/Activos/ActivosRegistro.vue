@@ -1,14 +1,14 @@
 <template>
   <b-container >
   <b-row>
-        <h3 class="mb-3" style="color: black;">Registro de Activos</h3>
+        <h3 class="mb-3" >Registro de Activos</h3>
     <b-col id="NAG" >
-      <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 " style="color: black;" >
-        <b-row style="color: black;">
+      <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 "  >
+        <b-row >
           <b-col sm>
             <b-form-group label="Empresa" >
               <b-form-select 
-                style="color: black;"
+                
                 required
                 v-model="empresaSeleccionada"
                 :options="empresasConSucursales.map(e => ({ value: e.emp_id, text: e.emp_nombre }))" 
@@ -21,7 +21,7 @@
           <b-col sm>
             <b-form-group label="Sucursal">
               <b-form-select
-                style="color: black;"
+                
                 v-model="sucursalSeleccionada"
                 :options="sucursalesFiltradas.map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
                 :class="{ 'is-invalid': inputErrors[index]?.sucursal }"
@@ -32,7 +32,7 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Responsable">
-              <b-form-select style="color: black;"
+              <b-form-select 
                 v-model="activo.usuario_id"
                 :options="usuariosFiltrados.map(u => ({ value: u.usr_id, text:u.usr_rut }))"
                 :class="{ 'is-invalid': inputErrors[index]?.usuario }"
@@ -44,7 +44,7 @@
           <b-col sm>
             <b-form-group label="Fecha">
               <b-form-input
-                type="date" style="color: black;"
+                type="date" 
                 v-model="activo.fecharegistro"
                 :class="{ 'is-invalid': inputErrors[index]?.fecharegistro }"
                 @input="validarCampo(index, 'fecharegistro', activo.fecharegistro)"
@@ -54,7 +54,7 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Tipo">
-            <b-form-select style="color: black;"
+            <b-form-select 
               v-model="activo.tipoactivo"
               :options="tiposDisponibles"
               value-field="tip_id"
@@ -71,7 +71,7 @@
             <b-col sm>
               <b-form-group label="RAM">
                 <b-form-input
-                  v-model="activo.com_ram" style="color: black;"
+                  v-model="activo.com_ram" 
                   :class="{ 'is-invalid': inputErrors[index]?.ram }"
                   @change="validarCampo(index, 'ram', activo.com_ram)"
                 />
@@ -81,7 +81,7 @@
             <b-col sm>
               <b-form-group label="CPU">
                 <b-form-input
-                  v-model="activo.com_cpu" style="color: black;"
+                  v-model="activo.com_cpu" 
                   :class="{ 'is-invalid': inputErrors[index]?.cpu }"
                   @input="validarCampo(index, 'cpu', activo.com_cpu)"
                 />
@@ -91,7 +91,7 @@
             <b-col sm>
              <b-form-group label="Disco">
                 <b-form-input
-                  v-model="activo.com_disco" style="color: black;"
+                  v-model="activo.com_disco" 
                   :class="{ 'is-invalid': inputErrors[index]?.disco }"
                   @input="validarCampo(index, 'disco', activo.com_disco)"
                 />
@@ -101,7 +101,7 @@
             <b-col sm>
               <b-form-group label="Sistema Operativo">
                 <b-form-select
-                  v-model="activo.com_sistema_operativo" style="color: black;"
+                  v-model="activo.com_sistema_operativo" 
                   :class="{ 'is-invalid': inputErrors[index]?.sistemaoperativo }"
                   @input="validarCampo(index, 'cpu', activo.com_cpu)"
                   :options="[
@@ -120,14 +120,14 @@
             <b-row>
               <b-col sm >
                 <b-form-group label="Nombre Servidor"> 
-                  <b-form-input v-model="activo.ser_nombre"  style="color: black;"/>
+                  <b-form-input v-model="activo.ser_nombre"  />
                   <small v-if="errors.ser_nombre" class="text-danger">{{ errors.ser_nombre }}</small>
                 </b-form-group>
                 </b-col>
                 <b-col sm>
                 <b-form-group label="RAM">
                   <b-form-input
-                  v-model="activo.ser_ram" style="color: black;"
+                  v-model="activo.ser_ram" 
                   :class="{ 'is-invalid': inputErrors[index]?.RAM }"
                   @input="validarCampo(index, 'cpu', activo.ser_ram)"
                 />
@@ -137,7 +137,7 @@
                 <b-col sm>
                   <b-form-group label="CPU">
                     <b-form-input
-                      v-model="activo.ser_cpu" style="color: black;"
+                      v-model="activo.ser_cpu" 
                       :class="{ 'is-invalid': inputErrors[index]?.cpuServidor }"
                       @input="validarCampo(index, 'cpuServidor', activo.ser_cpu)"
                     />
@@ -149,7 +149,7 @@
               <b-col sm>
                 <b-form-group label="Disco">
                   <b-form-input
-                  v-model="activo.ser_disco" style="color: black;"
+                  v-model="activo.ser_disco" 
                   :class="{ 'is-invalid': inputErrors[index]?.discoServidor }"
                   @input="validarCampo(index, 'discoServidor', activo.ser_disco)"
                 />
@@ -159,7 +159,7 @@
               <b-col sm>
                 <b-form-group label="Sistema Operativo">
                   <b-form-select
-                  v-model="activo.ser_sistema_operativo" style="color: black;"
+                  v-model="activo.ser_sistema_operativo" 
                   :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativoServidor }"
                   @input="validarCampo(index, 'sistemaOperativoServidor', activo.ser_sistema_operativo)"
                   :options="[
@@ -173,7 +173,7 @@
               <b-col sm>
                 <b-form-group label="Ranuras">
                  <b-form-input
-                  v-model="activo.ser_ranuras_ram" style="color: black;"
+                  v-model="activo.ser_ranuras_ram" 
                   :class="{ 'is-invalid': inputErrors[index]?.ramServidor }"
                   @input="validarCampo(index, 'ramServidor', activo.ser_ranuras_ram)"
                 />
@@ -183,7 +183,7 @@
               <b-col sm>
                 <b-form-group label="Cantidad Max CPU">
                   <b-form-input
-                  v-model="activo.ser_cantidad_max_cpu" style="color: black;"
+                  v-model="activo.ser_cantidad_max_cpu" 
                   :class="{ 'is-invalid': inputErrors[index]?.maxCpu }"
                   @input="validarCampo(index, 'maxCpu', activo.ser_cantidad_max_cpu)"
                   
@@ -197,7 +197,7 @@
         <b-row>
           <b-col sm>
             <b-form-group label="Nº de Serie">
-              <b-form-input v-model="activo.numeroserie" style="color: black;"
+              <b-form-input v-model="activo.numeroserie" 
                   :class="{ 'is-invalid': inputErrors[index]?.numeroSerie }"
                   @input="validarCampo(index, 'numeroSerie', activo.numeroserie)"
                />
@@ -206,7 +206,7 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Factura">
-              <b-form-input v-model="activo.factura" style="color: black;"
+              <b-form-input v-model="activo.factura" 
                   :class="{ 'is-invalid': inputErrors[index]?.factura }"
                   @input="validarCampo(index, 'factura', activo.factura)" />    
               <small v-if="errors.factura" class="text-danger">{{ errors.factura }}</small>
@@ -216,7 +216,7 @@
         <b-row>
           <b-col sm>
             <b-form-group label="Modelo">
-              <b-form-input v-model="activo.modelo" style="color: black;"
+              <b-form-input v-model="activo.modelo" 
                   :class="{ 'is-invalid': inputErrors[index]?.modelo }"
                   @input="validarCampo(index, 'modelo', activo.modelo)" />
               <small v-if="errors.modelo" class="text-danger">{{ errors.modelo }}</small>
@@ -224,7 +224,7 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Fabricante">
-              <b-form-input v-model="activo.fabricante" style="color: black;"
+              <b-form-input v-model="activo.fabricante" 
                   :class="{ 'is-invalid': inputErrors[index]?.fabricante }"
                   @input="validarCampo(index, 'fabricante', activo.fabricante)" />
               <small v-if="errors.fabricante" class="text-danger">{{ errors.fabricante }}</small>
@@ -232,7 +232,7 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Marca">
-              <b-form-input v-model="activo.marca" style="color: black;"
+              <b-form-input v-model="activo.marca" 
                   :class="{ 'is-invalid': inputErrors[index]?.marca }"
                   @input="validarCampo(index, 'marca', activo.marca)" />
               <small v-if="errors.marca" class="text-danger">{{ errors.marca }}</small>
@@ -240,13 +240,13 @@
           </b-col>
         </b-row>
         <b-form-group label="Dirección">
-          <b-form-input v-model="activo.direccion"  style="color: black;"
+          <b-form-input v-model="activo.direccion"  
                   :class="{ 'is-invalid': inputErrors[index]?.direccion }"
                   @input="validarCampo(index, 'direccion', activo.direccion)" />
           <small v-if="errors.direccion" class="text-danger">{{ errors.direccion }}</small>
         </b-form-group>
         <b-form-group label="Descripción">
-          <b-form-textarea v-model="activo.descripcion" style="color: black;"
+          <b-form-textarea v-model="activo.descripcion" 
                   :class="{ 'is-invalid': inputErrors[index]?.descripcion }"
                   @input="validarCampo(index, 'descripcion', activo.descripcion)" />
                   
@@ -254,7 +254,7 @@
         </b-form-group>
         <div>
           <b-form-group label="" label-for="input-1">
-            <b-form-checkbox style="color: black;"
+            <b-form-checkbox 
               v-model="activo.tieneIp"
               :id="'checkbox-' + index"
             >
@@ -262,7 +262,7 @@
             </b-form-checkbox>
             <div v-if="activo.tieneIp">
               <div v-for="(ip, i) in activo.ips" :key="i" class="d-flex mb-2">
-                <b-form-input style="color: black;"
+                <b-form-input 
                   v-model="activo.ips[i]"
                   placeholder="Ingrese IP"
                 />

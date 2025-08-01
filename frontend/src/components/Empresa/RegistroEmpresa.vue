@@ -3,12 +3,12 @@
     <b-container fluid="sm" id="NAG">
       <h3>Registrar Empresa</h3>
       <b-col class="row row-cols-2">
-        <b-form-group label="Nombre de la Empresa" style="color: black;">
+        <b-form-group label="Nombre de la Empresa" >
           <b-form-input v-model="empresa.emp_nombre" id="emp_nombre" name="emp_nombre" />
           <small v-if="errors.emp_nombre" class="text-danger">{{ errors.emp_nombre }}</small>
         </b-form-group>
 
-        <b-form-group label="Dirección de la Empresa" style="color: black;">
+        <b-form-group label="Dirección de la Empresa" >
           <b-form-input 
           v-model="empresa.emp_direccion" 
           id="emp_direccion" name="emp_direccion" />
@@ -16,18 +16,18 @@
         </b-form-group>
       </b-col>
       
-      <b-form-group label="Sucursales" style="color:black;">
+      <b-form-group label="Sucursales" >
         <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-3" >
           <hr />
           <b-form-group 
           label="Nombre de Sucursal" 
-          style="color: black;">
+          >
             <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
           </b-form-group>
 
           <b-form-group 
           label="Dirección de Sucursal" 
-          style="color: black;">
+          >
             <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
           </b-form-group>
           <hr />

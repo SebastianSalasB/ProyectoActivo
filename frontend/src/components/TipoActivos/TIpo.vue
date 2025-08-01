@@ -4,7 +4,7 @@
     <b-col>
       <b-container fluid="sm" id="NAG" >
         <b-form-group label="Nombre de Tipo">
-          <b-form-input v-model="Tipo.Nombre" id="Nombre" style="color: black;" name="Nombre" placeholder="" />
+          <b-form-input v-model="Tipo.Nombre" id="Nombre"  name="Nombre" placeholder="" />
           <small v-if="errors.Nombre" class="text-danger">{{ errors.Nombre }}</small>
         </b-form-group>
       </b-container>
@@ -72,7 +72,7 @@
       </b-card>
 
       <!-- Modal de Edición -->
-      <b-modal v-model="modalEditar" title="Editar Tipo" style="color: black;" size="md" hide-footer>
+      <b-modal v-model="modalEditar" title="Editar Tipo"  size="md" hide-footer>
         <b-form @submit.prevent>
           <b-form-group label="Descripción">
             <b-form-input v-model="tipoAEditar.tip_descripcion" />

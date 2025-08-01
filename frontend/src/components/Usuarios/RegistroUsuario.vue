@@ -5,13 +5,13 @@
         v-for="(activo, index) in usuarios.activos"
         :key="index"
         class="p-3 mb-3"
-        style="color: black;"
+        
       >
         <!-- Nombres y Apellidos -->
         <b-row>
           <b-col sm>
             <b-form-group label="Nombres">
-              <b-form-input style="color: black;"
+              <b-form-input 
                 v-model="activo.user_nombre"
                 :class="{ 'is-invalid': inputErrors[index]?.nombre }"
                 placeholder="Sebastian"
@@ -22,7 +22,7 @@
 
           <b-col sm>
             <b-form-group label="Apellidos">
-              <b-form-input style="color: black;"
+              <b-form-input 
                 v-model="activo.user_apellido"
                 :class="{ 'is-invalid': inputErrors[index]?.apellido }"
                 placeholder="Salas"
@@ -37,7 +37,7 @@
           <b-col class="sm-2">
             <div v-for="(usuario, index) in usuarios.activos" :key="index" class="mb-3">
               <b-form-group label="RUT">
-              <b-form-input style="color: black;"
+              <b-form-input 
                 :value="activo.user_rut"
                 @input="formatearRut($event, index)"
                 :class="{ 'is-invalid': inputErrors[index]?.rut }"
@@ -48,7 +48,7 @@
           </b-col>
           <b-col sm-2>
             <b-form-group label="Correo">
-              <b-form-input style="color: black;"
+              <b-form-input 
                 v-model="activo.user_correo"
                 :class="{ 'is-invalid': inputErrors[index]?.correo }"
                 type="correo"
@@ -63,7 +63,7 @@
         <b-row>
           <b-col sm>
             <b-form-group label="Teléfono">
-              <b-form-input style="color: black;"
+              <b-form-input 
                 v-model="activo.user_telefono"
                 :class="{ 'is-invalid': inputErrors[index]?.telefono }"
                 type="tel"
@@ -75,14 +75,14 @@
           <b-row>
             <b-col sm="1">
               <b-form-group label="ADMIN">
-                <b-form-checkbox style="color: black;"
+                <b-form-checkbox 
                 v-model="activo.tipoactivo" />
               </b-form-group>
             </b-col>
             <b-col v-if="activo.tipoactivo">
               
               <b-form-group label="Clave">
-                  <b-form-input style="color: black;"
+                  <b-form-input 
                     v-model="activo.user_clave"
                     :class="{ 'is-invalid': inputErrors[index]?.clave }"
                     type="password"
@@ -96,8 +96,8 @@
         <!-- Empresa y Sucursal -->
         <b-row>
           <b-col sm>
-            <b-form-group label="Empresa" style="color: black;">
-              <b-form-select style="color: black;"
+            <b-form-group label="Empresa" >
+              <b-form-select 
                 v-model="activo.user_id_empresa"
                 :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
                 :class="{ 'is-invalid': inputErrors[index]?.empresa }"
@@ -109,7 +109,7 @@
 
           <b-col sm>
             <b-form-group label="Sucursal" >
-              <b-form-select style="color: black;"
+              <b-form-select 
                 placeholder="Seleccione sucursal"
                 v-model="activo.user_id_sucursal"
                 :options="sucursalesFiltradas(activo.user_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
@@ -142,7 +142,7 @@
       title="Registro exitoso"
       ok-only
       v-model="modalShow"
-      style="color: black;"
+      
     >
       Usuarios registrados correctamente.
     </b-modal>

@@ -2,9 +2,9 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" class="mb-4">
     <b-container >
-      <b-navbar-brand href="#" style="color: black;">Empresas</b-navbar-brand>
-      <b-form class="d-flex ms-auto" @submit.prevent style="color: black;">
-        <b-form-input style="color: black;"
+      <h6 href="#" >Empresas</h6>
+      <b-form class="d-flex ms-auto" @submit.prevent >
+        <b-form-input 
           v-model="Buscador"
           class="me-2"
           type="search"
@@ -29,7 +29,7 @@
 
     <!-- Modal de edición -->
     <b-modal v-model="modalShow" title="Editar Empresa" size="lg" hide-footer>
-      <b-form style="color: black;">
+      <b-form >
         <b-row>
           <b-col md="6" class="mb-2" >
             <label>Nombre</label>
@@ -87,7 +87,7 @@
       ok-title="Sí, guardar cambios"
       cancel-title="Cancelar"
       ok-variant="success"
-      style="color: black;"
+      
     >
       ¿Estás seguro de que deseas guardar los cambios a la empresa <strong>{{ seleccionarEmpresa.emp_nombre }}</strong>?
     </b-modal>
@@ -100,7 +100,7 @@
       ok-title="Sí, eliminar"
       cancel-title="Cancelar"
       ok-variant="danger"
-      style="color: black;"
+      
     >
       ¿Estás seguro de que deseas eliminar la empresa <strong>{{ seleccionarEmpresa.emp_nombre }}</strong>?
     </b-modal>
@@ -113,7 +113,7 @@
       ok-title="Sí, eliminar sucursal"
       cancel-title="Cancelar"
       ok-variant="danger"
-      style="color: black;"
+      
     >
       ¿Estás seguro de que deseas eliminar la sucursal <strong>{{ sucursalEliminar?.suc_nombre }}</strong>?
     </b-modal>
