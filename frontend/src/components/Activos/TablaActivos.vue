@@ -304,29 +304,17 @@
         <b-row>
           <b-col sm>
             <b-form-group label="RAM">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_computador.com_ram"
-                :options="[
-                  { value: '4GB', text: '4 GB' },
-                  { value: '8GB', text: '8 GB' },
-                  { value: '16GB', text: '16 GB' },
-                  { value: '32GB', text: '32 GB' },
-                  { value: '64GB', text: '64 GB' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
           <b-col sm>
             <b-form-group label="CPU">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_computador.com_cpu"
-                :options="[
-                  { value: 'i3', text: 'Intel i3' },
-                  { value: 'i5', text: 'Intel i5' },
-                  { value: 'i7', text: 'Intel i7' },
-                  { value: 'Ryzen5', text: 'Ryzen 5' },
-                  { value: 'Ryzen7', text: 'Ryzen 7' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
@@ -334,25 +322,17 @@
         <b-row>
           <b-col sm>
             <b-form-group label="Disco">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_computador.com_disco"
-                :options="[
-                  { value: '256GB_SSD', text: '256 GB SSD' },
-                  { value: '512GB_SSD', text: '512 GB SSD' },
-                  { value: '1TB_HDD', text: '1 TB HDD' },
-                  { value: '1TB_SSD', text: '1 TB SSD' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
           <b-col sm>
             <b-form-group label="Sistema Operativo">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_computador.com_sistema_operativo"
-                :options="[
-                  { value: 'Windows', text: 'Windows' },
-                  { value: 'Linux', text: 'Linux' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
@@ -369,28 +349,17 @@
           </b-col>
           <b-col sm>
             <b-form-group label="RAM">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_ram"
-                :options="[
-                  { value: '4GB', text: '4 GB' },
-                  { value: '8GB', text: '8 GB' },
-                  { value: '16GB', text: '16 GB' },
-                  { value: '32GB', text: '32 GB' },
-                  { value: '64GB', text: '64 GB' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
           <b-col sm>
             <b-form-group label="CPU">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_cpu"
-                :options="[
-                  { value: 'Intel Xeon', text: 'Intel Xeon' },
-                  { value: 'AMD EPYC', text: 'AMD EPYC' },
-                  { value: 'ARM', text: 'ARM' },
-                  { value: 'PowerPC', text: 'PowerPC' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
@@ -398,55 +367,35 @@
         <b-row>
           <b-col sm>
             <b-form-group label="Disco">
-              <b-form-select
+              
+              <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_disco"
-                :options="[
-                  { value: '256GB_SSD', text: '256 GB SSD' },
-                  { value: '512GB_SSD', text: '512 GB SSD' },
-                  { value: '1TB_HDD', text: '1 TB HDD' },
-                  { value: '2TB_SSD', text: '2 TB SSD' },
-                  { value: '10TB_HDD', text: '10 TB HDD' },
-                  { value: '15TB_SSD', text: '15 TB SSD' },
-                  { value: '20TB_HDD', text: '20 TB HDD' },
-                  { value: '24TB_SSD', text: '25 TB SSD' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
           <b-col sm>
             <b-form-group label="Sistema Operativo">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_sistema_operativo"
-                :options="[
-                  { value: 'Windows', text: 'Windows' },
-                  { value: 'linux', text: 'Ubuntu' },
-                  { value: 'FreeBSD', text: 'FreeBSD' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
           <b-col sm>
             <b-form-group label="Ranuras">
-              <b-form-select
+              
+              <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_ranuras_ram"
-                :options="[
-                  { value: '8 Ranuras', text: '8 Ranuras' },
-                  { value: '16 Ranuras', text: '16 Ranuras' },
-                  { value: '32 Ranuras', text: '32 Ranuras' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
           <b-col sm>
             <b-form-group label="Cantidad Max CPU">
-              <b-form-select
+              <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_cantidad_max_cpu"
-                :options="[
-                  { value: '2 CPU', text: '2 CPU' },
-                  { value: '4 CPU', text: '4 CPU' },
-                  { value: '8 CPU', text: '8 CPU' },
-                  { value: '16 CPU', text: '16 CPU' }
-                ]" required
+                required
               />
             </b-form-group>
           </b-col>
