@@ -235,7 +235,7 @@ function confirmLogout() {
 .modo-oscuro input,
 .modo-oscuro textarea,
 .modo-oscuro select {
-  background-color: #929292 !important;
+  background-color: #424242 !important;
   color: white !important;
   border-color: #c9c9c9 !important;
 }
@@ -249,4 +249,22 @@ function confirmLogout() {
 .modo-oscuro .btn:hover {
   background-color: #000000;
 }
+.modo-oscuro .vueform__input ,
+.modo-oscuro .multiselect-option ,
+
+.modo-oscuro.multiselect-dropdown  
+{
+  background-color: #424242 !important;
+  color: rgb(255, 255, 255) !important;
+}
+.modo-oscuro .is-selected {
+  background-color: #b6b6b6 !important;
+  color: rgb(0, 0, 0) !important;
+}
+.modo-oscuro .vueform__input::placeholder {
+  color: rgb(255, 255, 255) !important;
+}
+
 </style>
+
+
