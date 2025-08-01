@@ -42,7 +42,7 @@
             </b-nav-item-dropdown>
 
             <!-- Menú Usuarios -->
-            <b-nav-item-dropdown text="Usuarios" left class="dropdown-dark">
+            <b-nav-item-dropdown text="Usuarios" left  class="dropdown-dark" style="">
               <b-dropdown-item @click="currentView = 'RegistroResponsable'">
                 <i class="fa-solid fa-file-pen fa-sm"></i> Usuarios
               </b-dropdown-item>
@@ -235,7 +235,7 @@ function confirmLogout() {
 .modo-oscuro input,
 .modo-oscuro textarea,
 .modo-oscuro select {
-  background-color: #424242 !important;
+  background-color: #000000 !important;
   color: white !important;
   border-color: #c9c9c9 !important;
 }
@@ -251,7 +251,6 @@ function confirmLogout() {
 }
 .modo-oscuro .vueform__input ,
 .modo-oscuro .multiselect-option ,
-
 .modo-oscuro.multiselect-dropdown  
 {
   background-color: #424242 !important;
