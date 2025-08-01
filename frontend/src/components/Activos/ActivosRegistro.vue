@@ -38,10 +38,16 @@
                   value: u.usr_id,
                   label: `${u.usr_rut} - ${u.usr_nombre} ${u.usr_apellido}`
                 }))"
-                placeholder="Buscar responsable..."
+                placeholder="Buscar por RUT, nombre o apellido"
                 searchable
                 :class="{ 'is-invalid': inputErrors[index]?.usuario }"
                 @input="val => validarCampo(index, 'usuario', val)"
+                :translations="{
+                  noOptions: 'La lista está vacía',
+                  noResults: 'Sin coincidencias',
+                  search: 'Buscar...',
+                  loading: 'Cargando...'
+                }"
               />
               <small v-if="errors.usuario_id" class="text-danger">{{ errors.usuario_id }}</small>
             </b-form-group>
