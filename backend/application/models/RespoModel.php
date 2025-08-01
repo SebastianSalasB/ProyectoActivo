@@ -4,11 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class RespoModel extends CI_Model
 {
     public function responsablesListado() {
-        $this->db->select('u.*, s.suc_nombre as nombre_sucursal, t.tus_tipo as nombre_tipo');
+        $this->db->select('u.*,
+        e.emp_id as usr_id_empresa,
+        e.emp_nombre as nombre_empresa,
+        s.suc_nombre as nombre_sucursal,
+        t.tus_tipo as nombre_tipo');
         $this->db->from('activos.usuarios u');
         $this->db->join('activos.sucursales s', 's.suc_id = u.usr_id_sucursal', 'left');
         $this->db->join('activos.tipos_usuario t', 't.tus_id = u.usr_id_tipos', 'left');
+        $this->db->join('activos.empresas e', 'e.emp_id = s.suc_id_empresa', 'left');
         $this->db->where('u.usr_estado', 'activo');
+        $this->db->where('s.suc_estados', 'activo');
+        $this->db->where('e.emp_estado', 'activo');
         $this->db->order_by('u.usr_id');
         $query = $this->db->get();
         return $query->result();

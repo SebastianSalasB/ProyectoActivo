@@ -78,32 +78,42 @@
     <b-modal v-model="modalShow" title="Editar Responsable" size="lg" hide-footer>
       <b-form style="color: black;">
         <b-row>
-          <b-col md="6" class="mb-2">
-            <label>Nombre</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_nombre" required />
+          <b-col md="6" class="mb-2">            
+            <b-form-group label="Nombre">
+              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_nombre" required />
+            </b-form-group>
           </b-col>
-          <b-col md="6" class="mb-2">
-            <label>Apellido</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_apellido" required />
+          <b-col md="6" class="mb-2">            
+            <b-form-group label="Apellido">
+              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_apellido" required />
+            </b-form-group>
           </b-col>
-          <b-col md="6" class="mb-2">
-            <label>Correo</label>
-            <b-form-input style="color: black;" type="email" v-model="UsuarioSeleccionado.usr_correo" required />
+          <b-col md="6" class="mb-2">            
+            <b-form-group label="Correo">
+              <b-form-input style="color: black;" type="email" v-model="UsuarioSeleccionado.usr_correo" required />
+            </b-form-group>
           </b-col>
-          <b-col md="6" class="mb-2">
-            <label>Teléfono</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_telefono" />
+          <b-col md="6" class="mb-2">            
+            <b-form-group label="Teléfono">
+              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_telefono" required />
+            </b-form-group>
           </b-col>
-          <b-col md="6" class="mb-2">
-            <label>RUT</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.usr_rut" required />
+          <b-col md="6" class="mb-2">            
+            <b-form-group label="RUT">
+              <b-form-input
+                style="color: black;"
+                v-model="UsuarioSeleccionado.usr_rut"
+                @blur="UsuarioSeleccionado.usr_rut = formatearRut(UsuarioSeleccionado.usr_rut)"
+                placeholder="Ej: 20.356.341-8"
+              />
+            </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">
             <b-form-group label="Empresa" style="color: black;">
               <b-form-select style="color: black;"
-                v-model="usuarios.usr_id_empresa"
+                v-model="UsuarioSeleccionado.usr_id_empresa"
+                placeholder="selecciona empresa"
                 :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
-                placeholder="Seleccione empresa"
               />
             </b-form-group>
           </b-col>
@@ -118,14 +128,21 @@
             </b-form-group>
           </b-col>
           <b-col md="6" class="mb-2">
-            <label>Tipo de Responsable</label>
-            <b-form-input style="color: black;" v-model="UsuarioSeleccionado.nombre_tipo" />
+            <b-form-group label="Tipo Usuario">
+              <b-form-input style="color: black;" v-model="UsuarioSeleccionado.nombre_tipo" disabled />
+            </b-form-group>
           </b-col>
           <b-col v-if="UsuarioSeleccionado.nombre_tipo=== 'admin'" md="6" class="mb-2">
-            <label>Clave nueva</label>
-            <b-form-input style="color: black;" @input="UsuarioSeleccionado.usr_clave" />
+            <b-form-group label="Clave nueva">
+              <b-form-input
+                v-if="UsuarioSeleccionado.nombre_tipo === 'admin'"
+                style="color: black;"
+                v-model="UsuarioSeleccionado.usr_clave"
+                type="password"
+                placeholder="Dejar vacío si no desea cambiar la clave"
+              />
+            </b-form-group>
           </b-col>
-
         </b-row>
         <div class="text-end mt-3">
           <b-button variant="success" class="me-2" @click="confirmacionEditar">Guardar</b-button>
@@ -194,33 +211,54 @@ export default {
     async cargarUsuario() {
       try {
         const { data } = await axios.get(`/Usuarios/listarResponsable`)
-        this.usuarios = data.Responsable
+        this.usuarios = data.Responsable       
         this.totalResponsables = data.Responsable.length
+
       } catch (error) {
         console.error('Error al cargar responsables:', error)
       }
     },
     async cargarEmpresasYSucursales() {
       try {
-        const [resEmpresas, resSucursales] = await Promise.all([
+        const [resEmpresas, resSucursales,resUsuarios] = await Promise.all([
           axios.get('/Usuarios/listaE'),
-          axios.get('/Usuarios/listaS')
+          axios.get('/Usuarios/listaS'),
+          axios.get('/Usuarios/listarResponsable')
         ]);
-        console.log('Empresas crudas:', resEmpresas.data);
-        console.log('Sucursales crudas:', resSucursales.data);
-
         this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo');
         this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo');
+        this.sucursalesIDempresa = this.sucursales.map(s=> s.suc_id_empresa)
+   
 
-        console.log('Empresas filtradas:', this.empresas);
-        console.log('Sucursales filtradas:', this.sucursales);
       } catch (error) {
         console.error('Error cargando empresas o sucursales:', error);
       }
     },
+    formatearRut(rut) {
+      if (!rut) return ''
+      rut = rut.replace(/[^0-9kK]/g, '').toUpperCase()
+
+      let cuerpo = rut.slice(0, -1)
+      let dv = rut.slice(-1)
+
+      if (cuerpo.length < 1) return rut
+
+      // Formatear cuerpo con puntos
+      let cuerpoFormateado = ''
+      while (cuerpo.length > 3) {
+        cuerpoFormateado = '.' + cuerpo.slice(-3) + cuerpoFormateado
+        cuerpo = cuerpo.slice(0, -3)
+      }
+      cuerpoFormateado = cuerpo + cuerpoFormateado
+      console.log(`${cuerpoFormateado}-${dv}`)
+      return `${cuerpoFormateado}-${dv}`
+    },
     sucursalesFiltradas(empId) {
       if (!empId) return []
       return this.sucursales.filter(s => String(s.suc_id_empresa) === String(empId))
+    },
+    EmpresasFiltradas(){
+      if(!this.UsuarioSeleccionado.usr_id_sucursal) return []
     },
     editarUsuario(respo) {
       this.UsuarioSeleccionado = { ...respo }
@@ -239,6 +277,7 @@ export default {
           `/Usuarios/ActualizarUsuario/${this.UsuarioSeleccionado.usr_id}`,
           this.UsuarioSeleccionado
         )
+        console.log(this.UsuarioSeleccionado)
         if (res.data.status === 'updated') {
           alert('Responsable actualizado correctamente')
           this.modalShow = false

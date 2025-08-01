@@ -25,27 +25,38 @@ class Usuarios extends CI_Controller
         ]);
     }
     public function ActualizarUsuario($id) {
-        $data = json_decode(file_get_contents('php://input'), true); // <--- importante
+        $data = json_decode(file_get_contents('php://input'), true);
 
         if (!$data) {
             echo json_encode(['error' => 'No se recibieron datos válidos']);
             return;
         }
 
+        // Preparamos los datos base
         $userData = [
-            'usr_nombre' => $data['usr_nombre'] ?? null,
-            'usr_apellido'  => $data['usr_apellido'] ?? null,
-            'usr_rut'   => $data['usr_rut'] ?? null,
-            'usr_correo'    => $data['usr_correo'] ?? null,
-            'usr_telefono'  => $data['usr_telefono'] ?? null,
+            'usr_nombre'     => $data['usr_nombre']     ?? null,
+            'usr_apellido'   => $data['usr_apellido']   ?? null,
+            'usr_rut'        => $data['usr_rut']        ?? null,
+            'usr_correo'     => $data['usr_correo']     ?? null,
+            'usr_telefono'   => $data['usr_telefono']   ?? null,
+            'usr_id_tipos'   => $data['usr_id_tipos']   ?? 2,
+            'usr_id_sucursal'=> $data['usr_id_sucursal']?? null,
+            'usr_estado'     => $data['usr_estado']     ?? 'activo',
         ];
 
+        // Verificamos si viene una clave nueva
+        if (!empty($data['usr_clave'])) {
+            $userData['usr_clave'] = password_hash($data['usr_clave'], PASSWORD_BCRYPT);
+        }
+
+        // Ejecutamos la actualización
         if ($this->RespoModel->actualizaUsuario($id, $userData)) {
             echo json_encode(['status' => 'updated']);
-            } else {
-                echo json_encode(['status' => 'error']);
-            }
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
     }
+
     public function CrearUsuario(){
         // Permitir CORS si es necesario
         header('Access-Control-Allow-Origin: *');
