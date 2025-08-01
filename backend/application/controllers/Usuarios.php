@@ -47,7 +47,9 @@ class Usuarios extends CI_Controller
         // Verificamos si viene una clave nueva
         if (!empty($data['usr_clave'])) {
             $userData['usr_clave'] = password_hash($data['usr_clave'], PASSWORD_BCRYPT);
+            
         }
+
 
         // Ejecutamos la actualización
         if ($this->RespoModel->actualizaUsuario($id, $userData)) {
@@ -102,7 +104,7 @@ class Usuarios extends CI_Controller
                 'usr_telefono'      => $user['user_telefono'],
                 'usr_id_sucursal'   => $user['user_id_sucursal'],
                 'usr_estado'        => 'activo',
-                'usr_id_tipos'      => isset($user['user_id_tipos']) ? $user['user_id_tipos'] : 2,
+                'usr_id_tipos'      => isset($user['user_id_tipos']) ? 1 : 2,
             ];
 
             // Incluir clave si es responsable

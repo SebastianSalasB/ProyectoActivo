@@ -156,7 +156,8 @@ export default {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
           validateStatus: () => true
-        });
+        })
+        console.log(this.rutFormateado,  this.password)
 
         if (response.data.status === 'success') {
           this.loginError = '';

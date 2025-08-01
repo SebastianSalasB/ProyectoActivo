@@ -384,9 +384,10 @@ export default {
         });
         const response = await axios.post(
           '/Usuarios/CrearUsuario',
-          { activos: this.usuarios.activos },
+          { activos: activosConDatos },
           { headers: { 'Content-Type': 'application/json' } }
         )
+        console.log(this.usuarios.activos)
 
         console.log('Respuesta del servidor:', response.data)
         this.modalShow = true

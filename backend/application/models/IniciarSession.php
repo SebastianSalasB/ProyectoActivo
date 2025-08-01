@@ -15,7 +15,7 @@ class IniciarSession extends CI_Model {
         $query = $this->db->get('activos.usuarios');
         $usuario = $query->row();
 
-        if ($usuario && password_verify($password, $usuario->usr_clave)) {
+        if (password_verify($password, $usuario->usr_clave)) {
             return $usuario;
         }
         return false;
