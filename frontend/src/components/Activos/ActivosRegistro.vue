@@ -32,11 +32,16 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Responsable">
-              <b-form-select 
+              <Multiselect
                 v-model="activo.usuario_id"
-                :options="usuariosFiltrados.map(u => ({ value: u.usr_id, text:u.usr_rut }))"
+                :options="usuariosFiltrados.map(u => ({
+                  value: u.usr_id,
+                  label: `${u.usr_rut} - ${u.usr_nombre} ${u.usr_apellido}`
+                }))"
+                placeholder="Buscar responsable..."
+                searchable
                 :class="{ 'is-invalid': inputErrors[index]?.usuario }"
-                @change="val => validarCampo(index, 'usuario', val)"
+                @input="val => validarCampo(index, 'usuario', val)"
               />
               <small v-if="errors.usuario_id" class="text-danger">{{ errors.usuario_id }}</small>
             </b-form-group>
@@ -311,6 +316,11 @@
 </template>
 <script>
 import axios from 'axios'
+import Multiselect from '@vueform/multiselect'
+import '@vueform/multiselect/themes/default.css'
+
+
+  
 
 export default {
   data() {
@@ -344,6 +354,9 @@ export default {
       errors: {},
       inputErrors: [] 
     }
+  },
+  components: {
+    Multiselect
   },
   computed: {
     sucursalesFiltradas() {
