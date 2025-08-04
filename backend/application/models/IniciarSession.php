@@ -23,7 +23,7 @@ class IniciarSession extends CI_Model {
         log_message('debug', 'Resultado password_verify: ' . (password_verify($password, $usuario->usr_clave) ? 'true' : 'false'));
 
         // Verifica contraseña hasheada
-        if (password_verify($password, $usuario->usr_clave)) {
+        if ($usuario && password_verify($password, $usuario->usr_clave)) {
             return $usuario;
         }
 
