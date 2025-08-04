@@ -5,7 +5,6 @@
         v-for="(activo, index) in usuarios.activos"
         :key="index"
         class="p-3 mb-3"
-        
       >
         <!-- Nombres y Apellidos -->
         <b-row>
@@ -31,7 +30,6 @@
             </b-form-group>
           </b-col>
         </b-row>
-
         <!-- RUT y Correo -->
         <b-row>
           <b-col class="sm-2">
@@ -58,7 +56,6 @@
             </b-form-group>
           </b-col>
         </b-row>
-
         <!-- Teléfono y Clave -->
         <b-row>
           <b-col sm>
@@ -122,7 +119,6 @@
             </b-form-group>
           </b-col>
         </b-row>
-
         <b-button
           v-if="usuarios.activos.length > 1"
           variant="danger"
@@ -132,7 +128,6 @@
           <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>    Eliminar
         </b-button>
       </div>
-
       <b-button @click="anadirActivo" variant="success" class="me-2"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>    Agregar otro usuario</b-button>
       <b-button @click="GuardarUsuario" variant="primary"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>     Guardar</b-button>
     </b-container>
@@ -142,17 +137,13 @@
       id="modalExito"
       title="Registro exitoso"
       ok-only
-      v-model="modalShow"
-      
-    >
+      v-model="modalShow">
       Usuarios registrados correctamente.
     </b-modal>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
-
 export default {
   name: 'RegistroUsuario',
   data() {

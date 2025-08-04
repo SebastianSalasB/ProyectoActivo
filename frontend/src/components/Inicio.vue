@@ -3,7 +3,6 @@
     <div v-if="!isAuthenticated" class="login-container">
       <Login @login-success="handleLoginSuccess" />
     </div>
-
     <div v-else style="height: 56rem;">
       <!-- Navbar superior -->
       <b-col>
@@ -111,11 +110,9 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
-
 // Componentes
 import Login from './components/Login/Login.vue'
 import ActivosRegistro from './components/Activos/ActivosRegistro.vue'
@@ -125,21 +122,18 @@ import RegistroEmpresa from './components/Empresa/RegistroEmpresa.vue'
 import ListaEmpresa from './components/Empresa/ListaEmpresa.vue'
 import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
-
 import '@fortawesome/fontawesome-free/css/all.css'
 
 // Estado general
 const currentView = ref('lista')
 const isAuthenticated = ref(false)
 const showConfirmLogout = ref(false)
-
 // Modo oscuro
 const modoOscuro = ref(localStorage.getItem('modoOscuro') === 'true')
 function toggleModoOscuro() {
   modoOscuro.value = !modoOscuro.value
   localStorage.setItem('modoOscuro', modoOscuro.value)
 }
-
 // Título dinámico
 const tituloActual = computed(() => {
   switch (currentView.value) {
@@ -153,7 +147,6 @@ const tituloActual = computed(() => {
     default: return ''
   }
 })
-
 // Comprobación de sesión
 onMounted(() => {
   axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
@@ -172,13 +165,11 @@ onMounted(() => {
       currentView.value = 'login'
     })
 })
-
 // Funciones sesión
 function handleLoginSuccess() {
   isAuthenticated.value = true
   currentView.value = 'lista'
 }
-
 function confirmLogout() {
   axios.post('/Auth/CerrarSession', {}, { withCredentials: true })
     .finally(() => {
@@ -190,7 +181,6 @@ function confirmLogout() {
     })
 }
 </script>
-
 <style>
 .login-container {
   display: flex;
@@ -198,42 +188,34 @@ function confirmLogout() {
   align-items: center;
   height: 100vh;
 }
-
 .bg-barra {
   background-color: #000 !important;
   color: white !important;
 }
-
 .navbar-nav .dropdown-dark .nav-link,
 .navbar-nav .dropdown-dark .dropdown-toggle {
   color: white !important;
 }
-
 .bg-barra .dropdown-menu {
   --bs-dropdown-link-active-bg: #6c757d;
   background-color: #000 !important;
 }
-
 .bg-barra .dropdown-item {
   color: white !important;
 }
-
 .bg-barra .dropdown-item:hover {
   background-color: #000000 !important;
   color: white !important;
 }
-
 /* MODO CLARO / OSCURO */
 .modo-claro {
   background-color: #ffffff;
   color: black;
 }
-
 .modo-oscuro {
   background-color: #121212;
   color: white;
 }
-
 .modo-oscuro .card,
 .modo-oscuro .table,
 .modo-oscuro .dropdown-menu,
@@ -241,12 +223,10 @@ function confirmLogout() {
   background-color: #000000 !important;
   color: white !important;
 }
-
 .modo-oscuro .dropdown-item:hover {
   background-color: #000000 !important;
   color: white !important;
 }
-
 .modo-oscuro .form-control,
 .modo-oscuro input,
 .modo-oscuro textarea,
@@ -255,13 +235,11 @@ function confirmLogout() {
   color: white !important;
   border-color: #c9c9c9 !important;
 }
-
 .modo-oscuro .btn {
   color: white;
   background-color: #000000;
   border-color: #000000;
 }
-
 .modo-oscuro .btn:hover {
   background-color: #000000;
 }
@@ -279,7 +257,6 @@ function confirmLogout() {
 .modo-oscuro .vueform__input::placeholder {
   color: rgb(255, 255, 255) !important;
 }
-
 </style>
 
 

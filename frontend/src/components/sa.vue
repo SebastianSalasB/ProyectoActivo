@@ -6,12 +6,11 @@
         :value="usuario.user_rut"
         @input="formatearRut($event, index)"
         placeholder="Ej: 20.356.341-8"
-      />
+        />
       <p class="text-white">RUT guardado: {{ usuario.user_rut }}</p>
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -32,10 +31,8 @@ export default {
         this.usuarios.activos[index].user_rut = ''
         return
       }
-
       let cuerpo = rut.slice(0, -1)
       let dv = rut.slice(-1)
-
       // Formatear con puntos cada 3 cifras desde el final
       let formateado = ''
       let i = cuerpo.length
@@ -44,7 +41,6 @@ export default {
         i -= 3
       }
       formateado = cuerpo.slice(0, i) + formateado
-
       this.usuarios.activos[index].user_rut = `${formateado}-${dv}`
     }
   }

@@ -61,21 +61,18 @@
             </b-col>
           </b-row>
         </div>
-
         <!-- Botón para agregar nueva sucursal -->
         <b-col md="3" class="mb-3">
           <b-button variant="success" size="sm" @click="agregarSucursal">
             <i class="fa-solid fa-plus"></i> Agregar Sucursal
           </b-button>
         </b-col>
-
         <div class="text-end mt-3">
           <b-button variant="success" class="me-2" @click="confirmarEditor"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Guardar</b-button>
           <b-button variant="secondary" @click="cancelarEditor"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>  Cancelar</b-button>
         </div>
       </b-form>
     </b-modal>
-
     <!-- Modal de confirmación de edición -->
     <b-modal
       v-model="editarConfirmacionModal"
@@ -84,11 +81,9 @@
       ok-title="Sí, guardar cambios"
       cancel-title="Cancelar"
       ok-variant="success"
-      
-    >
+      >
       ¿Estás seguro de que deseas guardar los cambios a la empresa <strong>{{ seleccionarEmpresa.emp_nombre }}</strong>?
     </b-modal>
-
     <!-- Modal de confirmación de eliminación empresas -->
     <b-modal
       v-model="eliminarConfirmaModal"
@@ -97,11 +92,9 @@
       ok-title="Sí, eliminar"
       cancel-title="Cancelar"
       ok-variant="danger"
-      
-    >
+      >
       ¿Estás seguro de que deseas eliminar la empresa <strong>{{ seleccionarEmpresa.emp_nombre }}</strong>?
     </b-modal>
-
     <!-- Modal de confirmación de eliminación sucursal -->
     <b-modal
       v-model="eliminarSucursalConfirmarModal"
@@ -110,16 +103,13 @@
       ok-title="Sí, eliminar sucursal"
       cancel-title="Cancelar"
       ok-variant="danger"
-      
-    >
+      >
       ¿Estás seguro de que deseas eliminar la sucursal <strong>{{ sucursalEliminar?.suc_nombre }}</strong>?
     </b-modal>
   </b-container>
 </template>
-
 <script>
 import axios from 'axios'
-
 export default {
   data() {
     return {
@@ -258,12 +248,10 @@ export default {
   }
 }
 </script>
-
 <style scoped>
   .custom-rounded-table {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
   }
-  
 </style>
 

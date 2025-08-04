@@ -68,36 +68,41 @@
       v-model="modalShow" title="Editar Usuario" size="lg" hide-footer>
       <b-form >
         <b-row>
+          <!-- Nombre -->
           <b-col md="6" class="mb-2">            
             <b-form-group label="Nombre">
               <b-form-input  v-model="UsuarioSeleccionado.usr_nombre" required />
             </b-form-group>
           </b-col>
+          <!-- Apellido -->
           <b-col md="6" class="mb-2">            
             <b-form-group label="Apellido">
               <b-form-input  v-model="UsuarioSeleccionado.usr_apellido" required />
             </b-form-group>
           </b-col>
+          <!-- Correo -->
           <b-col md="6" class="mb-2">            
             <b-form-group label="Correo">
               <b-form-input  type="email" v-model="UsuarioSeleccionado.usr_correo" required />
             </b-form-group>
           </b-col>
+          <!-- Teléfono -->
           <b-col md="6" class="mb-2">            
             <b-form-group label="Teléfono">
               <b-form-input  v-model="UsuarioSeleccionado.usr_telefono" required />
             </b-form-group>
           </b-col>
+          <!-- RUT -->
           <b-col md="6" class="mb-2">            
             <b-form-group label="RUT">
-              <b-form-input
-                
+              <b-form-input          
                 v-model="UsuarioSeleccionado.usr_rut"
                 @blur="UsuarioSeleccionado.usr_rut = formatearRut(UsuarioSeleccionado.usr_rut)"
                 placeholder="Ej: 20.356.341-8"
               />
             </b-form-group>
           </b-col>
+          <!-- Empresa -->
           <b-col md="6" class="mb-2">
             <b-form-group label="Empresa" >
               <b-form-select 
@@ -107,21 +112,23 @@
               />
             </b-form-group>
           </b-col>
+          <!-- Sucursal -->
           <b-col md="6" class="mb-2">
             <b-form-group label="Sucursal" >
               <b-form-select style="color: black;"
                 placeholder="Seleccione sucursal"
                 v-model="UsuarioSeleccionado.usr_id_sucursal"
-                :options="sucursalesFiltradas(UsuarioSeleccionado.usr_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
-               
+                :options="sucursalesFiltradas(UsuarioSeleccionado.usr_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"         
               />
             </b-form-group>
           </b-col>
+          <!-- Tipo Usuario -->
           <b-col md="6" class="mb-2">
             <b-form-group label="Tipo Usuario">
               <b-form-input  v-model="UsuarioSeleccionado.nombre_tipo" disabled />
             </b-form-group>
           </b-col>
+          <!-- Clave nueva -->
           <b-col v-if="UsuarioSeleccionado.nombre_tipo=== 'admin'" md="6" class="mb-2">
             <b-form-group label="Clave nueva">
               <b-form-input

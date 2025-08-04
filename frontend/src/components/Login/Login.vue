@@ -61,7 +61,6 @@
 </template>
 <script>
 import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -137,7 +136,7 @@ export default {
     validacionPassword(valor) {
       return typeof valor === 'string' && valor.length >= 6;
     },
-    async onSubmit() {
+    async onSubmit(){ 
       this.intentadoEnviar = true;
       this.loginError = '';
       this.cargando = true;
@@ -147,7 +146,6 @@ export default {
         this.cargando = false;
         return;
       }
-
       try {
         const response = await axios.post('/Auth/IniciarSession', {
           rut: this.rutFormateado,
@@ -172,18 +170,17 @@ export default {
       } catch (error) {
         this.loginError = 'Error de red o servidor.';
         console.error(error);
-      } finally {
+      } 
+      finally {
         this.cargando = false;
       }
-    }
+    },
   },
   mounted() {
     // Puedes agregar aquí lógica si necesitas algo al montar el componente
   }
 };
 </script>
-
-
 <style scoped>
 .login-container {
   height: 100vh;
@@ -194,11 +191,9 @@ export default {
   padding: 1rem;
   background-image: url(../Activos/3409297.jpg);
 }
-
 .object-cover {
   object-fit: cover;
 }
-
 .login-panel {
    /* bg-dark */
   color: white;
@@ -210,12 +205,10 @@ export default {
   border: none;
   background-color: rgb(84, 112, 186,0.4);
 }
-
 .b-form-input,
 .b-button {
   font-size: 1rem;
 }
-
 .btn-glow {
   background-color: #0d6efd;
   color: white;
@@ -225,7 +218,6 @@ export default {
 .btn-glow:hover {
   box-shadow: 0 0 10px rgb(13, 110 , 253,0.8);
 }
-
 @media (max-width: 768px) {
   .login-panel {
     padding: 2rem;

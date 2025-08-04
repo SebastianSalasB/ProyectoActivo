@@ -7,7 +7,6 @@
           <b-form-input v-model="empresa.emp_nombre" id="emp_nombre" name="emp_nombre" />
           <small v-if="errors.emp_nombre" class="text-danger">{{ errors.emp_nombre }}</small>
         </b-form-group>
-
         <b-form-group label="Dirección de la Empresa" >
           <b-form-input 
           v-model="empresa.emp_direccion" 
@@ -15,19 +14,13 @@
           <small v-if="errors.emp_direccion" class="text-danger">{{ errors.emp_direccion }}</small>
         </b-form-group>
       </b-col>
-      
       <b-form-group label="Sucursales" >
         <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-3" >
           <hr />
-          <b-form-group 
-          label="Nombre de Sucursal" 
-          >
-            <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
+          <b-form-group label="Nombre de Sucursal" >
+          <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
           </b-form-group>
-
-          <b-form-group 
-          label="Dirección de Sucursal" 
-          >
+          <b-form-group label="Dirección de Sucursal">
             <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
           </b-form-group>
           <hr />
@@ -38,28 +31,24 @@
             @click="eliminarSucursal(index)"
           ><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>   Eliminar</b-button>
         </div>
-
         <b-button size="sm" variant="primary" @click="añadirSucursal">
          <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>   Agregar otra sucursal
         </b-button>
         <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
       </b-form-group>
-
       <div class="text-center mt-4">
         <b-button
           id="Guarda"
           @click="crearEmpresa"
-          style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);"
-        ><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>   Guardar</b-button>
+          style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);">
+        <i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>   Guardar</b-button>
       </div>
-
       <b-modal v-model="modalShow" title="Resultado del registro" ok-only ok-title="Aceptar">
         {{ mensaje }}
       </b-modal>
     </b-container>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 

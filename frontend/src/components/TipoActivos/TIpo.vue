@@ -8,7 +8,6 @@
           <small v-if="errors.Nombre" class="text-danger">{{ errors.Nombre }}</small>
         </b-form-group>
       </b-container>
-
       <div class="text-center mt-4">
         <b-button
           id="Guarda"
@@ -18,7 +17,6 @@
           Guardar
         </b-button>
       </div>
-
       <b-alert v-if="mensaje" variant="success" dismissible class="mt-3">
         {{ mensaje }}
       </b-alert>
@@ -32,11 +30,10 @@
           :fields="fields"
           class="w-100 custom-rounded-table"
           style="text-align: center;"
-        >
+          >
           <template #cell(tip_descripcion)="data">
             {{ data.item.tip_descripcion }}
           </template>
-
           <template #cell(actions)="data">
             <b-button size="sm" variant=""  class="me-1" @click="EditarModal(data.item)">
               <i class="fa-solid fa-pen-to-square fa-lg" style="color: #258f24;"></i>
@@ -47,7 +44,6 @@
           </template>
         </b-table>
       </b-container>
-
       <!-- Detalles -->
       <b-card v-if="selectedTipo" class="mt-4 w-100">
         <h5>Detalles del tipo seleccionado:</h5>
@@ -61,7 +57,7 @@
           :fields="['label', 'value']"
           responsive
           striped
-        >
+          >
           <template #cell(label)="data">
             <strong>{{ data.value }}</strong>
           </template>
@@ -70,7 +66,6 @@
           Cerrar detalles
         </b-button>
       </b-card>
-
       <!-- Modal de Edición -->
       <b-modal v-model="modalEditar" title="Editar Tipo"  size="md" hide-footer>
         <b-form @submit.prevent>

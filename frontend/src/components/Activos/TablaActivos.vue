@@ -18,7 +18,6 @@
       </b-input-group>
     </b-container>
   </b-navbar>
-  
   <!-- filtro -->
   <b-container fluid>
     <b-row>
@@ -208,7 +207,6 @@
       </b-col>
     </b-row>
   </b-container>
-  
   <!-- Modal de edición -->
   <b-modal v-model="modalShow" title="Datos del Activo Editor" size="lg" hide-footer>
     <b-form class="small">
@@ -224,7 +222,6 @@
             placeholder="Selecciona una empresa"
           />
         </b-col>
-
         <!-- Sucursal -->
         <b-col md="6" class="mb-2">
           <label>Sucursal</label>
@@ -237,7 +234,6 @@
             required
           />
         </b-col>
-
         <!-- usuario -->
         <b-col md="6" class="mb-2">
           <label>Usuario</label>
@@ -250,50 +246,42 @@
             required
           />
         </b-col>
-
         <!-- Fecha Registro -->
         <b-col md="6" class="mb-2">
           <label>Fecha Registro</label>
           <b-form-input type="date" v-model="selectedActivos.act_fecha_registro" required />
         </b-col>
-
         <!-- Marca -->
         <b-col md="6" class="mb-2">
           <label>Marca</label>
           <b-form-input v-model="selectedActivos.act_marca" required />
         </b-col>
-
         <!-- Modelo -->
         <b-col md="6" class="mb-2">
           <label>Modelo</label>
           <b-form-input v-model="selectedActivos.act_modelo" required />
         </b-col>
-
         <!-- Fabricante -->
         <b-col md="6" class="mb-2">
           <label>Fabricante</label>
           <b-form-input v-model="selectedActivos.act_fabricante" required />
         </b-col>
-
         <!-- N° Serie -->
         <b-col md="6" class="mb-2">
           <label>N° de Serie</label>
           <b-form-input v-model="selectedActivos.act_numero_serie" required />
         </b-col>
-
         <!-- Ubicación -->
         <b-col md="6" class="mb-2">
           <label>Ubicación</label>
           <b-form-input v-model="selectedActivos.act_ubicacion" required />
         </b-col>
-
         <!-- Tipo -->
         <b-col md="6" class="mb-2">
           <label>Tipo</label>
           <b-form-input :value="nombreTipoDisplay" disabled />
         </b-col>
       </b-row>
-      
       <!-- Datos especiales según tipo de activo -->
       <div v-if="selectedActivos.act_id_tipo == 1">
         <!-- Computador -->
@@ -454,17 +442,14 @@
       </div>
     </b-form>
   </b-modal>   
-  
   <!-- Modal de confirmación de eliminación -->
   <b-modal v-model="ConfirmaEliminadoModal" title="Confirmar eliminación" @ok="eliminarActivos" ok-title="Sí, eliminar" cancel-title="Cancelar" ok-variant="danger">
     ¿Estás seguro de que deseas eliminar el activo? 
   </b-modal>
-  
   <!-- Modal de confirmación de edición -->
   <b-modal v-model="editorConfirmaModal" title="Confirmar modificación" @ok="editar" ok-title="Sí, guardar cambios" cancel-title="Cancelar" ok-variant="success">
     ¿Estás seguro de que deseas guardar los cambios al activo?
   </b-modal>
-  
   <!-- Modal para enviar a mantención o dar de baja -->
   <b-modal v-model="mantencionModal" title="Enviar a mantención o Dar de Baja" @ok="confirmarEnvioMantencion" ok-title="Mantención" cancel-title="Cancelar" ok-variant="primary">
     <div class="mb-3">

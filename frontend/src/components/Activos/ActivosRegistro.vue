@@ -77,7 +77,7 @@
           </b-col>
         </b-row>
         <b-row>
-          <div v-if="activo.tipoactivo === 1"> 
+          <div v-if="activo.tipoactivo === 1"> <!-- Asume que 'Computador' tiene tip_id = 1 --> 
             <b-row>
             <b-col sm>
               <b-form-group label="RAM">
@@ -127,7 +127,7 @@
             </b-col>
           </b-row>
           </div>
-          <div v-if="activo.tipoactivo === 2"> <!-- Asume que 'Computadores' tiene tip_id = 1 -->
+          <div v-if="activo.tipoactivo === 2"> <!-- Asume que 'Servidor' tiene tip_id = 2 -->
             <b-row>
               <b-col sm >
                 <b-form-group label="Nombre Servidor"> 
@@ -268,22 +268,19 @@
             <b-form-checkbox 
               v-model="activo.tieneIp"
               :id="'checkbox-' + index"
-            >
-              Tiene IP:
+              >Tiene IP:
             </b-form-checkbox>
             <div v-if="activo.tieneIp">
               <div v-for="(ip, i) in activo.ips" :key="i" class="d-flex mb-2">
                 <b-form-input 
                   v-model="activo.ips[i]"
-                  placeholder="Ingrese IP"
-                />
+                  placeholder="Ingrese IP"/>
                 <b-button
                   size="sm"
                   variant="danger"
                   class="ms-2"
                   @click="activo.ips.splice(i, 1)"
-                  v-if="activo.ips.length > 1"
-                >
+                  v-if="activo.ips.length > 1">
                   <i class="fa-solid fa-x fa-lg" style="color: #ffffff;"></i>
                 </b-button>
               </div>
@@ -324,9 +321,6 @@
 import axios from 'axios'
 import Multiselect from '@vueform/multiselect'
 import '@vueform/multiselect/themes/default.css'
-
-
-  
 
 export default {
   data() {
@@ -639,8 +633,6 @@ export default {
     this.cargarUsuarios()
   }
 }
-
-
 </script>
 <style>
 .b-form-input{
