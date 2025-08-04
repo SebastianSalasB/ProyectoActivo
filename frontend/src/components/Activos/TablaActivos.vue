@@ -2,7 +2,7 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" type="" variant="" class="mb-4">
     <b-container>
-      <h6 href="#" >Buscar Activos</h6>
+      <h6 >Buscar Activos</h6>
       <b-input-group class="mt-2">
         <b-form-input 
           v-model="Buscador" 
@@ -86,21 +86,22 @@
           <p></p>
         </b-col>
       </transition>
-      
       <!-- Tabla de resultados -->
       <b-col :md="mostrarFiltros ? 10 : 12">
-        <b-overlay :show="cargando" rounded="sm" spinner-variant="secondary" opacity="0.6">
+        <div v-if="cargando" class="cargando-overlay">
+              <b-spinner variant="primary" class="mb-2" />
+              <div>Cargando...</div>
+            </div>
           <b-table 
-          :items="activosPaginados" 
-          :fields="fields" 
-          responsive hover
-          class="custom-rounded-table"> 
+            :items="activosPaginados" 
+            :fields="fields" 
+            responsive hover Secondary 
+            class="custom-rounded-table" > 
             <template #cell(act_id)="data">
               <div>
                 <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
               </div>
             </template>
-            
             <template #cell(nombre_usuario)="data"> 
               <div>
                 <span>{{ data.item.nombre_usuario }}</span>
@@ -109,7 +110,6 @@
                 <span style="font-size: 0.80rem; text-align: start;">{{ data.item.apellido_usuario }}</span>
               </div>
             </template>              
-            
             <template #cell(nombre_sucursal)="data">
               <div>
                 <span style="font-size: 0.80rem; text-align: start;">{{ data.item.nombre_sucursal }}</span>
@@ -118,11 +118,9 @@
                 <span style="font-size: 0.60rem; text-align: start;">{{ data.item.nombre_tipo }}</span>
               </div>
             </template>
-            
             <template #cell(act_fecha_registro)="data">
               <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
             </template>              
-            
             <template #cell(acciones)="data">
               <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
                 <template #button-content>
@@ -161,7 +159,6 @@
                 </b-dropdown-item>
               </b-dropdown>
             </template>
-            
             <template #cell(act_estado)="data">
               <div>
                 <i
@@ -208,7 +205,6 @@
               last-number
               size="md"/>
           </div>
-        </b-overlay>
       </b-col>
     </b-row>
   </b-container>
@@ -434,7 +430,7 @@
                     variant="danger"
                     @click="selectedActivos.direcciones_ip.splice(index, 1)"
                   >
-                    Eliminar
+                   <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i> Eliminar
                   </b-button>
                 </b-input-group-append>
               </b-input-group>
@@ -445,7 +441,7 @@
               size="sm"
               @click="selectedActivos.direcciones_ip.push('')"
             >
-              Agregar IP
+             <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Agregar IP
             </b-button>
           </b-form-group>
         </b-col>          
@@ -453,8 +449,8 @@
       
       <!-- Botones -->
       <div class="text-end mt-3">
-        <b-button variant="success" class="me-2" @click="confirmarEdicion">Guardar</b-button>
-        <b-button variant="secondary" @click="cancelarEditar">Cancelar</b-button>
+        <b-button variant="success" class="me-2" @click="confirmarEdicion"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i> Guardar</b-button>
+        <b-button variant="secondary" @click="cancelarEditar"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>  Cancelar</b-button>
       </div>
     </b-form>
   </b-modal>   
@@ -1005,4 +1001,21 @@ export default {
   td.tipo{
     text-align: start;
   }
+  .cargando-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #007bff;
+  
+}
 </style>

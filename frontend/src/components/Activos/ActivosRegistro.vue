@@ -284,11 +284,11 @@
                   @click="activo.ips.splice(i, 1)"
                   v-if="activo.ips.length > 1"
                 >
-                  ✕
+                  <i class="fa-solid fa-x fa-lg" style="color: #ffffff;"></i>
                 </b-button>
               </div>
               <b-button size="sm" variant="success" @click="activo.ips.push('')">
-                + Agregar otra IP
+                <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i> Agregar otra IP
               </b-button>
             </div>
           </b-form-group>
@@ -299,15 +299,15 @@
           variant="danger"
           @click="removeActivo(index)"
         >
-          Eliminar Activo
+         <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i> Eliminar Activo
         </b-button>
       </div>
       <b-button size="sm" variant="primary" @click="AgregarActivo">
-        + Agregar otro activo
+        <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Agregar otro activo
       </b-button>
       <div class="text-center mt-4">
         <b-button size="sm" @click="GuardarActivo" style="background-color:rgb(97 221 166); width: 150px; color: white; border-radius: 18px; border:2px solid var(--Primery, #42B883);">
-          Guardar
+          <i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i> Guardar
         </b-button>
       </div>
       <b-modal v-model="modalShow" title="Resultado del registro" hide-footer>

@@ -13,7 +13,6 @@
       </b-form>
     </b-container>
   </b-navbar>
-
   <!-- Tabla de empresas -->
   <b-container >
     <b-table class="custom-rounded-table" :items="filtrarComputadoras" :fields="fields"responsive hover style="text-align: center;">
@@ -26,7 +25,6 @@
         </b-button>
       </template>
     </b-table>
-
     <!-- Modal de edición -->
     <b-modal v-model="modalShow" title="Editar Empresa" size="lg" hide-footer>
       <b-form >
@@ -40,7 +38,6 @@
             <b-form-input v-model="seleccionarEmpresa.emp_direccion" />
           </b-col>
         </b-row>
-
         <div v-if="seleccionarEmpresa.sucursales && seleccionarEmpresa.sucursales.length">
           <h5 class="mt-2">Sucursales</h5>
           <b-row
@@ -73,8 +70,8 @@
         </b-col>
 
         <div class="text-end mt-3">
-          <b-button variant="success" class="me-2" @click="confirmarEditor">Guardar</b-button>
-          <b-button variant="secondary" @click="cancelarEditor">Cancelar</b-button>
+          <b-button variant="success" class="me-2" @click="confirmarEditor"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Guardar</b-button>
+          <b-button variant="secondary" @click="cancelarEditor"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>  Cancelar</b-button>
         </div>
       </b-form>
     </b-modal>

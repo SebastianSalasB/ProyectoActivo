@@ -68,6 +68,7 @@
                 :class="{ 'is-invalid': inputErrors[index]?.telefono }"
                 type="tel"
                 placeholder="+569 1234 5678"
+                maxlength="9"
                 @input="validarCampo(index, 'telefono', activo.user_telefono)"
               />
             </b-form-group>
@@ -128,12 +129,12 @@
           class="mt-2"
           @click="eliminarActivo(index)"
         >
-          Eliminar
+          <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>    Eliminar
         </b-button>
       </div>
 
-      <b-button @click="anadirActivo" variant="success" class="me-2">+ Agregar otro usuario</b-button>
-      <b-button @click="GuardarUsuario" variant="primary">Guardar</b-button>
+      <b-button @click="anadirActivo" variant="success" class="me-2"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>    Agregar otro usuario</b-button>
+      <b-button @click="GuardarUsuario" variant="primary"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>     Guardar</b-button>
     </b-container>
 
     <!-- Modal de éxito -->

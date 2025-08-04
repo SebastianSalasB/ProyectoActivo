@@ -235,7 +235,7 @@ function confirmLogout() {
 .modo-oscuro input,
 .modo-oscuro textarea,
 .modo-oscuro select {
-  background-color: #000000 !important;
+  background-color: #2c2c2c !important;
   color: white !important;
   border-color: #c9c9c9 !important;
 }

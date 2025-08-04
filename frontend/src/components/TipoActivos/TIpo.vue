@@ -14,7 +14,7 @@
           id="Guarda"
           @click="guardarTipo"
           style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);"
-        >
+        ><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>
           Guardar
         </b-button>
       </div>
@@ -79,8 +79,8 @@
           </b-form-group>
 
           <div class="text-end mt-3">
-            <b-button variant="success" class="me-2" @click="modalConfirmarEditar = true">Guardar</b-button>
-            <b-button variant="secondary" @click="cerrarModalEditar">Cancelar</b-button>
+            <b-button variant="success" class="me-2" @click="modalConfirmarEditar = true"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i> Guardar</b-button>
+            <b-button variant="secondary" @click="cerrarModalEditar"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>  Cancelar</b-button>
           </div>
         </b-form>
       </b-modal>

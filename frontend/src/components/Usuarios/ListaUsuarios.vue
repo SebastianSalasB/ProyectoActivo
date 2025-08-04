@@ -17,6 +17,10 @@
 
   <!-- Tabla de responsables -->
   <b-container>
+    <div v-if="cargando" class="cargando-overlay">
+      <b-spinner variant="primary" class="mb-2" />
+      <div>Cargando...</div>
+    </div>
     <b-table
       id="tabla-usuarios"
       :items="usuariosPaginados"
@@ -59,23 +63,9 @@
       last-number
       size="md"
     />
-
-    <!-- Modal de confirmación de eliminación -->
-    <b-modal 
-      v-model="ConfirmaEliminarModal"
-      title="Confirmar eliminación"
-      @ok="EliminarUsuario"
-      ok-title="Sí, eliminar"
-      cancel-title="Cancelar"
-      ok-variant="danger" 
-    >
-      ¿Estás seguro de que deseas eliminar este responsable?
-    </b-modal>
-
-
-
     <!-- Modal de edición -->
-    <b-modal v-model="modalShow" title="Editar Responsable" size="lg" hide-footer>
+    <b-modal 
+      v-model="modalShow" title="Editar Usuario" size="lg" hide-footer>
       <b-form >
         <b-row>
           <b-col md="6" class="mb-2">            
@@ -136,7 +126,6 @@
             <b-form-group label="Clave nueva">
               <b-form-input
                 v-if="UsuarioSeleccionado.nombre_tipo === 'admin'"
-                
                 v-model="UsuarioSeleccionado.usr_clave"
                 type="password"
                 placeholder="Dejar vacío si no desea cambiar la clave"
@@ -145,12 +134,11 @@
           </b-col>
         </b-row>
         <div class="text-end mt-3">
-          <b-button variant="success" class="me-2" @click="confirmacionEditar">Guardar</b-button>
-          <b-button variant="secondary" @click="cancelarEditar">Cancelar</b-button>
+          <b-button variant="success" class="me-2" @click="confirmacionEditar"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>   Guardar</b-button>
+          <b-button variant="secondary" @click="cancelarEditar"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>    Cancelar</b-button>
         </div>
       </b-form>
     </b-modal>
-
     <!-- Modal de confirmación de edición -->
     <b-modal style="color: black;"
       v-model="editarConfirmaModal"
@@ -162,6 +150,18 @@
     >
       ¿Estás seguro de que deseas guardar los cambios?
     </b-modal>
+    <!-- Modal de confirmación de eliminación -->
+    <b-modal 
+      v-model="ConfirmaEliminarModal"
+      title="Confirmar eliminación"
+      @ok="EliminarUsuario"
+      ok-title="Sí, eliminar"
+      cancel-title="Cancelar"
+      ok-variant="danger" 
+    >
+      ¿Estás seguro de que deseas eliminar este responsable?
+    </b-modal>
+
   </b-container>
 </template>
 
@@ -188,7 +188,8 @@ export default {
         { key: 'usr_nombre', label: 'Nombre' },
         { key: 'nombre_sucursal', label: 'Sucursal' },
         { key: 'acciones', label: 'Acciones' }
-      ]
+      ],
+      cargando:false
     }
   },
   computed: {
@@ -209,6 +210,7 @@ export default {
   },
   methods: {
     async cargarUsuario() {
+      this.cargando = true
       try {
         const { data } = await axios.get(`/Usuarios/listarResponsable`)
         this.usuarios = data.Responsable       
@@ -217,6 +219,7 @@ export default {
       } catch (error) {
         console.error('Error al cargar responsables:', error)
       }
+      this.cargando= false
     },
     async cargarEmpresasYSucursales() {
       try {
@@ -356,4 +359,20 @@ export default {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
   }
+  .cargando-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #007bff;
+}
 </style>
