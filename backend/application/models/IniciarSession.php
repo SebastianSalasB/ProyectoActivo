@@ -12,21 +12,19 @@ class IniciarSession extends CI_Model {
     public function VeridicacionDatos($rut, $password) {
         $this->db->where('usr_rut', $rut);
         $query = $this->db->get($this->table);
-        $usuario = $query->row();
+        $usuarios = $query->result();
 
-        if (!$usuario) {
-            return false;
-        }
-        log_message('debug', 'RUT recibido: ' . $rut);
-        log_message('debug', 'Clave en texto recibido: ' . $password);
-        log_message('debug', 'Hash en BD: ' . $usuario->usr_clave);
-        log_message('debug', 'Resultado password_verify: ' . (password_verify($password, $usuario->usr_clave) ? 'true' : 'false'));
-
-        // Verifica contraseña hasheada
-        if ($usuario && password_verify($password, $usuario->usr_clave)) {
-            return $usuario;
+        if (empty($usuarios)) {
+            return false; // No hay usuarios con ese RUT
         }
 
-        return false;
+        foreach ($usuarios as $usuario) {
+            if (password_verify($password, $usuario->usr_clave)) {
+                return $usuario; // Retorna el usuario que coincide
+            }
+        }
+
+        return false; // Ninguna contraseña coincide
     }
+
 }
