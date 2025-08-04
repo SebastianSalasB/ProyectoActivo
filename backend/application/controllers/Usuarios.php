@@ -14,10 +14,8 @@ class Usuarios extends CI_Controller
     public function listarResponsable() {
         // Obtiene los registros de responsables con paginación
         $responsables = $this->RespoModel->responsablesListado();
-
         // Obtiene el total de registros (para calcular páginas en el frontend)
         $total = $this->RespoModel->contarResponsables();
-
         // Retorna los datos en formato JSON
         echo json_encode([
             'Responsable' => $responsables,
@@ -54,12 +52,9 @@ class Usuarios extends CI_Controller
         if (!empty(trim($data['usr_clave'] ?? ''))) {
             $clavePlano = trim($data['usr_clave']);
             $userData['usr_clave'] = password_hash($clavePlano, PASSWORD_BCRYPT);
-            error_log("Clave hasheada: " . $userData['usr_clave']);
-            error_log("Clave original para verificar: " . $clavePlano);
         } else {
             error_log("Clave no recibida o vacía");
         }
-
         if ($this->RespoModel->actualizaUsuario($id, $userData)) {
             echo json_encode([
                 'status' => 'updated',
@@ -81,7 +76,6 @@ class Usuarios extends CI_Controller
             http_response_code(200);
             exit;
         }
-        
         // Obtener datos JSON
         $input = json_decode(file_get_contents('php://input'), true);
 
@@ -92,9 +86,7 @@ class Usuarios extends CI_Controller
             ]);
             return;
         }
-
         $usuariosInsertados = 0;
-
         foreach ($input['activos'] as $user) {
             // Validar campos obligatorios
             if (
@@ -129,7 +121,6 @@ class Usuarios extends CI_Controller
                 $usuariosInsertados++;
             }
         }
-
         if ($usuariosInsertados > 0) {
             echo json_encode([
                 'status' => 'success',

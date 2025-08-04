@@ -7,7 +7,6 @@ class CompuModel extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-
     public function obtenerComputador() {
         return $this->db->get($this->table)->result();
     }
