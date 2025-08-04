@@ -25,40 +25,60 @@ class Usuarios extends CI_Controller
         ]);
     }
     public function ActualizarUsuario($id) {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $raw = file_get_contents('php://input');
+        error_log("RAW INPUT: " . $raw);
+
+        $data = json_decode($raw, true);
+        error_log("Datos recibidos: " . print_r($data, true));
 
         if (!$data) {
             echo json_encode(['error' => 'No se recibieron datos válidos']);
             return;
         }
 
-        // Preparamos los datos base
+        if (!is_numeric($id)) {
+            echo json_encode(['error' => 'ID inválido']);
+            return;
+        }
+
         $userData = [
-            'usr_nombre'     => $data['usr_nombre']     ?? null,
-            'usr_apellido'   => $data['usr_apellido']   ?? null,
-            'usr_rut'        => $data['usr_rut']        ?? null,
-            'usr_correo'     => $data['usr_correo']     ?? null,
-            'usr_telefono'   => $data['usr_telefono']   ?? null,
-            'usr_id_tipos'   => $data['usr_id_tipos']   ?? 2,
-            'usr_id_sucursal'=> $data['usr_id_sucursal']?? null,
-            'usr_estado'     => $data['usr_estado']     ?? 'activo',
+            'usr_nombre'      => $data['usr_nombre']     ?? null,
+            'usr_apellido'    => $data['usr_apellido']   ?? null,
+            'usr_rut'         => $data['usr_rut']        ?? null,
+            'usr_correo'      => $data['usr_correo']     ?? null,
+            'usr_telefono'    => $data['usr_telefono']   ?? null,
+            'usr_id_tipos'    => $data['usr_id_tipos']   ?? 2,
+            'usr_id_sucursal' => $data['usr_id_sucursal']?? null,
+            'usr_estado'      => $data['usr_estado']     ?? 'activo',
         ];
 
-        // Verificamos si viene una clave nueva
-        if (!empty($data['usr_clave'])) {
-            $userData['usr_clave'] = password_hash($data['usr_clave'], PASSWORD_BCRYPT);
-            
+        if (empty($userData['usr_nombre']) || empty($userData['usr_apellido']) || empty($userData['usr_rut'])) {
+            echo json_encode(['error' => 'Nombre, apellido y RUT son obligatorios']);
+            return;
         }
 
-
-        // Ejecutamos la actualización
-        if ($this->RespoModel->actualizaUsuario($id, $userData)) {
-            echo json_encode(['status' => 'updated']);
+        if (!empty(trim($data['usr_clave'] ?? ''))) {
+            $clavePlano = trim($data['usr_clave']);
+            $userData['usr_clave'] = password_hash($clavePlano, PASSWORD_BCRYPT);
+            error_log("Clave hasheada: " . $userData['usr_clave']);
+            error_log("Clave original para verificar: " . $clavePlano);
         } else {
-            echo json_encode(['status' => 'error']);
+            error_log("Clave no recibida o vacía");
+        }
+
+        if ($this->RespoModel->actualizaUsuario($id, $userData)) {
+            echo json_encode([
+                'status' => 'updated',
+                'message' => "Se actualizó el usuario",
+                'usr_clave_hash' => $userData['usr_clave'] ?? null
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'No se pudo actualizar el usuario'
+            ]);
         }
     }
-
     public function CrearUsuario(){
         // Permitir CORS si es necesario
         header('Access-Control-Allow-Origin: *');
@@ -94,7 +114,6 @@ class Usuarios extends CI_Controller
                 log_message('error', 'Datos incompletos en usuario: ' . print_r($user, true));
                 continue;
             }
-
             // Preparar datos
             $data = [
                 'usr_nombre'        => $user['user_nombre'],
@@ -106,12 +125,10 @@ class Usuarios extends CI_Controller
                 'usr_estado'        => 'activo',
                 'usr_id_tipos'      => isset($user['user_id_tipos']) ? 1 : 2,
             ];
-
             // Incluir clave si es responsable
             if (!empty($user['user_clave'])) {
-                $data['usr_clave'] = password_hash($user['user_clave'], PASSWORD_BCRYPT);
+                $data['usr_clave']= password_hash($user['user_clave'], PASSWORD_BCRYPT) ;
             }
-
             // Insertar en la base de datos
             if ($this->RespoModel->insertarUsuario($data)) {
                 $usuariosInsertados++;
@@ -130,7 +147,6 @@ class Usuarios extends CI_Controller
             ]);
         }
     }
-
     public function EliminarUsuario($id) {
         $result = $this->RespoModel->eliminarUsuario($id);
 

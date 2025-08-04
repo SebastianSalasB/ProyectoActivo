@@ -1,23 +1,32 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
 class IniciarSession extends CI_Model {
 
     protected $table = 'activos.usuarios'; 
 
     public function __construct() {
         parent::__construct();
-
     }
+
     public function VeridicacionDatos($rut, $password) {
         $this->db->where('usr_rut', $rut);
-        $query = $this->db->get('activos.usuarios');
+        $query = $this->db->get($this->table);
         $usuario = $query->row();
 
+        if (!$usuario) {
+            return false;
+        }
+        log_message('debug', 'RUT recibido: ' . $rut);
+        log_message('debug', 'Clave en texto recibido: ' . $password);
+        log_message('debug', 'Hash en BD: ' . $usuario->usr_clave);
+        log_message('debug', 'Resultado password_verify: ' . (password_verify($password, $usuario->usr_clave) ? 'true' : 'false'));
+
+        // Verifica contraseña hasheada
         if (password_verify($password, $usuario->usr_clave)) {
             return $usuario;
         }
+
         return false;
     }
 }

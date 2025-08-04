@@ -28,7 +28,7 @@ class RespoModel extends CI_Model
     public function insertarUsuario($data) {
         return $this->db->insert('activos.usuarios', $data);
     }
-    public function actualizaUsuario($id,$data) {
+    public function actualizaUsuario($id, $data) {
         $this->db->where('usr_id', $id);
         return $this->db->update('activos.usuarios', $data);
     }

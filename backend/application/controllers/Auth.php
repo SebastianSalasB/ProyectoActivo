@@ -43,11 +43,11 @@ class Auth extends CI_Controller {
 
         json_decode($rut);
 
-        $usuarios = $this->IniciarSession->VeridicacionDatos($rut, $password); // <-- cambia a usar RUT
+        $usuarios = $this->IniciarSession->VeridicacionDatos($rut, $password); 
 
         if ($usuarios) {
             $usuarios = (array)$usuarios;
-            unset($usuarios['usr_clave']); // Quitar la contraseña
+            unset($usuarios['usr_clave']); 
 
             $this->session->set_userdata('user', $usuarios);
 

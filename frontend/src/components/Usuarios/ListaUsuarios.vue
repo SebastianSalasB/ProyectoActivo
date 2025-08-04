@@ -272,14 +272,38 @@ export default {
       this.editarConfirmaModal = true
     },
     async actualizarUsuario() {
+      const payload = {
+        usr_nombre: this.UsuarioSeleccionado.usr_nombre,
+        usr_apellido: this.UsuarioSeleccionado.usr_apellido,
+        usr_rut: this.UsuarioSeleccionado.usr_rut,
+        usr_correo: this.UsuarioSeleccionado.usr_correo,
+        usr_telefono: this.UsuarioSeleccionado.usr_telefono,
+        usr_id_tipos: this.UsuarioSeleccionado.usr_id_tipos,
+        usr_id_sucursal: this.UsuarioSeleccionado.usr_id_sucursal,
+        usr_estado: this.UsuarioSeleccionado.usr_estado
+      }
+      // Solo si la clave no está vacía, la incluimos
+      if (
+        this.UsuarioSeleccionado.usr_clave &&
+        this.UsuarioSeleccionado.usr_clave.trim() !== ''
+      ) {
+        payload.usr_clave = this.UsuarioSeleccionado.usr_clave
+      }
+
       try {
         const res = await axios.post(
           `/Usuarios/ActualizarUsuario/${this.UsuarioSeleccionado.usr_id}`,
-          this.UsuarioSeleccionado
+          payload,
+          {
+            headers: {
+              'Content-Type': 'application/json'  
+            }
+          }
         )
-        console.log(this.UsuarioSeleccionado)
+        console.log("Payload enviado:", JSON.stringify(payload))
         if (res.data.status === 'updated') {
           alert('Responsable actualizado correctamente')
+          console.log(res.data.message, res.data.usr_clave_hash)
           this.modalShow = false
           this.editarConfirmaModal = false
           this.cargarUsuario()
