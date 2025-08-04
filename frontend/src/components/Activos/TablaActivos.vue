@@ -33,7 +33,9 @@
                 :options="TiposOpciones"
                 value-field="id"
                 text-field="nombre"
-                stacked
+                stacked 
+                :aria-describedby="ariaDescribedby"
+                switches
                 style="flex-wrap: wrap !important; justify-content: flex-start !important;"
               />
             </b-form-group>
@@ -45,6 +47,8 @@
                 value-field="id"
                 text-field="nombre"
                 stacked
+                :aria-describedby="ariaDescribedby"
+                switches
               />
             </b-form-group>
             <!-- Filtro por Sucursal -->
@@ -55,6 +59,8 @@
                 value-field="id"
                 text-field="nombre"
                 stacked
+                :aria-describedby="ariaDescribedby"
+                switches
               />
             </b-form-group>
             <!-- Filtro por Estado -->
@@ -65,6 +71,8 @@
                 value-field="id"
                 text-field="nombre"
                 stacked
+                :aria-describedby="ariaDescribedby"
+                switches
               />
             </b-form-group>
             <b-row>

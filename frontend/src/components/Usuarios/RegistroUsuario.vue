@@ -52,6 +52,7 @@
                 type="correo"
                 placeholder="ejemplo@correo.cl"
                 @input="validarCampo(index, 'correo', activo.user_correo)"
+                
               />
             </b-form-group>
           </b-col>
