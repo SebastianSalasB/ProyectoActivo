@@ -563,7 +563,7 @@ export default {
       Buscador: '',
       activosFiltros: [],
       paginaActual: 1,
-      porPagina: 8,
+      porPagina: 9,
       errors: {}
     }
   },

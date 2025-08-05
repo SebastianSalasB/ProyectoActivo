@@ -2,7 +2,7 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" class="mb-4">
     <b-container>
-      <b-navbar-brand style="text-align: left;" >Buscar Usuario</b-navbar-brand>
+      <h6 style="text-align: left;" >Buscar Usuario</h6>
       <b-form class="d-flex ms-auto" @submit.prevent>
         <b-form-input 
           v-model="Buscador"
@@ -183,7 +183,7 @@ export default {
       empresas:[],
       totalResponsables: 0,
       paginaActual: 1,
-      porPagina: 8,
+      porPagina: 9,
       Buscador: '',
       UsuarioSeleccionado: {},
       modalShow: false,

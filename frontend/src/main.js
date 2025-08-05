@@ -8,7 +8,7 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import '@fortawesome/fontawesome-free/css/all.css'
 
 // Establecer URL base global
 axios.defaults.baseURL = 'http://localhost/Activos/Backend/index.php'

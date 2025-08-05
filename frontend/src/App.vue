@@ -13,7 +13,6 @@
         <b-navbar-toggle target="nav-collapse">
           <i class="fa-solid fa-bars fa-xl text-white"></i>
         </b-navbar-toggle>
-
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
             <!-- Menú Activos -->
@@ -25,12 +24,10 @@
                 <i class="fa-solid fa-list fa-sm"></i> Lista
               </b-dropdown-item>
             </b-nav-item-dropdown>
-
             <!-- Menú Tipo -->
             <b-nav-item-dropdown text="Tipo" left class="dropdown-dark">
               <b-dropdown-item @click="currentView = 'tipo'">Ver Tipos</b-dropdown-item>
             </b-nav-item-dropdown>
-
             <!-- Menú Empresa -->
             <b-nav-item-dropdown text="Empresa" left class="dropdown-dark">
               <b-dropdown-item @click="currentView = 'Registro Empresa'">
@@ -40,7 +37,6 @@
                 <i class="fa-solid fa-list fa-sm"></i> Lista
               </b-dropdown-item>
             </b-nav-item-dropdown>
-
             <!-- Menú Usuarios -->
             <b-nav-item-dropdown text="Usuarios" left  class="dropdown-dark" style="">
               <b-dropdown-item @click="currentView = 'RegistroResponsable'">
@@ -69,7 +65,6 @@
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
-
       <!-- Contenido -->
       <main :class="['main', 'mt-5', 'pt-4', modoOscuro ? 'modo-oscuro' : 'modo-claro']">
         <h2 class="mb-2 text-center" :class="modoOscuro ? 'text-white' : 'text-black'">
@@ -83,7 +78,6 @@
         <ListaRespo v-else-if="currentView === 'Responsable'" />
         <RegistroRespo v-else-if="currentView === 'RegistroResponsable'" />
       </main>
-
       <!-- Modal de confirmación -->
       <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered>
         ¿Estás seguro que deseas cerrar tu sesión?

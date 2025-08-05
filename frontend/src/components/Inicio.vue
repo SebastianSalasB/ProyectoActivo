@@ -5,87 +5,66 @@
     </div>
     <div v-else style="height: 56rem;">
       <!-- Navbar superior -->
-      <b-col>
-        <nav class="navbar bg-body-tertiary fixed-top">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="#">Barra de navegación Offcanvas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Alternar navegación">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              </div>
-              <div class="offcanvas-body">
-                <b-navbar toggleable="md" class="bg-barra shadow-sm" fixed="top">
-                  <b-navbar-brand class="text-white" @click="currentView = 'registro'">
-                    Sistema de Activos
-                  </b-navbar-brand>
-                  <b-navbar-toggle target="nav-collapse">
-                    <i class="fa-solid fa-bars fa-xl text-white"></i>
-                  </b-navbar-toggle>
+      <div
+        class="d-flex flex-column flex-shrink-0 p-3 border-end"
+        :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'"
+        style="width: 150px;"
+      >
+        <span class="fs-4 text-center mb-4"> Sistema de Activos</span>
 
-                  <b-collapse id="nav-collapse" is-nav>
-                    <b-navbar-nav>
-                      <!-- Menú Activos -->
-                      <b-nav-item-dropdown text="Activos" left class="dropdown-dark">
-                        <b-dropdown-item @click="currentView = 'registro'">
-                          <i class="fa-solid fa-file-pen fa-sm"></i> Activos
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="currentView = 'lista'">
-                          <i class="fa-solid fa-list fa-sm"></i> Lista
-                        </b-dropdown-item>
-                      </b-nav-item-dropdown>
-
-                      <!-- Menú Tipo -->
-                      <b-nav-item-dropdown text="Tipo" left class="dropdown-dark">
-                        <b-dropdown-item @click="currentView = 'tipo'">Ver Tipos</b-dropdown-item>
-                      </b-nav-item-dropdown>
-
-                      <!-- Menú Empresa -->
-                      <b-nav-item-dropdown text="Empresa" left class="dropdown-dark">
-                        <b-dropdown-item @click="currentView = 'Registro Empresa'">
-                          <i class="fa-solid fa-file-pen fa-sm"></i> Empresa
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="currentView = 'Empresa'">
-                          <i class="fa-solid fa-list fa-sm"></i> Lista
-                        </b-dropdown-item>
-                      </b-nav-item-dropdown>
-
-                      <!-- Menú Usuarios -->
-                      <b-nav-item-dropdown text="Usuarios" left  class="dropdown-dark" style="">
-                        <b-dropdown-item @click="currentView = 'RegistroResponsable'">
-                          <i class="fa-solid fa-file-pen fa-sm"></i> Usuarios
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="currentView = 'Responsable'">
-                          <i class="fa-solid fa-list fa-sm"></i> Lista
-                        </b-dropdown-item>
-                      </b-nav-item-dropdown>
-                    </b-navbar-nav>
-
-                    <!-- Botones a la derecha -->
-                    <b-navbar-nav class="ms-auto">
-                      <!-- Botón modo oscuro -->
-                      <b-nav-item @click="toggleModoOscuro" title="Cambiar modo">
-                        <i
-                          class="fa-solid fa-xl"
-                          :class="modoOscuro ? 'fa-sun text-warning' : 'fa-moon text-white'"
-                        ></i>
-                      </b-nav-item>
-
-                      <!-- Botón cerrar sesión -->
-                      <b-nav-item @click="showConfirmLogout = true">
-                        <i class="fa-solid fa-right-from-bracket fa-xl" style="color: #c20000;"></i>
-                      </b-nav-item>
-                    </b-navbar-nav>
-                  </b-collapse>
-                </b-navbar>
-              </div>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li>
+            <a class="nav-link " data-bs-toggle="collapse" href="#collapseActivos" role="button" >Activos</a>
+            <div class="collapse show" id="collapseActivos">
+              <ul class="list-unstyled ps-3 small">
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'registro'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'lista'"><i class="fa-solid fa-list"></i> Lista</a></li>
+              </ul>
             </div>
-          </div>
-        </nav>
-      </b-col>
+          </li>
+
+          <li class="mt-2">
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseEmpresa" role="button">Empresa</a>
+            <div class="collapse show" id="collapseEmpresa">
+              <ul class="list-unstyled ps-3 small">
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Registro Empresa'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Empresa'"><i class="fa-solid fa-list"></i> Lista</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="mt-2">
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseUsuarios" role="button">Usuarios</a>
+            <div class="collapse show" id="collapseUsuarios">
+              <ul class="list-unstyled ps-3 small">
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'RegistroResponsable'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Responsable'"><i class="fa-solid fa-list"></i> Lista</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="mt-2">
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseTipos" role="button">Tipos</a>
+            <div class="collapse" id="collapseTipos">
+              <ul class="list-unstyled ps-3 small">
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'tipo'">Lista / Registro</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+
+        <hr />
+
+        <div>
+          <b-button variant="outline-secondary" class="w-100 mb-2" @click="toggleModoOscuro">
+            <i :class="modoOscuro ? 'fa fa-sun' : 'fa fa-moon'"></i>
+          </b-button>
+
+          <b-button variant="outline-danger" class="w-100" @click="showConfirmLogout = true">
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+          </b-button>
+        </div>
+      </div>
       <!-- Contenido -->
       <main :class="['main', 'mt-5', 'pt-4', modoOscuro ? 'modo-oscuro' : 'modo-claro']">
         <h2 class="mb-2 text-center" :class="modoOscuro ? 'text-white' : 'text-black'">
@@ -110,7 +89,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup>  
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 // Componentes
@@ -122,7 +101,6 @@ import RegistroEmpresa from './components/Empresa/RegistroEmpresa.vue'
 import ListaEmpresa from './components/Empresa/ListaEmpresa.vue'
 import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
-import '@fortawesome/fontawesome-free/css/all.css'
 
 // Estado general
 const currentView = ref('lista')
