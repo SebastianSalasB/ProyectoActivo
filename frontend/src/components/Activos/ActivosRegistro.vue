@@ -8,7 +8,6 @@
           <b-col sm>
             <b-form-group label="Empresa" >
               <b-form-select 
-                
                 required
                 v-model="empresaSeleccionada"
                 :options="empresasConSucursales.map(e => ({ value: e.emp_id, text: e.emp_nombre }))" 

@@ -1,218 +1,220 @@
 <template>
-  <!-- Barra de búsqueda -->
-  <b-navbar toggleable="lg" type="" variant="" class="mb-4">
-    <b-container>
-      <h6 >Buscar Activos</h6>
-      <b-input-group class="mt-2">
-        <b-form-input 
-          v-model="Buscador" 
-          type="search" 
-          placeholder="Buscar por palabra clave..." 
-          @input="paginaActual = 1"  
-        />
-        <b-input-group-append v-if="!mostrarFiltros">
-          <b-button variant="outline-secondary" @click="mostrarFiltros = true">
-            <i class="fa-solid fa-filter fa-sm"></i> filtros
-          </b-button>
-        </b-input-group-append>
-      </b-input-group>
-    </b-container>
-  </b-navbar>
+  
   <!-- filtro -->
   <b-container fluid>
+    
     <b-row>
-      <!-- Barra lateral izquierda -->
-      <transition name="fade">
-        <b-col md="2" v-if="mostrarFiltros">
-          <b-card class="shadow-sm" style="border: none;" >
-            <h5 class="mb-3" style="">Filtros</h5>              
-            <!-- Filtro por Tipo -->
-            <b-form-group label="Tipo">
-              <b-form-checkbox-group
-                v-model="filtros.Tipos"
-                :options="TiposOpciones"
-                value-field="id"
-                text-field="nombre"
-                stacked 
-                :aria-describedby="ariaDescribedby"
-                switches
-                style="flex-wrap: wrap !important; justify-content: flex-start !important;"
-              />
-            </b-form-group>
-            <!-- Filtro por Empresa -->
-            <b-form-group label="Empresa">
-              <b-form-checkbox-group
-                v-model="filtros.empresa"
-                :options="empresaOpciones"
-                value-field="id"
-                text-field="nombre"
-                stacked
-                :aria-describedby="ariaDescribedby"
-                switches
-              />
-            </b-form-group>
-            <!-- Filtro por Sucursal -->
-            <b-form-group label="Sucursal">
-              <b-form-checkbox-group
-                v-model="filtros.sucursales"
-                :options="sucursalesOpciones"
-                value-field="id"
-                text-field="nombre"
-                stacked
-                :aria-describedby="ariaDescribedby"
-                switches
-              />
-            </b-form-group>
-            <!-- Filtro por Estado -->
-            <b-form-group label="Estado">
-              <b-form-checkbox-group
-                v-model="filtros.estados"
-                :options="estadosOpciones"
-                value-field="id"
-                text-field="nombre"
-                stacked
-                :aria-describedby="ariaDescribedby"
-                switches
-              />
-            </b-form-group>
-            <b-row>
-              <b-col>
-                <div class="d-grid gap-2 small">
-                  <b-button size="sm" class="mb-3" variant="danger" @click="limpiarFiltros">
-                    <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
-                  </b-button>
+      <!-- Barra de búsqueda -->
+      <b-navbar md="2" toggleable="" type="" variant="" class="mb-4">
+          <h6 >Buscar Activos</h6>
+          <b-input-group class="mt-2">
+            <b-form-input 
+              v-model="Buscador" 
+              type="search" 
+              placeholder="Buscar por palabra clave..." 
+              @input="paginaActual = 1"  
+            />
+            <b-input-group-append v-if="!mostrarFiltros">
+              <b-button variant="outline-secondary" @click="mostrarFiltros = true">
+                <i class="fa-solid fa-filter fa-sm"></i> filtros
+              </b-button>
+            </b-input-group-append>
+          </b-input-group><!-- Barra lateral izquierda -->
+          <transition name="fade">
+            <b-col v-if="mostrarFiltros">
+              <b-card class="shadow-sm" style="border: none;" >
+                <h5 class="mb-3" style="">Filtros</h5>              
+                <!-- Filtro por Tipo -->
+                <b-form-group label="Tipo">
+                  <b-form-checkbox-group
+                    v-model="filtros.Tipos"
+                    :options="TiposOpciones"
+                    value-field="id"
+                    text-field="nombre"
+                    stacked 
+                    :aria-describedby="ariaDescribedby"
+                    switches
+                    style="flex-wrap: wrap !important; justify-content: flex-start !important;"
+                  />
+                </b-form-group>
+                <!-- Filtro por Empresa -->
+                <b-form-group label="Empresa">
+                  <b-form-checkbox-group
+                    v-model="filtros.empresa"
+                    :options="empresaOpciones"
+                    value-field="id"
+                    text-field="nombre"
+                    stacked
+                    :aria-describedby="ariaDescribedby"
+                    switches
+                  />
+                </b-form-group>
+                <!-- Filtro por Sucursal -->
+                <b-form-group label="Sucursal">
+                  <b-form-checkbox-group
+                    v-model="filtros.sucursales"
+                    :options="sucursalesOpciones"
+                    value-field="id"
+                    text-field="nombre"
+                    stacked
+                    :aria-describedby="ariaDescribedby"
+                    switches
+                  />
+                </b-form-group>
+                <!-- Filtro por Estado -->
+                <b-form-group label="Estado">
+                  <b-form-checkbox-group
+                    v-model="filtros.estados"
+                    :options="estadosOpciones"
+                    value-field="id"
+                    text-field="nombre"
+                    stacked
+                    :aria-describedby="ariaDescribedby"
+                    switches
+                  />
+                </b-form-group>
+                <b-row>
+                  <b-col>
+                    <div class="d-grid gap-2 small">
+                      <b-button size="sm" class="mb-3" variant="danger" @click="limpiarFiltros">
+                        <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
+                      </b-button>
+                    </div>
+                  </b-col>
+                  <b-col>
+                    <b-button variant="outline-secondary" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
+                      <i class="fa-solid fa-xmark"></i> Ocultar filtros
+                    </b-button>
+                  </b-col>
+                </b-row>
+              </b-card>
+              <p></p>
+            </b-col>
+          </transition> 
+          <!-- Tabla de resultados -->
+        <b-col :md="mostrarFiltros ? 10 : 12" style="padding: 20px;">
+          <div v-if="cargando" class="cargando-overlay pl-1">
+                <b-spinner variant="primary" class="mb-2" />
+                <div>Cargando...</div>
+              </div>
+            <b-table 
+              :items="activosPaginados" 
+              :fields="fields" 
+              responsive hover Secondary 
+              class="custom-rounded-table" > 
+              <template #cell(act_id)="data">
+                <div>
+                  <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
                 </div>
-              </b-col>
-              <b-col>
-                <b-button variant="outline-secondary" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
-                  <i class="fa-solid fa-xmark"></i> Ocultar filtros
-                </b-button>
-              </b-col>
-            </b-row>
-          </b-card>
-          <p></p>
-        </b-col>
-      </transition>
-      <!-- Tabla de resultados -->
-      <b-col :md="mostrarFiltros ? 10 : 12">
-        <div v-if="cargando" class="cargando-overlay">
-              <b-spinner variant="primary" class="mb-2" />
-              <div>Cargando...</div>
+              </template>
+              <template #cell(nombre_usuario)="data"> 
+                <div>
+                  <span>{{ data.item.nombre_usuario }}</span>
+                </div>
+                <div>
+                  <span style="font-size: 0.80rem; text-align: start;">{{ data.item.apellido_usuario }}</span>
+                </div>
+              </template>              
+              <template #cell(nombre_sucursal)="data">
+                <div>
+                  <span style="font-size: 0.80rem; text-align: start;">{{ data.item.nombre_sucursal }}</span>
+                </div>
+                <div>
+                  <span style="font-size: 0.60rem; text-align: start;">{{ data.item.nombre_tipo }}</span>
+                </div>
+              </template>
+              <template #cell(act_fecha_registro)="data">
+                <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
+              </template>              
+              <template #cell(acciones)="data">
+                <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
+                  <template #button-content>
+                    <i class="fa-solid fa-gear fa-xl"></i>
+                  </template>
+                  <!-- Editar: solo si NO está en baja ni eliminado -->
+                  <b-dropdown-item 
+                    v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                    @click="editarActivo(data.item)"
+                  >
+                    <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> Editar
+                  </b-dropdown-item>
+
+                  <!-- Eliminar: solo si NO está en baja ni eliminado -->
+                  <b-dropdown-item 
+                    v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                    @click="confirmarEliminar(data.item)"
+                  >
+                    <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
+                  </b-dropdown-item>
+
+                  <!-- Mantención: solo si está activo -->
+                  <b-dropdown-item 
+                    v-if="data.item.act_estado === 'activo'"
+                    @click="abrirModalMantencion(data.item)"
+                  >
+                    <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
+                  </b-dropdown-item>
+
+                  <!-- Activar: si está eliminado, baja o mantenimiento -->
+                  <b-dropdown-item 
+                    v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
+                    @click="activarActivo(data.item)" 
+                  >
+                    <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
+                  </b-dropdown-item>
+                </b-dropdown>
+              </template>
+              <template #cell(act_estado)="data">
+                <div>
+                  <i
+                    v-if="data.item.act_estado === 'activo'"
+                    class="fa-solid fa-circle-check text-success"
+                    title="activo"
+                    style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i
+                    v-else-if="data.item.act_estado === 'eliminado'"
+                    class="fa-solid fa-circle-xmark text-danger"
+                    title="Eliminado"
+                    style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i
+                    v-else-if="data.item.act_estado === 'baja'"
+                    class="fa-solid fa-ban" 
+                    title="Baja"
+                    style="color: #ff4747; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i 
+                    v-else-if="data.item.act_estado === 'mantenimiento'" 
+                    class="fa-solid fa-circle-exclamation" 
+                    title="mantenimiento" 
+                    style="color: #ffe852; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
+                  ></i>
+                  <i
+                    v-else
+                    class="fa-solid fa-circle-question text-secondary"
+                    title="Desconocido"
+                    style="font-size: 0.870em; padding: 0.2rem 0.2rem;"
+                  ></i>
+                </div> 
+              </template>
+            </b-table> 
+            <div class="overflow-auto">
+              <b-pagination
+                v-model="paginaActual"
+                :total-rows="filtrarActivos.length"
+                :per-page="porPagina"       
+                align="center"
+                class="my-3"
+                first-number
+                last-number
+                size="md"/>
             </div>
-          <b-table 
-            :items="activosPaginados" 
-            :fields="fields" 
-            responsive hover Secondary 
-            class="custom-rounded-table" > 
-            <template #cell(act_id)="data">
-              <div>
-                <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
-              </div>
-            </template>
-            <template #cell(nombre_usuario)="data"> 
-              <div>
-                <span>{{ data.item.nombre_usuario }}</span>
-              </div>
-              <div>
-                <span style="font-size: 0.80rem; text-align: start;">{{ data.item.apellido_usuario }}</span>
-              </div>
-            </template>              
-            <template #cell(nombre_sucursal)="data">
-              <div>
-                <span style="font-size: 0.80rem; text-align: start;">{{ data.item.nombre_sucursal }}</span>
-              </div>
-              <div>
-                <span style="font-size: 0.60rem; text-align: start;">{{ data.item.nombre_tipo }}</span>
-              </div>
-            </template>
-            <template #cell(act_fecha_registro)="data">
-              <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
-            </template>              
-            <template #cell(acciones)="data">
-              <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
-                <template #button-content>
-                  <i class="fa-solid fa-gear fa-xl"></i>
-                </template>
-                <!-- Editar: solo si NO está en baja ni eliminado -->
-                <b-dropdown-item 
-                  v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
-                  @click="editarActivo(data.item)"
-                >
-                  <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> Editar
-                </b-dropdown-item>
-
-                <!-- Eliminar: solo si NO está en baja ni eliminado -->
-                <b-dropdown-item 
-                  v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
-                  @click="confirmarEliminar(data.item)"
-                >
-                  <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
-                </b-dropdown-item>
-
-                <!-- Mantención: solo si está activo -->
-                <b-dropdown-item 
-                  v-if="data.item.act_estado === 'activo'"
-                  @click="abrirModalMantencion(data.item)"
-                >
-                  <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
-                </b-dropdown-item>
-
-                <!-- Activar: si está eliminado, baja o mantenimiento -->
-                <b-dropdown-item 
-                  v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
-                  @click="activarActivo(data.item)" 
-                >
-                  <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
-                </b-dropdown-item>
-              </b-dropdown>
-            </template>
-            <template #cell(act_estado)="data">
-              <div>
-                <i
-                  v-if="data.item.act_estado === 'activo'"
-                  class="fa-solid fa-circle-check text-success"
-                  title="activo"
-                  style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i
-                  v-else-if="data.item.act_estado === 'eliminado'"
-                  class="fa-solid fa-circle-xmark text-danger"
-                  title="Eliminado"
-                  style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i
-                  v-else-if="data.item.act_estado === 'baja'"
-                  class="fa-solid fa-ban" 
-                  title="Baja"
-                  style="color: #ff4747; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i 
-                  v-else-if="data.item.act_estado === 'mantenimiento'" 
-                  class="fa-solid fa-circle-exclamation" 
-                  title="mantenimiento" 
-                  style="color: #ffe852; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                ></i>
-                <i
-                  v-else
-                  class="fa-solid fa-circle-question text-secondary"
-                  title="Desconocido"
-                  style="font-size: 0.870em; padding: 0.2rem 0.2rem;"
-                ></i>
-              </div> 
-            </template>
-          </b-table> 
-          <div class="overflow-auto">
-            <b-pagination
-              v-model="paginaActual"
-              :total-rows="filtrarActivos.length"
-              :per-page="porPagina"       
-              align="center"
-              class="my-3"
-              first-number
-              last-number
-              size="md"/>
-          </div>
-      </b-col>
+        </b-col>
+      </b-navbar>
+      
+      
+     
     </b-row>
   </b-container>
   <!-- Modal de edición -->
@@ -563,7 +565,7 @@ export default {
       Buscador: '',
       activosFiltros: [],
       paginaActual: 1,
-      porPagina: 9,
+      porPagina: 8,
       errors: {}
     }
   },
@@ -603,11 +605,6 @@ export default {
 
         return Query && filtroSucursales && filtroUsuarios && filtroEstados && filtroTipos && filtroEmpresa
       })
-    },
-    sucursalesFiltradas() {
-      if (!this.selectedActivos.act_id_empresa) return []
-      const empresa = this.empresasConSucursales.find(e => e.emp_id === this.selectedActivos.act_id_empresa)
-      return empresa ? empresa.sucursales : []
     },
     contarActivosPorSucursal() {
       const conteo = {}
@@ -686,6 +683,24 @@ export default {
         id,
         nombre
       }))
+    },
+    sucursalesFiltradas() {
+      const empresa = this.empresaSucursales.find(e => e.emp_id === this.selectedActivos.act_id_empresa)
+      return empresa ? empresa.sucursales : []
+    },
+    usuariosFiltrados() {
+      return this.usuariosDisponibles.filter(u => u.usr_id_sucursal === this.sucursalSeleccionada)
+    },
+    empresasFiltradas(){
+      this.empresaSucursales = empresasActivas.map(empresa => {
+        const sucursalesDeEmpresa = sucursalesRes.data.filter(
+          s => s.suc_id_empresa === empresa.emp_id
+        )
+        return {
+          ...empresa,
+          sucursales: sucursalesDeEmpresa
+        }
+      })
     }
   },
 
@@ -960,7 +975,9 @@ export default {
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.1s;
   }
-  
+  .dropdown-menu{
+    right: 0 !important; 
+  }
   .custom-rounded-table {
     border-radius: 12px;
     overflow: hidden; /* importante para que las esquinas internas también se redondeen */
