@@ -155,7 +155,7 @@ export default {
       if (!this.validadatos()) return
 
       try {
-        const res = await axios.post(`/tiposactivos/CrearTipo`, {
+        const res = await axios.post(`/TiposActivos/CrearTipo`, {
           tip_descripcion: this.Tipo.Nombre.trim()
         })
 

@@ -1,8 +1,6 @@
 <template>
-  
   <!-- filtro -->
-  <b-container fluid>
-    
+  <b-container >
     <b-row>
       <!-- Barra de búsqueda -->
       <b-navbar md="2" toggleable="" type="" variant="" class="mb-4">
@@ -100,7 +98,7 @@
             <b-table 
               :items="activosPaginados" 
               :fields="fields" 
-              responsive hover Secondary 
+              hover 
               class="custom-rounded-table" > 
               <template #cell(act_id)="data">
                 <div>
@@ -127,7 +125,16 @@
                 <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
               </template>              
               <template #cell(acciones)="data">
-                <b-dropdown size="sm" style="margin-top: 12px;" variant="light" text="Acciones" toggle-class="btn-sm" no-caret>
+                <b-dropdown
+                    boundary="clippingParents"
+                    flip
+                    size="sm"
+                    variant="light"
+                    no-caret
+                    text="Acciones"
+                    toggle-class="btn-sm"
+                    style="margin-top: 12px;"
+                  >
                   <template #button-content>
                     <i class="fa-solid fa-gear fa-xl"></i>
                   </template>
@@ -211,10 +218,7 @@
                 size="md"/>
             </div>
         </b-col>
-      </b-navbar>
-      
-      
-     
+      </b-navbar>            
     </b-row>
   </b-container>
   <!-- Modal de edición -->
@@ -691,17 +695,7 @@ export default {
     usuariosFiltrados() {
       return this.usuariosDisponibles.filter(u => u.usr_id_sucursal === this.sucursalSeleccionada)
     },
-    empresasFiltradas(){
-      this.empresaSucursales = empresasActivas.map(empresa => {
-        const sucursalesDeEmpresa = sucursalesRes.data.filter(
-          s => s.suc_id_empresa === empresa.emp_id
-        )
-        return {
-          ...empresa,
-          sucursales: sucursalesDeEmpresa
-        }
-      })
-    }
+    
   },
 
   watch: {
@@ -752,7 +746,21 @@ export default {
         console.error('Error cargando Activo:', error)
       }
     },
-
+    
+    async cargarEmpresasConSucursales() {
+      try {
+        const empresasRes = await axios.get('/Activos/listaEmpresa')
+        const sucursalesRes = await axios.get('/Activos/listaSucursal')
+        
+        const empresasActivas = empresasRes.data.filter(e => e.emp_estado === 'activo')
+        this.empresaSucursales = empresasActivas.map(emp => ({
+          ...emp,
+          sucursales: sucursalesRes.data.filter(s => s.suc_id_empresa === emp.emp_id)
+        }))
+      } catch (error) {
+        console.error('Error cargando empresas y sucursales:', error)
+      }
+    },
     editarActivo(activo) {
       Object.assign(this.selectedActivos, activo)
       console.log(this.selectedActivos)
@@ -975,12 +983,11 @@ export default {
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.1s;
   }
-  .dropdown-menu{
-    right: 0 !important; 
+  .dropdown-menu {
+    z-index: 1050 !important; /* Bootstrap usa 1000+ para modals, dropdowns, tooltips */
   }
   .custom-rounded-table {
-    border-radius: 12px;
-    overflow: hidden; /* importante para que las esquinas internas también se redondeen */
+    border-radius: 12px; 
   }
   .bg-card{
     border: none;
@@ -995,13 +1002,6 @@ export default {
   .acciones{
     width: 0 !important;
   }
-  #estados{
-    width: 0 !important;
-  }
-  td.estados {
-    width: 0px;
-    padding: 0.2rem 0.2rem;
-  }
   td.usuario{
     width: 120px;
   }
@@ -1012,20 +1012,19 @@ export default {
     text-align: start;
   }
   .cargando-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #007bff;
-  
-}
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #007bff; 
+  }
 </style>

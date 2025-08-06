@@ -27,9 +27,8 @@ class Auth extends CI_Controller {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return $this->output
                 ->set_status_header(405)
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Método no permitido.']));
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Metodo no permitido.']));
         }
-
         $datos = json_decode(file_get_contents("php://input"), true);
         
         if (!isset($datos['rut']) || !isset($datos['password'])) {
@@ -37,20 +36,14 @@ class Auth extends CI_Controller {
                 ->set_status_header(400)
                 ->set_output(json_encode(['status' => 'error', 'message' => 'RUT y contraseña son obligatorios.']));
         }
-
         $rut = $datos['rut'];
         $password = $datos['password'];
-
         json_decode($rut);
-
         $usuarios = $this->IniciarSession->VeridicacionDatos($rut, $password); 
-
         if ($usuarios) {
             $usuarios = (array)$usuarios;
             unset($usuarios['usr_clave']); 
-
             $this->session->set_userdata('user', $usuarios);
-
             return $this->output
                 ->set_status_header(200)
                 ->set_output(json_encode([
@@ -66,11 +59,9 @@ class Auth extends CI_Controller {
                 ]));
         }
     }
-
     // ---------- Confirmacion Session ----------
     public function ConfirmacionSession() {
         $usuarios = $this->session->userdata('user');
-
         if ($usuarios) {
             return $this->output
                 ->set_status_header(200)
@@ -87,7 +78,6 @@ class Auth extends CI_Controller {
                 ]));
         }
     }
-
     // ---------- Cerrar Session ----------
     public function CerrarSession() {
         $this->session->unset_userdata('user');
@@ -100,4 +90,6 @@ class Auth extends CI_Controller {
                 'message' => 'Sesión cerrada correctamente.'
             ]));
     }
+
+
 }

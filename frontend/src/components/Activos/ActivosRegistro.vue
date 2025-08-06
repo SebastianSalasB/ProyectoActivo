@@ -20,7 +20,7 @@
           <b-col sm>
             <b-form-group label="Sucursal">
               <b-form-select
-                
+                placeholder="selecciona una sucursal"
                 v-model="sucursalSeleccionada"
                 :options="sucursalesFiltradas.map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
                 :class="{ 'is-invalid': inputErrors[index]?.sucursal }"
@@ -51,6 +51,9 @@
               <small v-if="errors.usuario_id" class="text-danger">{{ errors.usuario_id }}</small>
             </b-form-group>
           </b-col>
+         
+        </b-row>
+        <b-row>
           <b-col sm>
             <b-form-group label="Fecha">
               <b-form-input
@@ -76,6 +79,7 @@
           </b-col>
         </b-row>
         <b-row>
+           
           <div v-if="activo.tipoactivo === 1"> <!-- Asume que 'Computador' tiene tip_id = 1 --> 
             <b-row>
             <b-col sm>
@@ -634,7 +638,7 @@ export default {
 }
 </script>
 <style>
-.b-form-input{
-  color: black;
-} 
+.multiselect-placeholder{
+  font-size: 12px !important;
+}
 </style>

@@ -32,6 +32,10 @@ class RespoModel extends CI_Model
         $this->db->where('usr_id', $id);
         return $this->db->update('activos.usuarios', $data);
     }
+    public function DatosUsuario($id){
+        $this->db->where('usr_id',$id);
+        return $this->db->get('activos.usuarios')->result();
+    }
     public function eliminarUsuario($id) {
         $data = ['usr_estado' => 'eliminado']; 
         $this->db->where('usr_id', $id);       

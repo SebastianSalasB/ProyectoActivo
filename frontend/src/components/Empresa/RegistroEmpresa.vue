@@ -116,8 +116,8 @@ export default {
 </script>
 <style>
 .bg-light {
-    --bs-bg-opacity: 1;
-    background-color: rgb(255 255 255 / 50%) !important;
+  --bs-bg-opacity: 1;
+  background-color: rgb(255 255 255 / 50%) !important;
 }
 
 </style>

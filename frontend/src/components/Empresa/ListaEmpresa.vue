@@ -251,7 +251,7 @@ export default {
 <style scoped>
   .custom-rounded-table {
     border-radius: 12px;
-    overflow: hidden; /* importante para que las esquinas internas también se redondeen */
+    overflow: hidden; 
   }
 </style>
 

@@ -10,8 +10,11 @@ class IniciarSession extends CI_Model {
     }
     public function VeridicacionDatos($rut, $password) {
         $this->db->where('usr_rut', $rut);
+        
         $query = $this->db->get($this->table);
+
         $usuarios = $query->result();
+
         if (empty($usuarios)) {
             return false; // No hay usuarios con ese RUT
         }

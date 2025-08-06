@@ -10,6 +10,18 @@ class Usuarios extends CI_Controller
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: Content-Type, Authorization");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Credentials: true");
+    }
+    private function setCorsHeaders() {
+        header("Access-Control-Allow-Origin: http://localhost:3000");
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            exit();
+        }
     }
     public function listarResponsable() {
         // Obtiene los registros de responsables con paginación
@@ -22,6 +34,77 @@ class Usuarios extends CI_Controller
             'total' => $total
         ]);
     }
+    public function DatosUsuario($id = null) {
+        $this->setCorsHeaders(); // 👈 agrega esto primero
+
+        if ($id === null || !is_numeric($id)) {
+            show_error('ID inválido', 400);
+            return;
+        }
+
+        $datos = $this->RespoModel->DatosUsuario($id);
+
+        if (!$datos) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['error' => 'Usuario no encontrado']));
+            return;
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($datos));
+    }
+    public function ActualizarPerfil() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            show_error('Método no permitido', 405);
+            return;
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (!$data) {
+            echo json_encode(['status' => 'error', 'message' => 'Datos inválidos']);
+            return;
+        }
+
+        // Obtener ID de usuario desde sesión
+        $usuario_id = $this->session->userdata('id'); // Ajusta el nombre de la variable si es distinto
+
+        if (!$usuario_id) {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario no autenticado']);
+            return;
+        }
+
+        // Validar campos obligatorios
+        if (empty($data['usr_nombre']) || empty($data['usr_apellido']) || empty($data['usr_rut'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Nombre, apellido y RUT son obligatorios']);
+            return;
+        }
+
+        // Preparar datos para actualizar
+        $userData = [
+            'usr_correo'      => $data['usr_correo'] ?? null,
+            'usr_telefono'    => $data['usr_telefono'] ?? null,
+        ];
+
+        // Solo actualiza clave si fue enviada
+        if (!empty(trim($data['usr_clave'] ?? ''))) {
+            $clavePlano = trim($data['usr_clave']);
+            $userData['usr_clave'] = password_hash($clavePlano, PASSWORD_BCRYPT);
+        }
+
+        // Actualizar en la base de datos
+        $actualizado = $this->Usuario_model->actualizarPerfil($usuario_id, $userData);
+
+        if ($actualizado) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No se pudo actualizar']);
+        }
+    }
+
+
     public function ActualizarUsuario($id) {
         $raw = file_get_contents('php://input');
         error_log("RAW INPUT: " . $raw);
@@ -143,22 +226,16 @@ class Usuarios extends CI_Controller
         }
     }
     public function listaE() {
-        $this->load->model('RespoModel');
-        $tipos = $this->RespoModel->listaE();
-
-        echo json_encode($tipos);
+        $listarE = $this->RespoModel->listaE();
+        echo json_encode($listarE);
     }
     public function listaS() {
-       $this->load->model('RespoModel');
-        $tipos = $this->RespoModel->listaS();
-
-        echo json_encode($tipos);
+        $listarS = $this->RespoModel->listaS();
+        echo json_encode($listarS);
     }
     public function listaT() {
-        $this->load->model('RespoModel');
-        $tipos = $this->RespoModel->listaT();
-
-        echo json_encode($tipos);
+        $listarT = $this->RespoModel->listaT();
+        echo json_encode($listarT);
     }
         
 }

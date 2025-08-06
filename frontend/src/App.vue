@@ -3,150 +3,203 @@
     <div v-if="!isAuthenticated" class="login-container">
       <Login @login-success="handleLoginSuccess" />
     </div>
-
-    <div v-else style="height: 100vh;">
-        
-          <!-- NAVBAR: visible solo en móvil -->
-          <b-navbar v-if="isMobile" toggleable="md" class="bg-barra shadow-sm" fixed="top">
-            <b-navbar-brand class="text-white" @click="currentView = 'registro'">
-              Sistema de Activos
-            </b-navbar-brand>
-            <b-navbar-toggle target="nav-collapse">
-              <i class="fa-solid fa-bars fa-xl text-white"></i>
-            </b-navbar-toggle>
-            <b-collapse id="nav-collapse" is-nav>
-              <b-navbar-nav>
-                <b-nav-item-dropdown text="Activos" left class="dropdown-dark">
-                  <b-dropdown-item @click="currentView = 'registro'">
-                    <i class="fa-solid fa-file-pen fa-sm"></i> Activos
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="currentView = 'lista'">
-                    <i class="fa-solid fa-list fa-sm"></i> Lista
-                  </b-dropdown-item>
-                </b-nav-item-dropdown>
-                <b-nav-item-dropdown text="Tipo" left class="dropdown-dark">
-                  <b-dropdown-item @click="currentView = 'tipo'">Ver Tipos</b-dropdown-item>
-                </b-nav-item-dropdown>
-                <b-nav-item-dropdown text="Empresa" left class="dropdown-dark">
-                  <b-dropdown-item @click="currentView = 'Registro Empresa'">
-                    <i class="fa-solid fa-file-pen fa-sm"></i> Empresa
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="currentView = 'Empresa'">
-                    <i class="fa-solid fa-list fa-sm"></i> Lista
-                  </b-dropdown-item>
-                </b-nav-item-dropdown>
-                <b-nav-item-dropdown text="Usuarios" left class="dropdown-dark">
-                  <b-dropdown-item @click="currentView = 'RegistroResponsable'">
-                    <i class="fa-solid fa-file-pen fa-sm"></i> Usuarios
-                  </b-dropdown-item>
-                  <b-dropdown-item @click="currentView = 'Responsable'">
-                    <i class="fa-solid fa-list fa-sm"></i> Lista
-                  </b-dropdown-item>
-                </b-nav-item-dropdown>
-              </b-navbar-nav>
-              <b-navbar-nav class="ms-auto">
-                <b-nav-item @click="toggleModoOscuro" title="Cambiar modo">
-                  <i class="fa-solid fa-xl" :class="modoOscuro ? 'fa-sun text-warning' : 'fa-moon text-white'"></i>
-                </b-nav-item>
-                <b-nav-item @click="showConfirmLogout = true">
-                  <i class="fa-solid fa-right-from-bracket fa-xl" style="color: #c20000;"></i>
-                </b-nav-item>
-              </b-navbar-nav>
-            </b-collapse>
-          </b-navbar>
-
-          <!-- SIDEBAR: visible solo en escritorio -->
-          <div 
-            v-if="!isMobile"
-            class="d-flex flex-column flex-shrink-0 p-3 border-end"
-            :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'"
-            style="width: 150px; height: 100vh; position: fixed; z-index: 1;"
-          >
-            <span class="fs-4 text-center mb-4">Sistema de Activos</span>
-
-            <ul class="nav nav-pills flex-column mb-auto">
-              <li>
-                <a class="nav-link" data-bs-toggle="collapse" href="#collapseActivos" role="button">Activos</a>
-                <div class="collapse show" id="collapseActivos">
-                  <ul class="list-unstyled ps-3 small">
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'registro'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'lista'"><i class="fa-solid fa-list"></i> Lista</a></li>
-                  </ul>
-                </div>
-              </li>
-
-              <li class="mt-2">
-                <a class="nav-link" data-bs-toggle="collapse" href="#collapseEmpresa" role="button">Empresa</a>
-                <div class="collapse show" id="collapseEmpresa">
-                  <ul class="list-unstyled ps-3 small">
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Registro Empresa'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Empresa'"><i class="fa-solid fa-list"></i> Lista</a></li>
-                  </ul>
-                </div>
-              </li>
-
-              <li class="mt-2">
-                <a class="nav-link" data-bs-toggle="collapse" href="#collapseUsuarios" role="button">Usuarios</a>
-                <div class="collapse show" id="collapseUsuarios">
-                  <ul class="list-unstyled ps-3 small">
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'RegistroResponsable'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Responsable'"><i class="fa-solid fa-list"></i> Lista</a></li>
-                  </ul>
-                </div>
-              </li>
-
-              <li class="mt-2">
-                <a class="nav-link" data-bs-toggle="collapse" href="#collapseTipos" role="button">Tipos</a>
-                <div class="collapse" id="collapseTipos">
-                  <ul class="list-unstyled ps-3 small">
-                    <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'tipo'">Lista / Registro</a></li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-
-            <hr />
-            <div>
-              <b-button variant="outline-secondary" class="w-100 mb-2" @click="toggleModoOscuro">
-                <i :class="modoOscuro ? 'fa fa-sun' : 'fa fa-moon'"></i>
-              </b-button>
-              <b-button variant="outline-danger" class="w-100" @click="showConfirmLogout = true">
-                <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
-              </b-button>
+    <div v-else style="height: 100vh;"> 
+      <!-- NAVBAR: visible solo en móvil -->
+      <b-navbar v-if="isMobile" toggleable="md" class="bg-barra shadow-sm" fixed="top">
+        <b-navbar-brand class="text-white">
+          Sistema de Activos
+        </b-navbar-brand>
+        <b-navbar-toggle target="nav-collapse">
+          <i class="fa-solid fa-bars fa-xl text-white"></i>
+        </b-navbar-toggle>
+        <b-collapse id="nav-collapse" is-nav ref="navCollapse">
+          <b-navbar-nav>
+            <b-nav-item-dropdown text="Activos" left class="dropdown-dark">
+              <b-dropdown-item @click="seleccionarVista('registro')">
+                <i class="fa-solid fa-pen-to-square"></i> Activos
+              </b-dropdown-item>
+              <b-dropdown-item @click="seleccionarVista('lista')">
+                <i class="fa-solid fa-list"></i> Lista
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown text="Tipo" left class="dropdown-dark">
+              <b-dropdown-item @click="seleccionarVista('tipo')">
+                <i class="fa-solid fa-pen-to-square"></i> Ver Tipos
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown text="Empresa" left class="dropdown-dark">
+              <b-dropdown-item @click="seleccionarVista('Registro Empresa')">
+                <i class="fa-solid fa-pen-to-square"></i> Empresa
+              </b-dropdown-item>
+              <b-dropdown-item @click="seleccionarVista('Empresa')">
+                <i class="fa-solid fa-list"></i> Lista
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown text="Usuarios" left class="dropdown-dark">
+              <b-dropdown-item @click="seleccionarVista('RegistroResponsable')">
+                <i class="fa-solid fa-pen-to-square"></i> Usuarios
+              </b-dropdown-item>
+              <b-dropdown-item @click="seleccionarVista('Responsable')">
+                <i class="fa-solid fa-list"></i> Lista
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+          <b-navbar-nav class="ms-auto">
+            <b-nav-item variant="outline-white" class=" mb-2" @click="UsuariosAjustes = true">
+              <i class="fa-solid fa-gear fa-lg text-white"></i> Ajustes
+            </b-nav-item>
+            <b-nav-item @click="showConfirmLogout = true">
+              <i class="fa-solid fa-right-from-bracket fa-xl text-danger"></i>
+            </b-nav-item>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
+      <!-- SIDEBAR: visible solo en escritorio -->
+      <div 
+        v-if="!isMobile"
+        class="d-flex flex-column flex-shrink-0 p-3 border-end"
+        :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'"
+        style="width: 180px; height: 100vh; position: fixed; z-index: 1;"
+      >
+        <span class="fs-4 text-center mb-4">Sistema de Activos</span>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li>
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseActivos" role="button">Activos</a>
+            <div class="collapse show" id="collapseActivos">
+              <ul class="list-unstyled ps-3 small">
+                <li>
+                  <a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'registro'">
+                    <i class="fa-solid fa-pen-to-square"></i> Registro
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'lista'">
+                    <i class="fa-solid fa-list"></i> Lista
+                  </a>
+                  </li>
+              </ul>
             </div>
-          </div>
+          </li>
+          <li class="mt-2">
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseEmpresa" role="button">Empresa</a>
+            <div class="collapse show" id="collapseEmpresa">
+              <ul class="list-unstyled ps-3 small">
+                <li>
+                  <a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Registro Empresa'">
+                    <i class="fa-solid fa-pen-to-square"></i> Registro
+                  </a></li>
+                <li>
+                  <a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Empresa'">
+                    <i class="fa-solid fa-list"></i> Lista
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
 
-          <!-- CONTENIDO PRINCIPAL -->
-          <main
-            :class="['main', 'pt-4', modoOscuro ? 'modo-oscuro' : 'modo-claro']"
-            :style="{ marginTop: isMobile ? '2rem' : '0', marginLeft: !isMobile ? '150px' : '0' }"
-          >
-            <ActivosRegistro v-if="currentView === 'registro'" />
-            <TablaActivos v-else-if="currentView === 'lista'" />
-            <Tipo v-else-if="currentView === 'tipo'" />
-            <RegistroEmpresa v-else-if="currentView === 'Registro Empresa'" />
-            <ListaEmpresa v-else-if="currentView === 'Empresa'" />
-            <ListaRespo v-else-if="currentView === 'Responsable'" />
-            <RegistroRespo v-else-if="currentView === 'RegistroResponsable'" />
-          </main>
-
-          <!-- MODAL CONFIRMACIÓN -->
-          <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered>
-            ¿Estás seguro que deseas cerrar tu sesión?
-            <template #footer>
-              <b-button variant="secondary" @click="showConfirmLogout = false">Cancelar</b-button>
-              <b-button variant="danger" @click="confirmLogout">Sí, cerrar sesión</b-button>
-            </template>
-          </b-modal>
+          <li class="mt-2">
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseUsuarios" role="button">Usuarios</a>
+            <div class="collapse show" id="collapseUsuarios">
+              <ul class="list-unstyled ps-3 small">
+                <li>
+                  <a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'RegistroResponsable'">
+                    <i class="fa-solid fa-pen-to-square"></i> Registro
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Responsable'">
+                    <i class="fa-solid fa-list"></i> Lista
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="mt-2">
+            <a class="nav-link" data-bs-toggle="collapse" href="#collapseTipos" role="button">Tipos</a>
+            <div class="collapse" id="collapseTipos">
+              <ul class="list-unstyled ps-3 small">
+                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'tipo'">Lista / Registro</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <hr />
+        <div>
+          <b-button variant="outline-secondary" class="w-100 mb-2" @click="UsuariosAjustes = true">
+            <i class="fa-solid fa-gear"></i> Ajustes
+          </b-button>
+          <b-button variant="outline-danger" class="w-100 mb-2" @click="showConfirmLogout = true">
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+          </b-button>
+        </div>
+      </div>
+      <!-- CONTENIDO PRINCIPAL -->
+      <main
+        :class="['main', 'pt-4', modoOscuro ? 'modo-oscuro' : 'modo-claro']"
+        :style="{ marginTop: isMobile ? '2rem' : '0', marginLeft: !isMobile ? '200px' : '0' }"
+      >
+        <ActivosRegistro v-if="currentView === 'registro'" />
+        <TablaActivos v-else-if="currentView === 'lista'" />
+        <Tipo v-else-if="currentView === 'tipo'" />
+        <RegistroEmpresa v-else-if="currentView === 'Registro Empresa'" />
+        <ListaEmpresa v-else-if="currentView === 'Empresa'" />
+        <ListaRespo v-else-if="currentView === 'Responsable'" />
+        <RegistroRespo v-else-if="currentView === 'RegistroResponsable'" />
+      </main>
+      <!-- MODAL CONFIRMACIÓN -->
+      <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered>
+        ¿Estás seguro que deseas cerrar tu sesión?
+        <template #footer>
+          <b-button variant="secondary" @click="showConfirmLogout = false">Cancelar</b-button>
+          <b-button variant="danger" @click="confirmLogout">Sí, cerrar sesión</b-button>
+        </template>
+      </b-modal>
+      <!-- Modal Editar Usuario -->
+      <b-modal v-model="UsuariosAjustes" title="Ajustes de Usuario" centered>
+        <b-form>
+          <b-form-group label="Nombre y Apellido">
+            <b-row>
+              <b-col>
+                <b-form-input v-model="datosUsuariosRegistado.usr_nombre" disabled placeholder="Nombre" />
+              </b-col>
+              <b-col>
+                <b-form-input v-model="datosUsuariosRegistado.usr_apellido" disabled placeholder="Apellido" />
+              </b-col>
+            </b-row>
+          </b-form-group>
+          <b-row>
+            <b-col sm="6">
+              <b-form-group label="Correo">
+                <b-form-input v-model="datosUsuariosRegistado.usr_correo" type="email" />
+              </b-form-group>
+            </b-col>
+            <b-col sm="6">
+              <b-form-group label="Teléfono">
+                <b-form-input v-model="datosUsuariosRegistado.usr_telefono" type="tel" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-form-group label="Contraseña (opcional)">
+                <b-form-input v-model="datosUsuariosRegistado.usr_clave" type="password" />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-form-group label="Tema">
+            <b-form-checkbox v-model="modoOscuro" switches>Usar modo oscuro</b-form-checkbox>
+          </b-form-group>
+        </b-form>
+        <template #footer>
+          <b-button variant="secondary" @click="UsuariosAjustes = false">Cancelar</b-button>
+          <b-button variant="primary" @click="guardarCambiosUsuario">Guardar cambios</b-button>
+        </template>
+      </b-modal>
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+<script>
 import axios from 'axios'
-
-// Componentes
 import Login from './components/Login/Login.vue'
 import ActivosRegistro from './components/Activos/ActivosRegistro.vue'
 import TablaActivos from './components/Activos/TablaActivos.vue'
@@ -155,64 +208,134 @@ import RegistroEmpresa from './components/Empresa/RegistroEmpresa.vue'
 import ListaEmpresa from './components/Empresa/ListaEmpresa.vue'
 import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
-
 import '@fortawesome/fontawesome-free/css/all.css'
 
-const currentView = ref('lista')
-const isAuthenticated = ref(false)
-const showConfirmLogout = ref(false)
-const modoOscuro = ref(localStorage.getItem('modoOscuro') === 'true')
+export default {
+  components: {
+    Login,
+    ActivosRegistro,
+    TablaActivos,
+    Tipo,
+    RegistroEmpresa,
+    ListaEmpresa,
+    ListaRespo,
+    RegistroRespo
+  },
 
-// DETECTAR PANTALLA PEQUEÑA
-const isMobile = ref(window.innerWidth < 768)
-function handleResize() {
-  isMobile.value = window.innerWidth < 768
-}
-onMounted(() => {
-  window.addEventListener('resize', handleResize)
-  handleResize()
+  data() {
+    return {
+      currentView: 'lista',
+      isAuthenticated: false,
+      showConfirmLogout: false,
+      UsuariosAjustes: false,
+      UsuariosRegistado: {},
+      datosUsuariosRegistado: {}, // este objeto debe existir
+      modoOscuro: localStorage.getItem('modoOscuro') === 'true',
+      isMobile: window.innerWidth < 768
+    }
+  },
 
-  axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
-    .then(res => {
-      const data = res.data
-      if (res.status === 200 && data.status === 'success') {
-        isAuthenticated.value = true
-        currentView.value = 'lista'
-      } else {
-        isAuthenticated.value = false
-        currentView.value = 'login'
+  computed: {
+    // Aquí puedes agregar computadas si son necesarias
+  },
+
+  methods: {
+    handleResize() {
+      this.isMobile = window.innerWidth < 768
+    },
+
+    toggleModoOscuro() {
+      this.modoOscuro = !this.modoOscuro
+      localStorage.setItem('modoOscuro', this.modoOscuro)
+    },
+
+    handleLoginSuccess() {
+      this.isAuthenticated = true
+      this.currentView = 'lista'
+    },
+
+    confirmLogout() {
+      axios.post('/Auth/CerrarSession', {}, { withCredentials: true })
+        .finally(() => {
+          this.showConfirmLogout = false
+          setTimeout(() => {
+            this.isAuthenticated = false
+            this.currentView = 'login'
+          }, 300)
+        })
+    },
+    async datosUsuarioRegistrado() {
+      try {
+        const resUsuario = await axios.get('/Auth/ConfirmacionSession', { withCredentials: true });
+        this.UsuariosRegistado = resUsuario.data.user;
+
+        if (!this.UsuariosRegistado?.usr_id) {
+          console.error("No se obtuvo el ID del usuario");
+          return;
+        }
+
+        const res = await axios.get(`/Usuarios/DatosUsuario/${this.UsuariosRegistado.usr_id}`, {
+          withCredentials: true
+        });
+
+        this.datosUsuariosRegistado = res.data[0];
+        console.log('Datos usuario cargado:', res.data);
+
+      } catch (error) {
+        console.error('Error al obtener los datos del usuario:', error);
       }
-    })
-    .catch(() => {
-      isAuthenticated.value = false
-      currentView.value = 'login'
-    })
-})
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-})
+    },
 
-function toggleModoOscuro() {
-  modoOscuro.value = !modoOscuro.value
-  localStorage.setItem('modoOscuro', modoOscuro.value)
-}
+    guardarCambiosUsuario() {
+      const payload = { ...this.UsuariosRegistado }
 
-function handleLoginSuccess() {
-  isAuthenticated.value = true
-  currentView.value = 'lista'
-}
+      axios.post('/Usuario/ActualizarPerfil', payload, { withCredentials: true })
+        .then(res => {
+          if (res.data.status === 'success') {
+            alert('Datos actualizados correctamente')
+            this.UsuariosAjustes = false
+            this.UsuariosRegistado.clave = ''
+          } else {
+            alert('Hubo un error al actualizar')
+          }
+        })
+        .catch(() => {
+          alert('Error al conectarse al servidor')
+        })
+    },
+    seleccionarVista(vista) {
+      this.currentView = vista;
+      // Solo cerrar menú hamburguesa si está abierto y si estás en móvil
+      if (this.isMobile && this.$refs.navCollapse) {
+        this.$refs.navCollapse.hide();
+      }
+    },
+  },
+  mounted() {
+    this.datosUsuarioRegistrado()
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize()
+    
+    axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
+      .then(res => {
+        const data = res.data
+        
+        if (res.status === 200 && data.status === 'success') {
+          this.isAuthenticated = true
+          this.currentView = 'lista'
+        } else {
+          this.isAuthenticated = false
+          this.currentView = 'login'
+        }
+      })
+  },
 
-function confirmLogout() {
-  axios.post('/Auth/CerrarSession', {}, { withCredentials: true })
-    .finally(() => {
-      showConfirmLogout.value = false
-      setTimeout(() => {
-        isAuthenticated.value = false
-        currentView.value = 'login'
-      }, 300)
-    })
+  unmounted() {
+    window.removeEventListener('resize', this.handleResize)
+  }
 }
 </script>
+
 
 <style>
 /* MISMO CSS QUE TENÍAS */
@@ -255,7 +378,9 @@ function confirmLogout() {
 .modo-oscuro .modal-content {
   background-color: #000000 !important;
   color: white !important;
-  right: 0 !important;
+}
+.modo-oscuro .nav-link{
+  color:white;
 }
 .modo-oscuro .dropdown-item:hover {
   background-color: #000000 !important;
@@ -286,6 +411,9 @@ function confirmLogout() {
 .modo-oscuro .is-selected {
   background-color: #b6b6b6 !important;
   color: rgb(0, 0, 0) !important;
+}
+.modo-oscuro .nav-link:hover{
+  color: gray;
 }
 .modo-oscuro .vueform__input::placeholder {
   color: rgb(255, 255, 255) !important;
