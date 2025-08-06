@@ -12,7 +12,7 @@
         <b-navbar-toggle target="nav-collapse">
           <i class="fa-solid fa-bars fa-xl text-white"></i>
         </b-navbar-toggle>
-        <b-collapse id="nav-collapse" is-nav ref="navCollapse">
+        <b-collapse id="nav-collapse" is-nav ref="navCollapse"  v-model="collapseVisible">
           <b-navbar-nav>
             <b-nav-item-dropdown text="Activos" left class="dropdown-dark">
               <b-dropdown-item @click="seleccionarVista('registro')">
@@ -182,7 +182,7 @@
           <b-row>
             <b-col>
               <b-form-group label="Contraseña (opcional)">
-                <b-form-input v-model="datosUsuariosRegistado.usr_clave" type="password" />
+                <b-form-input v-model="datosUsuariosRegistado.usr_claveNueva" type="password" />
               </b-form-group>
             </b-col>
           </b-row>
@@ -228,6 +228,7 @@ export default {
       isAuthenticated: false,
       showConfirmLogout: false,
       UsuariosAjustes: false,
+      collapseVisible: false,
       UsuariosRegistado: {},
       datosUsuariosRegistado: {}, // este objeto debe existir
       modoOscuro: localStorage.getItem('modoOscuro') === 'true',
@@ -243,17 +244,14 @@ export default {
     handleResize() {
       this.isMobile = window.innerWidth < 768
     },
-
     toggleModoOscuro() {
       this.modoOscuro = !this.modoOscuro
       localStorage.setItem('modoOscuro', this.modoOscuro)
     },
-
     handleLoginSuccess() {
       this.isAuthenticated = true
       this.currentView = 'lista'
     },
-
     confirmLogout() {
       axios.post('/Auth/CerrarSession', {}, { withCredentials: true })
         .finally(() => {
@@ -285,37 +283,69 @@ export default {
         console.error('Error al obtener los datos del usuario:', error);
       }
     },
+    async guardarCambiosUsuario() {
+      const payload = {
+        usr_nombre: this.datosUsuariosRegistado.usr_nombre,
+        usr_apellido: this.datosUsuariosRegistado.usr_apellido,
+        usr_rut: this.datosUsuariosRegistado.usr_rut,
+        usr_correo: this.datosUsuariosRegistado.usr_correo,
+        usr_telefono: this.datosUsuariosRegistado.usr_telefono,
+        usr_id_tipos: this.datosUsuariosRegistado.usr_id_tipos,
+        usr_id_sucursal: this.datosUsuariosRegistado.usr_id_sucursal,
+        usr_estado: this.datosUsuariosRegistado.usr_estado
+      }
+      // Solo si la clave no está vacía, la incluimos
+      if (
+        this.datosUsuariosRegistado.usr_claveNueva &&
+        this.datosUsuariosRegistado.usr_claveNueva.trim() !== ''
+      ) {
+        payload.usr_clave = this.datosUsuariosRegistado.usr_claveNueva
+      }
 
-    guardarCambiosUsuario() {
-      const payload = { ...this.UsuariosRegistado }
-
-      axios.post('/Usuario/ActualizarPerfil', payload, { withCredentials: true })
-        .then(res => {
-          if (res.data.status === 'success') {
-            alert('Datos actualizados correctamente')
-            this.UsuariosAjustes = false
-            this.UsuariosRegistado.clave = ''
-          } else {
-            alert('Hubo un error al actualizar')
+      try {
+        const res = await axios.post(
+          `/Usuarios/ActualizarUsuario/${this.datosUsuariosRegistado.usr_id}`,
+          payload,
+          {
+            headers: {
+              'Content-Type': 'application/json'  
+            }
           }
-        })
-        .catch(() => {
-          alert('Error al conectarse al servidor')
-        })
+        )
+        console.log("Payload enviado:", JSON.stringify(payload))
+        if (res.data.status === 'updated') {
+          alert('Responsable actualizado correctamente')
+          console.log(res.data.message, res.data.usr_clave_hash)
+          this.modalShow = false
+          this.editarConfirmaModal = false
+        } else {
+          alert('Error al actualizar el responsable')
+        }
+      } catch (err) {
+        console.error('Error al guardar:', err)
+        alert('Error de conexión al servidor')
+      }
     },
     seleccionarVista(vista) {
       this.currentView = vista;
-      // Solo cerrar menú hamburguesa si está abierto y si estás en móvil
-      if (this.isMobile && this.$refs.navCollapse) {
-        this.$refs.navCollapse.hide();
+      if (this.isMobile) {
+        this.collapseVisible = false; // Oculta el menú visualmente
+
+        // Cierra el collapse si está abierto (por si Bootstrap-Vue no lo hace bien solo con v-model)
+        if (this.$refs.navCollapse && this.$refs.navCollapse.hide) {
+          this.$refs.navCollapse.hide();
+        }
+        setTimeout(() => {
+          this.collapseVisible = false;
+        }, 100);
       }
     },
   },
   mounted() {
+
     this.datosUsuarioRegistrado()
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
-    
     axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
       .then(res => {
         const data = res.data

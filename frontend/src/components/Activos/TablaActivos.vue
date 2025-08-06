@@ -126,12 +126,8 @@
               </template>              
               <template #cell(acciones)="data">
                 <b-dropdown
-                    boundary="clippingParents"
-                    flip
-                    size="sm"
-                    variant="light"
-                    no-caret
-                    text="Acciones"
+                    boundary="clippingParents" flip size="sm"
+                    variant="light" no-caret text="Acciones"
                     toggle-class="btn-sm"
                     style="margin-top: 12px;"
                   >
@@ -590,7 +586,7 @@ export default {
         { key: 'nombre_sucursal', label: 'Sucursal/Tipo', thClass: '', tdClass: 'tipo' },
         { key: 'act_fecha_registro', label: 'Fecha', class: 'd-none d-lg-table-cell' },
         { key: 'act_descripcion', label: 'Descricion', class: 'd-none d-lg-table-cell' },
-        { key: 'acciones', label: '', thClass: 'text-center', tdClass: 'acciones', style: "color: black;" },
+        { key: 'acciones', label: '', thClass: 'text-center', tdClass: 'acciones', style: "color: black; right: 0;" },
         { key: 'act_estado', label: '', thClass: 'text-center', tdClass: 'estados' }
       ]
     },
@@ -978,16 +974,16 @@ export default {
 }
 </script>
 
-<style>
+<style >
   /* Puedes agregar estilos específicos aquí */
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.1s;
   }
-  .dropdown-menu {
-    z-index: 1050 !important; /* Bootstrap usa 1000+ para modals, dropdowns, tooltips */
-  }
   .custom-rounded-table {
     border-radius: 12px; 
+  }
+  .dropdown-menu.show{
+    right: 0 !important;
   }
   .bg-card{
     border: none;
