@@ -42,11 +42,11 @@
         </div>
       </template>
       <template #cell(acciones)="data">
-        <b-button size="sm" variant="success" class="me-1" @click="editarUsuario(data.item)">
-          <i class="fa-solid fa-pen-to-square fa-lg"></i>
+        <b-button size="sm" variant="" class="me-1" @click="editarUsuario(data.item)">
+          <i class="fa-solid fa-pen-to-square fa-lg text-success"></i>
         </b-button>
-        <b-button size="sm" variant="danger" @click="confirmDelete(data.item)">
-          <i class="fa-solid fa-trash fa-lg"></i>
+        <b-button size="sm" variant="" @click="confirmDelete(data.item)">
+          <i class="fa-solid fa-trash fa-lg text-danger"></i>
         </b-button>
       </template>
     </b-table>

@@ -1,6 +1,6 @@
 <template>
   <!-- filtro -->
-  <b-container >
+  <b-container fluid >
     <b-row>
       <!-- Barra de búsqueda -->
       <b-navbar md="2" toggleable="" type="" variant="" class="mb-4">
@@ -20,10 +20,10 @@
           </b-input-group><!-- Barra lateral izquierda -->
           <transition name="fade">
             <b-col v-if="mostrarFiltros">
-              <b-card class="shadow-sm" style="border: none;" >
+              <b-card class="shadow-sm " style="border: none;" >
                 <h5 class="mb-3" style="">Filtros</h5>              
                 <!-- Filtro por Tipo -->
-                <b-form-group label="Tipo">
+                <b-form-group label="Tipo" >
                   <b-form-checkbox-group
                     v-model="filtros.Tipos"
                     :options="TiposOpciones"
@@ -97,9 +97,8 @@
               </div>
             <b-table 
               :items="activosPaginados" 
-              :fields="fields" 
-              hover 
-              class="custom-rounded-table" > 
+              :fields="fields" hover 
+               > 
               <template #cell(act_id)="data">
                 <div>
                   <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
@@ -125,10 +124,8 @@
                 <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
               </template>              
               <template #cell(acciones)="data">
-                <b-dropdown
-                    boundary="clippingParents" flip size="sm"
-                    variant="light" no-caret text="Acciones"
-                    toggle-class="btn-sm"
+                <b-dropdown size="sm"
+                    variant="" no-caret right
                     style="margin-top: 12px;"
                   >
                   <template #button-content>
@@ -982,7 +979,7 @@ export default {
   .custom-rounded-table {
     border-radius: 12px; 
   }
-  .dropdown-menu.show{
+  .dropdown-menu{
     right: 0 !important;
   }
   .bg-card{

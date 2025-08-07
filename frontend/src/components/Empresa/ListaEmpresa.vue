@@ -18,10 +18,10 @@
     <b-table class="custom-rounded-table" :items="filtrarComputadoras" :fields="fields"responsive hover style="text-align: center;">
       <template #cell(acciones)="data">
         <b-button  variant="" size="sm" class="me-1" @click="editarEmpresa(data.item)">
-          <i class="fa-solid fa-pen-to-square fa-lg" style="color: #258f24;"></i>
+          <i class="fa-solid fa-pen-to-square fa-lg text-success" ></i>
         </b-button>
         <b-button  variant="" size="sm" @click="ConfirmarEliminacion(data.item)">
-          <i class="fa-solid fa-trash fa-lg" style="color: #8e0101;"></i>
+          <i class="fa-solid fa-trash fa-lg text-danger" ></i>
         </b-button>
       </template>
     </b-table>
@@ -56,7 +56,7 @@
             <b-col md="1">
               <label>Eliminar</label>
               <b-button  variant="" size="sm" @click="ConfirmarEliminacionSucursal(sucursal)">
-                <i class="fa-solid fa-trash fa-lg" style="color: #8e0101;"></i>
+                <i class="fa-solid fa-trash fa-lg text-danger" ></i>
               </b-button>
             </b-col>
           </b-row>
