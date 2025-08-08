@@ -122,15 +122,15 @@
         </b-row>
         <b-button
           v-if="usuarios.activos.length > 1"
-          variant="danger"
+          variant="outline-danger"
           class="mt-2"
           @click="eliminarActivo(index)"
         >
-          <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>    Eliminar
+          <i class="fa-solid fa-circle-xmark fa-lg"></i>    Eliminar
         </b-button>
       </div>
-      <b-button @click="anadirActivo" variant="success" class="me-2"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>    Agregar otro usuario</b-button>
-      <b-button @click="GuardarUsuario" variant="primary"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>     Guardar</b-button>
+      <b-button @click="anadirActivo" variant="outline-primary" class="me-2"><i class="fa-solid fa-circle-plus fa-lg "></i>    Agregar otro usuario</b-button>
+      <b-button @click="GuardarUsuario" variant="outline-success"><i class="fa-solid fa-floppy-disk fa-lg" ></i>     Guardar</b-button>
     </b-container>
 
     <!-- Modal de éxito -->

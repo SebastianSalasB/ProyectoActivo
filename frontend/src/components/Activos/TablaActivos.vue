@@ -4,7 +4,7 @@
     <b-row>
       <!-- Barra de búsqueda -->
       <b-navbar md="2" toggleable="" type="" variant="" class="mb-4">
-          <h6 >Buscar Activos</h6>
+          <h3 >Buscar Activos</h3>
           <b-input-group class="mt-2">
             <b-form-input 
               v-model="Buscador" 
@@ -17,13 +17,17 @@
                 <i class="fa-solid fa-filter fa-sm"></i> filtros
               </b-button>
             </b-input-group-append>
-          </b-input-group><!-- Barra lateral izquierda -->
+          </b-input-group>
+          
+          <!-- Barra lateral izquierda -->
           <transition name="fade">
+            
             <b-col v-if="mostrarFiltros">
+              <p></p>
               <b-card class="shadow-sm " style="border: none;" >
                 <h5 class="mb-3" style="">Filtros</h5>              
                 <!-- Filtro por Tipo -->
-                <b-form-group label="Tipo" >
+                <b-form-group label="Tipo" class="checkbox-grid-2cols">
                   <b-form-checkbox-group
                     v-model="filtros.Tipos"
                     :options="TiposOpciones"
@@ -35,8 +39,9 @@
                     style="flex-wrap: wrap !important; justify-content: flex-start !important;"
                   />
                 </b-form-group>
+                <hr />
                 <!-- Filtro por Empresa -->
-                <b-form-group label="Empresa">
+                <b-form-group label="Empresa" class="checkbox-grid-2cols">
                   <b-form-checkbox-group
                     v-model="filtros.empresa"
                     :options="empresaOpciones"
@@ -45,10 +50,12 @@
                     stacked
                     :aria-describedby="ariaDescribedby"
                     switches
+                   
                   />
                 </b-form-group>
+                <hr />
                 <!-- Filtro por Sucursal -->
-                <b-form-group label="Sucursal">
+                <b-form-group label="Sucursal" class="checkbox-grid-2cols">
                   <b-form-checkbox-group
                     v-model="filtros.sucursales"
                     :options="sucursalesOpciones"
@@ -57,10 +64,12 @@
                     stacked
                     :aria-describedby="ariaDescribedby"
                     switches
+                   
                   />
                 </b-form-group>
+                <hr />
                 <!-- Filtro por Estado -->
-                <b-form-group label="Estado">
+                <b-form-group label="Estado" class="checkbox-grid-2cols">
                   <b-form-checkbox-group
                     v-model="filtros.estados"
                     :options="estadosOpciones"
@@ -69,18 +78,17 @@
                     stacked
                     :aria-describedby="ariaDescribedby"
                     switches
+                   
                   />
                 </b-form-group>
                 <b-row>
-                  <b-col>
-                    <div class="d-grid gap-2 small">
-                      <b-button size="sm" class="mb-3" variant="danger" @click="limpiarFiltros">
-                        <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
-                      </b-button>
-                    </div>
+                  <b-col sm>
+                    <b-button size="sm" class="mb-3" variant="danger" @click="limpiarFiltros">
+                      <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
+                    </b-button>
                   </b-col>
-                  <b-col>
-                    <b-button variant="outline-secondary" size="sm" class="mb-3 small" @click="mostrarFiltros = false">
+                  <b-col sm>
+                    <b-button size="sm" class="mb-3" variant="secondary"  @click="mostrarFiltros = false">
                       <i class="fa-solid fa-xmark"></i> Ocultar filtros
                     </b-button>
                   </b-col>
@@ -125,7 +133,7 @@
               </template>              
               <template #cell(acciones)="data">
                 <b-dropdown size="sm"
-                    variant="" no-caret right
+                    variant="outline-success" no-caret right
                     style="margin-top: 12px;"
                   >
                   <template #button-content>
@@ -422,21 +430,21 @@
                 <b-form-input v-model="selectedActivos.direcciones_ip[index]" />
                 <b-input-group-append>
                   <b-button
-                    variant="danger"
+                    variant="outline-danger"
                     @click="selectedActivos.direcciones_ip.splice(index, 1)"
                   >
-                   <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i> Eliminar
+                   <i class="fa-solid fa-circle-xmark fa-lg"></i> Eliminar
                   </b-button>
                 </b-input-group-append>
               </b-input-group>
             </div>
 
             <b-button
-              variant="success"
+              variant="outline-primary"
               size="sm"
               @click="selectedActivos.direcciones_ip.push('')"
             >
-             <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Agregar IP
+             <i class="fa-solid fa-circle-plus fa-lg"></i>  Agregar IP
             </b-button>
           </b-form-group>
         </b-col>          
@@ -444,8 +452,14 @@
       
       <!-- Botones -->
       <div class="text-end mt-3">
-        <b-button variant="success" class="me-2" @click="confirmarEdicion"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i> Guardar</b-button>
-        <b-button variant="secondary" @click="cancelarEditar"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>  Cancelar</b-button>
+        <b-button variant="outline-success" class="me-2" @click="confirmarEdicion">
+          <i class="fa-solid fa-floppy-disk fa-lg">            
+          </i> Guardar
+        </b-button>
+        <b-button variant="outline-secondary" @click="cancelarEditar">
+          <i class="fa-solid fa-circle-xmark fa-lg">
+          </i>  Cancelar
+        </b-button>
       </div>
     </b-form>
   </b-modal>   
@@ -641,7 +655,7 @@ export default {
           const cantidad = this.contarActivosPorSucursal[s.suc_id]
           return {
             id: s.suc_id,
-            nombre: `${s.suc_nombre} (${cantidad})`
+            nombre: `${s.suc_nombre}`
           }
         })
     },
@@ -1020,4 +1034,9 @@ export default {
     font-size: 1.2rem;
     color: #007bff; 
   }
+  .checkbox-grid-2cols {
+  display: grid;
+  grid-template-columns: repeat(2, 6rem);
+
+}
 </style>

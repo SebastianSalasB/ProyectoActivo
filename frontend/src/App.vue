@@ -3,74 +3,127 @@
     <div v-if="!isAuthenticated" class="login-container">
       <Login @login-success="handleLoginSuccess" />
     </div>
-
     <div v-else style="height: 100vh;">
       <!-- NAVBAR: solo móvil -->
-      <b-navbar v-if="isMobile" toggleable="md" class="bg-barra shadow-sm" fixed="top">
-        <b-navbar-brand class="text-light">Sistema de Activos</b-navbar-brand>
-        <b-navbar-toggle target="nav-collapse">
-          <i class="fa-solid fa-bars fa-xl text-white"></i>
+      <b-navbar  id="narbar-movil" v-if="isMobile" toggleable="md" class="shadow-sm" fixed="top">
+        <h2 class="">Sistema de Activos</h2>
+        <b-navbar-toggle id="hamburgesa" target="nav-collapse ">
+          <i class="fa-solid fa-bars fa-xl "></i>
         </b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav ref="navCollapse" v-model="collapseVisible">
           <b-navbar-nav>
             <!-- Activos -->
-            <b-nav-item-dropdown text="Activos" left class="dropdown-dark">
-              <b-dropdown-item @click="seleccionarVista('registro')"><i class="fa-solid fa-pen-to-square"></i> Registro Activos</b-dropdown-item>
-              <b-dropdown-item @click="seleccionarVista('lista')"><i class="fa-solid fa-list"></i> Lista</b-dropdown-item>
+            <b-nav-item-dropdown 
+              class="ms-3 " 
+              text="Activos"
+              drop="down">
+              <b-dropdown-item 
+                @click="seleccionarVista('registro')">
+                <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Activos</span>
+              </b-dropdown-item>
+              <b-dropdown-item 
+                @click="seleccionarVista('lista')">
+                <i class="fa-solid fa-list"></i> <span class="small"> Lista de activos</span>
+              </b-dropdown-item>
             </b-nav-item-dropdown>
             <!-- Tipo -->
-            <b-nav-item-dropdown text="Tipo" left class="dropdown-dark">
-              <b-dropdown-item @click="seleccionarVista('tipo')"><i class="fa-solid fa-pen-to-square"></i> Ver Tipos</b-dropdown-item>
+            <b-nav-item-dropdown 
+              text="Tipo" 
+              class="ms-3 " 
+              drop="down">
+              <b-dropdown-item
+                @click="seleccionarVista('tipo')">
+                <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registro / Lista</span>
+              </b-dropdown-item>
             </b-nav-item-dropdown>
             <!-- Empresa -->
-            <b-nav-item-dropdown text="Empresa" left class="dropdown-dark">
-              <b-dropdown-item @click="seleccionarVista('Registro Empresa')"><i class="fa-solid fa-pen-to-square"></i> Registrar Empresa</b-dropdown-item>
-              <b-dropdown-item @click="seleccionarVista('Empresa')"><i class="fa-solid fa-list"></i> Lista</b-dropdown-item>
+            <b-nav-item-dropdown 
+              text="Empresa" 
+              class="ms-3 " 
+              drop="down">
+              <b-dropdown-item 
+                @click="seleccionarVista('Registro Empresa')">
+                <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Empresa</span>
+              </b-dropdown-item>
+              <b-dropdown-item 
+                @click="seleccionarVista('Empresa')">
+                <i class="fa-solid fa-list"></i> <span class="small"> Lista de empresa</span>
+              </b-dropdown-item>
             </b-nav-item-dropdown>
             <!-- Usuarios -->
-            <b-nav-item-dropdown text="Usuarios" left class="dropdown-dark">
-              <b-dropdown-item @click="seleccionarVista('RegistroResponsable')"><i class="fa-solid fa-pen-to-square"></i> Registrar Usuarios</b-dropdown-item>
-              <b-dropdown-item @click="seleccionarVista('Responsable')"><i class="fa-solid fa-list"></i> Lista</b-dropdown-item>
+            <b-nav-item-dropdown 
+              text="Usuarios" 
+              class="ms-3 " 
+              drop="down">
+              <b-dropdown-item 
+                @click="seleccionarVista('RegistroResponsable')">
+                <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Usuarios</span>
+              </b-dropdown-item>
+              <b-dropdown-item 
+                @click="seleccionarVista('Responsable')">
+                <i class="fa-solid fa-list"></i> <span class="small"> Lista de Usuarios</span>
+              </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
           <b-navbar-nav class="ms-auto">
-            <b-nav-item @click="UsuariosAjustes = true"><i class="fa-solid fa-gear fa-lg text-white"></i> Ajustes</b-nav-item>
-            <b-nav-item @click="showConfirmLogout = true"><i class="fa-solid fa-right-from-bracket fa-xl text-danger"></i></b-nav-item>
+            <!-- Botón de Ajustes -->
+            <b-nav-item
+              role="button"
+              aria-label="Ajustes de usuario"
+              @click="UsuariosAjustes = true"
+              variant="secondary"
+              class="d-flex align-items-center  ms-3" >
+              <i class="fa-solid fa-gear fa-lg "></i>
+              <span class="small" > Ajustes</span>
+            </b-nav-item>
+            <!-- Botón de Cerrar sesión -->
+            <b-nav-item
+              role="button"
+              aria-label="Cerrar sesión"
+              @click="showConfirmLogout = true"
+              class="d-flex align-items-center ms-3" >
+              <i class="fa-solid fa-right-from-bracket fa-lg text-danger me-1"></i>
+              <span class="text-danger small">Cerrar sesión</span>
+            </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
 
       <!-- SIDEBAR: solo escritorio -->
-      <div v-if="!isMobile" class="d-flex flex-column flex-shrink-0 p-3 border-end" :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" style="width: 180px; height: 100vh; position: fixed; z-index: 1;">
+      <div v-if="!isMobile" class="d-flex flex-column flex-shrink-0 p-3 border-end" 
+        :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" 
+        style="width: 180px; height: 100vh; position: fixed; z-index: 1;">
         <span class="fs-4 text-center mb-4">Sistema de Activos</span>
-        <ul class="nav nav-pills flex-column mb-auto">
+        <ul class="nav nav-pills flex-column mb-auto" >
           <!-- Activos -->
           <li>
             <a class="nav-link" data-bs-toggle="collapse" href="#collapseActivos" role="button">Activos</a>
             <div class="collapse show" id="collapseActivos">
               <ul class="list-unstyled ps-3 small">
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'registro'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'lista'"><i class="fa-solid fa-list"></i> Lista</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'registro'">
+                  <i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'lista'">
+                  <i class="fa-solid fa-list"></i> Lista</a></li>
               </ul>
             </div>
           </li>
           <!-- Empresa -->
           <li class="mt-2">
             <a class="nav-link" data-bs-toggle="collapse" href="#collapseEmpresa" role="button">Empresa</a>
-            <div class="collapse show" id="collapseEmpresa">
+            <div class="collapse" id="collapseEmpresa">
               <ul class="list-unstyled ps-3 small">
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Registro Empresa'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Empresa'"><i class="fa-solid fa-list"></i> Lista</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'Registro Empresa'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'Empresa'"><i class="fa-solid fa-list"></i> Lista</a></li>
               </ul>
             </div>
           </li>
           <!-- Usuarios -->
           <li class="mt-2">
             <a class="nav-link" data-bs-toggle="collapse" href="#collapseUsuarios" role="button">Usuarios</a>
-            <div class="collapse show" id="collapseUsuarios">
+            <div class="collapse" id="collapseUsuarios">
               <ul class="list-unstyled ps-3 small">
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'RegistroResponsable'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'Responsable'"><i class="fa-solid fa-list"></i> Lista</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'RegistroResponsable'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'Responsable'"><i class="fa-solid fa-list"></i> Lista</a></li>
               </ul>
             </div>
           </li>
@@ -79,17 +132,19 @@
             <a class="nav-link" data-bs-toggle="collapse" href="#collapseTipos" role="button">Tipos</a>
             <div class="collapse" id="collapseTipos">
               <ul class="list-unstyled ps-3 small">
-                <li><a href="#" class="nav-link nav-link-li" @click.prevent="currentView = 'tipo'">Lista / Registro</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'tipo'">Lista / Registro</a></li>
               </ul>
             </div>
           </li>
         </ul>
         <hr />
         <div>
+    <!-- Ajustes -->
           <b-button class="w-100 mb-2" variant="outline-secondary" @click="UsuariosAjustes = true">
-            <i class="fa-solid fa-gear text-secondary"></i> Ajustes
+            <i class="fa-solid fa-gear "></i> Ajustes
           </b-button>
-          <b-button variant="outline-danger" class="w-100 mb-2" @click="showConfirmLogout = true">
+    <!-- Cerrar sesion -->
+          <b-button class="w-100 mb-2" variant="outline-danger"  @click="showConfirmLogout = true">
             <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
           </b-button>
         </div>
@@ -107,11 +162,11 @@
       </main>
 
       <!-- MODAL CONFIRMACIÓN LOGOUT -->
-      <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered>
+      <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered >
         ¿Estás seguro que deseas cerrar tu sesión?
         <template #footer>
-          <b-button variant="secondary" @click="showConfirmLogout = false">Cancelar</b-button>
-          <b-button variant="danger" @click="confirmLogout">Sí, cerrar sesión</b-button>
+          <b-button variant="outline-secondary" @click="showConfirmLogout = false">Cancelar</b-button>
+          <b-button variant="outline-danger" @click="confirmLogout">Sí, cerrar sesión</b-button>
         </template>
       </b-modal>
 
@@ -301,38 +356,26 @@ export default {
   align-items: center;
   height: 100vh;
 }
-.bg-barra {
-  background-color: #000 !important;
-  color: white !important;
-}
-.navbar-nav .dropdown-dark .nav-link,
-.navbar-nav .dropdown-dark .dropdown-toggle {
-  color: white !important;
-}
-.bg-barra .dropdown-menu {
-  --bs-dropdown-link-active-bg: #6c757d;
-  background-color: #000 !important;
-}
-.bg-barra .dropdown-item {
-  color: white !important;
-}
-.bg-barra .dropdown-item:hover {
-  background-color: #000000 !important;
-  color: white !important;
-}
-.modo-claro {
-  background-color: #ffffff;
-  color: black;
+
+.modo-claro #hamburgesa, 
+#narbar-movil{
+  background-color: rgb(255, 255, 255);
+  color: #121212;
 }
 .modo-oscuro {
   background-color: #121212;
   color: white;
 }
+.modo-oscuro #hamburgesa {
+  background-color: #121212;
+  color: white;
+}
 .modo-oscuro .card,
 .modo-oscuro .table,
+.modo-oscuro .navbar,
 .modo-oscuro .dropdown-menu,
 .modo-oscuro .modal-content {
-  background-color: #000000 !important;
+  background-color: #121212 !important;
   color: white !important;
   right: 0;
 }
@@ -340,11 +383,18 @@ export default {
   color:white;
 }
 .modo-oscuro .dropdown-item{
-  color:#ffffff
+  color:#ffffff;
 }
-.modo-oscuro .dropdown-item:hover {
-  background-color: #000000 !important;
-  color: white !important;
+.modo-oscuro .dropdown-item:hover, 
+.modo-oscuro .nav-link.show, 
+.modo-oscuro .container,
+.modo-oscuro .table{
+  background-color: #121212 !important;
+  color: rgb(255, 255, 255) !important;
+}
+.modo-oscuro table > :not(caption) > * > * {
+  background-color: #121212 !important;
+  color: rgb(255, 255, 255) !important;
 }
 .modo-oscuro .form-control,
 .modo-oscuro input,
@@ -354,23 +404,11 @@ export default {
   color: white !important;
   border-color: #c9c9c9 !important;
 }
-.modo-oscuro .btn {
-  color: white;
-  background-color: #000000;
-  border-color: #000000;
-}
-.modo-oscuro .btn:hover {
-  background-color: #000000;
-}
 .modo-oscuro .vueform__input,
 .modo-oscuro .multiselect-option,
 .modo-oscuro.multiselect-dropdown {
   background-color: #424242 !important;
   color: rgb(255, 255, 255) !important;
-}
-.modo-oscuro .is-selected {
-  background-color: #b6b6b6 !important;
-  color: rgb(0, 0, 0) !important;
 }
 .modo-oscuro .nav-link:hover{
   color: rgb(201, 201, 201);

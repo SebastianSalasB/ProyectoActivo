@@ -11,9 +11,9 @@
       <div class="text-center mt-4">
         <b-button
           id="Guarda"
-          @click="guardarTipo"
-          style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);"
-        ><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>
+          @click="guardarTipo" variant="outline-success"
+          style=" border-radius: 18px; "
+        ><i class="fa-solid fa-floppy-disk fa-lg"></i>
           Guardar
         </b-button>
       </div>
@@ -35,11 +35,11 @@
             {{ data.item.tip_descripcion }}
           </template>
           <template #cell(actions)="data">
-            <b-button size="sm" variant=""  class="me-1" @click="EditarModal(data.item)">
-              <i class="fa-solid fa-pen-to-square fa-lg" style="color: #258f24;"></i>
+            <b-button size="sm" variant="outline-success"  class="me-1" @click="EditarModal(data.item)">
+              <i class="fa-solid fa-pen-to-square fa-lg "></i>
             </b-button>
-            <b-button size="sm" variant="" @click="confirmacionEliminado(data.item)">
-              <i class="fa-solid fa-trash fa-lg" style="color: #8e0101;"></i>
+            <b-button size="sm" variant="outline-danger" @click="confirmacionEliminado(data.item)">
+              <i class="fa-solid fa-trash fa-lg"></i>
             </b-button>
           </template>
         </b-table>

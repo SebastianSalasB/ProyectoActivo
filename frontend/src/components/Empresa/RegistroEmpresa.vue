@@ -29,10 +29,10 @@
             size="sm"
             variant="danger"
             @click="eliminarSucursal(index)"
-          ><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>   Eliminar</b-button>
+          ><i class="fa-solid fa-circle-xmark fa-lg"></i>   Eliminar</b-button>
         </div>
         <b-button size="sm" variant="primary" @click="añadirSucursal">
-         <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>   Agregar otra sucursal
+         <i class="fa-solid fa-circle-plus fa-lg"></i>   Agregar otra sucursal
         </b-button>
         <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
       </b-form-group>
@@ -41,7 +41,7 @@
           id="Guarda"
           @click="crearEmpresa"
           style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);">
-        <i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>   Guardar</b-button>
+        <i class="fa-solid fa-floppy-disk fa-lg" ></i>   Guardar</b-button>
       </div>
       <b-modal v-model="modalShow" title="Resultado del registro" ok-only ok-title="Aceptar">
         {{ mensaje }}

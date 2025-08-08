@@ -42,11 +42,11 @@
         </div>
       </template>
       <template #cell(acciones)="data">
-        <b-button size="sm" variant="" class="me-1" @click="editarUsuario(data.item)">
-          <i class="fa-solid fa-pen-to-square fa-lg text-success"></i>
+        <b-button size="sm" variant="outline-success" class="me-1" @click="editarUsuario(data.item)">
+          <i class="fa-solid fa-pen-to-square fa-lg "></i>
         </b-button>
-        <b-button size="sm" variant="" @click="confirmDelete(data.item)">
-          <i class="fa-solid fa-trash fa-lg text-danger"></i>
+        <b-button size="sm" variant="outline-danger" @click="confirmDelete(data.item)">
+          <i class="fa-solid fa-trash fa-lg "></i>
         </b-button>
       </template>
     </b-table>
@@ -141,8 +141,8 @@
           </b-col>
         </b-row>
         <div class="text-end mt-3">
-          <b-button variant="success" class="me-2" @click="confirmacionEditar"><i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i>   Guardar</b-button>
-          <b-button variant="secondary" @click="cancelarEditar"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>    Cancelar</b-button>
+          <b-button variant="outline-success" class="me-2" @click="confirmacionEditar"><i class="fa-solid fa-floppy-disk fa-lg" ></i>   Guardar</b-button>
+          <b-button variant="outline-secondary" @click="cancelarEditar"><i class="fa-solid fa-circle-xmark fa-lg"></i>    Cancelar</b-button>
         </div>
       </b-form>
     </b-modal>

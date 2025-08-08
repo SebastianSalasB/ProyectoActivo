@@ -15,13 +15,17 @@
   </b-navbar>
   <!-- Tabla de empresas -->
   <b-container >
-    <b-table class="custom-rounded-table" :items="filtrarComputadoras" :fields="fields"responsive hover style="text-align: center;">
+    <b-table 
+      class="custom-rounded-table" 
+      :items="filtrarComputadoras" 
+      :fields="fields" 
+      responsive hover >
       <template #cell(acciones)="data">
-        <b-button  variant="" size="sm" class="me-1" @click="editarEmpresa(data.item)">
-          <i class="fa-solid fa-pen-to-square fa-lg text-success" ></i>
+        <b-button  variant="outline-success" size="sm" class="me-1" @click="editarEmpresa(data.item)">
+          <i class="fa-solid fa-pen-to-square fa-lg" ></i>
         </b-button>
-        <b-button  variant="" size="sm" @click="ConfirmarEliminacion(data.item)">
-          <i class="fa-solid fa-trash fa-lg text-danger" ></i>
+        <b-button  variant="outline-danger" size="sm" @click="ConfirmarEliminacion(data.item)">
+          <i class="fa-solid fa-trash fa-lg " ></i>
         </b-button>
       </template>
     </b-table>
@@ -54,22 +58,24 @@
               <b-form-input v-model="sucursal.suc_direccion" />
             </b-col>
             <b-col md="1">
-              <label>Eliminar</label>
-              <b-button  variant="" size="sm" @click="ConfirmarEliminacionSucursal(sucursal)">
-                <i class="fa-solid fa-trash fa-lg text-danger" ></i>
+              <label></label>
+              <b-button  variant="danger" size="sm" @click="ConfirmarEliminacionSucursal(sucursal)">
+                <i class="fa-solid fa-trash fa-lg " ></i>
               </b-button>
             </b-col>
           </b-row>
         </div>
         <!-- Botón para agregar nueva sucursal -->
         <b-col md="3" class="mb-3">
-          <b-button variant="success" size="sm" @click="agregarSucursal">
+          <b-button variant="outline-primary" size="sm" @click="agregarSucursal">
             <i class="fa-solid fa-plus"></i> Agregar Sucursal
           </b-button>
         </b-col>
         <div class="text-end mt-3">
-          <b-button variant="success" class="me-2" @click="confirmarEditor"><i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Guardar</b-button>
-          <b-button variant="secondary" @click="cancelarEditor"><i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i>  Cancelar</b-button>
+          <b-button variant="outline-success" class="me-2" @click="confirmarEditor">
+            <i class="fa-solid fa-circle-plus fa-lg" ></i>  Guardar</b-button>
+          <b-button variant="outline-secondary" @click="cancelarEditor">
+            <i class="fa-solid fa-circle-xmark fa-lg" ></i>  Cancelar</b-button>
         </div>
       </b-form>
     </b-modal>

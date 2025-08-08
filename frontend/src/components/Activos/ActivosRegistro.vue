@@ -287,8 +287,8 @@
                   <i class="fa-solid fa-x fa-lg" style="color: #ffffff;"></i>
                 </b-button>
               </div>
-              <b-button size="sm" variant="success" @click="activo.ips.push('')">
-                <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i> Agregar otra IP
+              <b-button size="sm" variant="outline-success" @click="activo.ips.push('')">
+                <i class="fa-solid fa-circle-plus fa-lg" ></i> Agregar otra IP
               </b-button>
             </div>
           </b-form-group>
@@ -296,18 +296,18 @@
         <b-button
           v-if="Activo.activos.length > 1"
           size="sm"
-          variant="danger"
+          variant="outline-danger"
           @click="removeActivo(index)"
         >
-         <i class="fa-solid fa-circle-xmark fa-lg" style="color: #ffffff;"></i> Eliminar Activo
+         <i class="fa-solid fa-circle-xmark fa-lg"></i> Eliminar Activo
         </b-button>
       </div>
-      <b-button size="sm" variant="primary" @click="AgregarActivo">
-        <i class="fa-solid fa-circle-plus fa-lg" style="color: #ffffff;"></i>  Agregar otro activo
+      <b-button size="sm" variant="outline-primary" @click="AgregarActivo">
+        <i class="fa-solid fa-circle-plus fa-lg"></i>  Agregar otro activo
       </b-button>
       <div class="text-center mt-4">
-        <b-button size="sm" @click="GuardarActivo" style="background-color:rgb(97 221 166); width: 150px; color: white; border-radius: 18px; border:2px solid var(--Primery, #42B883);">
-          <i class="fa-solid fa-floppy-disk fa-lg" style="color: #ffffff;"></i> Guardar
+        <b-button size="sm" variant="outline-success" @click="GuardarActivo" style=" width: 150px; border-radius: 18px; ">
+          <i class="fa-solid fa-floppy-disk fa-lg" ></i> Guardar
         </b-button>
       </div>
       <b-modal v-model="modalShow" title="Resultado del registro" hide-footer>

@@ -103,8 +103,6 @@ class Usuarios extends CI_Controller
             echo json_encode(['status' => 'error', 'message' => 'No se pudo actualizar']);
         }
     }
-
-
     public function ActualizarUsuario($id) {
         $raw = file_get_contents('php://input');
         error_log("RAW INPUT: " . $raw);
