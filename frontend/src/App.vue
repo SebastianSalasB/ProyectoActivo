@@ -357,17 +357,20 @@ export default {
   height: 100vh;
 }
 
+.modo-claro .vueform__input::placeholder , ::placeholder {
+  color: rgb(0, 0, 0) !important;
+}
 .modo-claro #hamburgesa, 
 #narbar-movil{
   background-color: rgb(255, 255, 255);
-  color: #121212;
+  color:rgb(33, 37, 41);
 }
 .modo-oscuro {
-  background-color: #121212;
+  background-color: rgb(33, 37, 41);
   color: white;
 }
 .modo-oscuro #hamburgesa {
-  background-color: #121212;
+  background-color: rgb(33, 37, 41);
   color: white;
 }
 .modo-oscuro .card,
@@ -375,7 +378,7 @@ export default {
 .modo-oscuro .navbar,
 .modo-oscuro .dropdown-menu,
 .modo-oscuro .modal-content {
-  background-color: #121212 !important;
+  background-color: rgb(33, 37, 41) !important;
   color: white !important;
   right: 0;
 }
@@ -385,39 +388,46 @@ export default {
 .modo-oscuro .dropdown-item{
   color:#ffffff;
 }
-.modo-oscuro ::placeholder {
-  color:white;
-}
+
 .modo-oscuro .dropdown-item:hover, 
 .modo-oscuro .nav-link.show, 
 .modo-oscuro .container,
 .modo-oscuro .table{
-  background-color: #121212 !important;
+  background-color: rgb(33, 37, 41) !important;
   color: rgb(255, 255, 255) !important;
 }
 .modo-oscuro table > :not(caption) > * > * {
-  background-color: #121212 !important;
+  background-color: rgb(33, 37, 41) !important;
   color: rgb(255, 255, 255) !important;
 }
 .modo-oscuro .form-control,
-.modo-oscuro input,
+.modo-oscuro .input,
 .modo-oscuro textarea,
 .modo-oscuro select {
-  background-color: #2c2c2c !important;
+  background-color: rgb(33, 37, 41) !important;
   color: white !important;
   border-color: #c9c9c9 !important;
 }
 .modo-oscuro .vueform__input,
 .modo-oscuro .multiselect-option,
-.modo-oscuro.multiselect-dropdown {
-  background-color: #424242 !important;
+.modo-oscuro.multiselect-dropdown ,
+.modo-oscuro .vueform__input::placeholder ,
+.modo-oscuro ::placeholder{
+  background-color: rgb(33, 37, 41) !important;
   color: rgb(255, 255, 255) !important;
 }
 .modo-oscuro .nav-link:hover{
   color: rgb(201, 201, 201);
 }
-.modo-oscuro .vueform__input::placeholder {
-  color: rgb(255, 255, 255) !important;
+
+.modo-oscuro .multiselect-search ,
+.modo-oscuro .multiselect-no-options{
+  background-color: rgb(33,37,41);
+  color: #ffffff;
+}
+
+.modo-oscuro .placeholder{
+  color: rgb(255, 255, 255);
 }
 
 </style>

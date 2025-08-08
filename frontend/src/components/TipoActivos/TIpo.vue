@@ -193,7 +193,7 @@ export default {
     },
     async saveEdit() {
       try {
-        const res = await axios.post(`/tiposactivos/ActualizarTipos/${this.tipoAEditar.tip_id}`, this.tipoAEditar)
+        const res = await axios.post(`/TiposActivos/ActualizarTipos/${this.tipoAEditar.tip_id}`, this.tipoAEditar)
         if (res.data.status === 'updated') {
           const index = this.tipos.findIndex(t => t.tip_id === this.tipoAEditar.tip_id)
           if (index !== -1) this.tipos.splice(index, 1, { ...this.tipoAEditar })
@@ -215,7 +215,7 @@ export default {
     },
     async EliminarTipo() {
       try {
-        const res = await axios.delete(`/tiposactivos/EliminarTipo/${this.tipoAEliminar.tip_id}`)
+        const res = await axios.delete(`/TiposActivos/EliminarTipo/${this.tipoAEliminar.tip_id}`)
         if (res.data.status === 'deleted') {
           this.tipos = this.tipos.filter(t => t.tip_id !== this.tipoAEliminar.tip_id)
         } else {

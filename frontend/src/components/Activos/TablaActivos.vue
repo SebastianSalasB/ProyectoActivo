@@ -329,8 +329,12 @@
           </b-col>
           <b-col sm>
             <b-form-group label="Sistema Operativo">
-              <b-form-input
+              <b-form-select
                 v-model="selectedActivos.datos_computador.com_sistema_operativo"
+                :options="sistemasOperativosOpciones"
+                value-field="nombre"
+                text-field="nombre"
+                placeholder="Seleccione un sistema operativo"
                 required
               />
             </b-form-group>
@@ -516,6 +520,7 @@
 
 <script>
 import axios from 'axios'
+import { version } from 'vue'
 
 export default {
   data() {
@@ -560,6 +565,7 @@ export default {
       estados: [],
       empresa: [],
       usuariosDisponibles: [],
+      sistemasOperativosDisponibles:[],
       NombreApellido: [],
       mostrarFiltros: false,
       filtros: {
@@ -585,6 +591,9 @@ export default {
     // Computed properties
     empresaOpciones() {
       return this.empresa.map(e => ({ id: e.emp_id, nombre: e.emp_nombre }))
+    },
+    sistemasOperativosNombreVersion() {
+      return `${this.sistemasOperativosDisponibles.sio_nombre || ''} ${this.sistemasOperativosDisponibles.sio_version || ''}`
     },
     nombreTipoDisplay() {
       return this.selectedActivos.nombre_tipo || 'No definido'
@@ -671,6 +680,12 @@ export default {
         nombre: estado
       }))
     },
+    sistemasOperativosOpciones(){
+      return this.sistemasOperativosDisponibles.map(s=>({
+        id: s.sio_id, 
+        nombre: `${s.sio_nombre} ${s.sio_version}`
+      }))
+    },
     usuariosOpciones() {
       return this.usuariosDisponibles.map(u => ({
         id: u.usr_id_usuario,
@@ -702,7 +717,6 @@ export default {
     usuariosFiltrados() {
       return this.usuariosDisponibles.filter(u => u.usr_id_sucursal === this.sucursalSeleccionada)
     },
-    
   },
 
   watch: {
@@ -742,7 +756,6 @@ export default {
         this.cargando = false
       }
     },
-
     async contarActivos() {
       try {
         const res = await axios.get('/Activos/contarActivos')
@@ -753,13 +766,12 @@ export default {
         console.error('Error cargando Activo:', error)
       }
     },
-    
     async cargarEmpresasConSucursales() {
       try {
         const empresasRes = await axios.get('/Activos/listaEmpresa')
         const sucursalesRes = await axios.get('/Activos/listaSucursal')
-        
         const empresasActivas = empresasRes.data.filter(e => e.emp_estado === 'activo')
+
         this.empresaSucursales = empresasActivas.map(emp => ({
           ...emp,
           sucursales: sucursalesRes.data.filter(s => s.suc_id_empresa === emp.emp_id)
@@ -777,11 +789,9 @@ export default {
       this.selectedActivos.act_id_empresa = sucursal?.suc_id_empresa || null
       this.modalShow = true
     },
-
     aplicarFiltros() {
       this.filtroModal = false
     },
-
     limpiarFiltros() {
       this.filtros.Tipos.splice(0, this.filtros.Tipos.length)
       this.filtros.sucursales.splice(0, this.filtros.sucursales.length)
@@ -789,7 +799,6 @@ export default {
       this.filtros.estados.splice(0, this.filtros.estados.length)
       this.filtros.empresa.splice(0, this.filtros.empresa.length)
     },
-
     async cargarTipos() {
       try {
         const res = await axios.get('/Activos/listaTipo')
@@ -798,7 +807,16 @@ export default {
         console.error('Error cargando Tipos:', error)
       }
     },
-
+    async cargarsistemasOperativos(){
+      try{
+        const res = await axios.get('/Activos/listaSistemaOperativo')
+        this.sistemasOperativosDisponibles = res.data
+        console.log(this.sistemasOperativosDisponibles)
+      } catch (error){
+        console.error('Error cargando sistemas operativos')
+      }
+    
+    },
     async cargarSucursales() {
       try {
         const res = await axios.get('/Activos/listaSucursal')
@@ -807,7 +825,6 @@ export default {
         console.error('Error cargando sucursales:', error)
       }
     },
-
     async cargarEstados() {
       try {
         const res = await axios.get('/Activos/listaActivos')
@@ -816,7 +833,6 @@ export default {
         console.error('Error cargando estados:', error)
       }
     },
-
     async cargarEmpresa() {
       try {
         const res = await axios.get('/Activos/listaEmpresa')
@@ -825,7 +841,6 @@ export default {
         console.error('Error cargando empresas:', error)
       }
     },
-
     async cargarUsuarios() {
       try {
         const res = await axios.get('/Activos/listaUsuarios')
@@ -838,12 +853,10 @@ export default {
         console.error('Error al cargar usuarios', error)
       }
     },
-
     abrirModalMantencion(activo) {
       this.activoParaMantencion = activo
       this.mantencionModal = true
     },
-
     async confirmarEnvioMantencion() {
       const activo = this.activoParaMantencion
 
@@ -867,8 +880,8 @@ export default {
         this.activoParaMantencion = null
       }
     },
-
     async activarActivo(activo) {
+      this.cargarActivos()
       if (!activo?.act_id) {
         alert('Faltan datos para activar el activo.')
         return
@@ -879,9 +892,9 @@ export default {
       } catch (error) {
         console.error('Error al activar el activo:', error)
         alert('No se pudo activar el activo.')
+        this.cargarActivos()
       }
     },
-
     async darDeBajaActivo() {
       const activo = this.activoParaMantencion
       if (!activo?.act_id || !this.selectedActivos.bjs_descripcion?.trim()) {
@@ -902,7 +915,6 @@ export default {
         this.activoParaMantencion = null
       }
     },
-
     cargarArchivo(event) {
       const file = event.target.files[0]
       if (file) {
@@ -981,6 +993,7 @@ export default {
     this.cargarEstados()
     this.cargarEmpresa()
     this.contarActivos()
+    this.cargarsistemasOperativos()
   }
 }
 </script>

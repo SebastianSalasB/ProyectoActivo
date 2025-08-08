@@ -118,12 +118,10 @@
                   v-model="activo.com_sistema_operativo" 
                   :class="{ 'is-invalid': inputErrors[index]?.sistemaoperativo }"
                   @input="validarCampo(index, 'cpu', activo.com_cpu)"
-                  :options="[
-                    { value: 'Windows', text: 'Windows' },
-                    { value: 'Linux', text: 'Linux' },
-                    { value: 'MacOS', text: 'MacOS' },
-                    { value: 'Unix', text: 'Unix' }
-                  ]"
+                  :options="sistemaOperativo.map(e=> ({
+                    value : e.sio_id,
+                    label: `${e.sio_nombre} ${e.sio_} `
+                  }))"
                 />
                 <small v-if="errors.com_sistema_operativo" class="text-danger">{{ errors.com_sistema_operativo }}</small>
               </b-form-group>
@@ -174,12 +172,12 @@
                 <b-form-group label="Sistema Operativo">
                   <b-form-select
                   v-model="activo.ser_sistema_operativo" 
-                  :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativoServidor }"
+                  :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativo }"
                   @input="validarCampo(index, 'sistemaOperativoServidor', activo.ser_sistema_operativo)"
-                  :options="[
-                    { value: 'Windows', text: 'Windows' },
-                    { value: 'Linux', text: 'Linux' }
-                  ]"
+                  :options="sistemaOperativo.map(e=> ({
+                    value : e.sio_id,
+                    label: `${e.sio_nombre} ${e.sio_} `
+                  }))"
                   />
                 <small v-if="errors.ser_sistema_operativo" class="text-danger">{{ errors.ser_sistema_operativo }}</small>
                 </b-form-group>
@@ -349,6 +347,7 @@ export default {
       },
       empresasConSucursales: [],
       usuariosDisponibles: [],
+      sistemaOperativo:[],
       empresaSeleccionada: '',
       sucursalSeleccionada: '',
       tiposDisponibles: [],
@@ -392,6 +391,14 @@ export default {
         })
       } catch (error) {
         console.error('Error al cargar empresas, sucursales o tipos', error)
+      }
+    },
+    async cargarSistemasOperativos(){
+      try{
+        const res = await axios.get('/Activos/listaSistemaOperativo')
+        this.sistemaOperativo = res.data
+      } catch{
+        console.error('Error al cargar Sistema Operativos')
       }
     },
     async cargarUsuarios() {
@@ -634,6 +641,7 @@ export default {
   mounted() {
     this.cargarEmpresaSucursalesTipo()
     this.cargarUsuarios()
+    this.cargarSistemasOperativos()
   }
 }
 </script>

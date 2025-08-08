@@ -7,6 +7,15 @@ class ActivosModel extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
+    public function obtenerSistemaOperativo() {
+        $this->db->select('
+            s.*,
+        ');
+        $this->db->from('activos.sistemas_operativos s');
+        $this->db->order_by('s.sio_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
     public function obtenerActivos() {
         $this->db->select('
             a.*,
@@ -24,6 +33,7 @@ class ActivosModel extends CI_Model {
         $this->db->join('activos.sucursales s', 's.suc_id = a.act_id_sucursal');
         $this->db->join('activos.empresas e', 'e.emp_id = s.suc_id_empresa');
         $this->db->join('activos.direccionesip d', 'd.dip_id_activo = a.act_id', 'left'); 
+        
         $this->db->where('e.emp_estado','activo');
         $this->db->order_by('a.act_id');
         $query = $this->db->get();

@@ -291,7 +291,9 @@ class Activos extends CI_Controller {
                 'com_cpu'               => $activo['com_cpu'],
                 'com_disco'             => $activo['com_disco'],
                 'com_sistema_operativo' => $activo['com_sistema_operativo'],
-                'com_id_activo'         => $act_id
+                'com_id_activo'         => $act_id,
+                'com_id_sistema_operativo' => $activo['com_sistema_operativo']
+                
             ];
 
             // Solo insertar si alguno de los campos de Computadores Datos no está vacío
@@ -311,7 +313,8 @@ class Activos extends CI_Controller {
                 'ser_cantidad_max_cpu'  => $activo['ser_cantidad_max_cpu'],
                 'ser_ranuras_ram'       => $activo['ser_ranuras_ram'],
                 'ser_nombre'            => $activo['ser_nombre'],
-                'ser_id_activo'         => $act_id
+                'ser_id_activo'         => $act_id,
+                'ser_id_sistema_operativo' => $activo['ser_id_sistema_operativo']
             ];
             
             // Solo insertar si alguno de los campos de ServidorDatos no está vacío
@@ -361,7 +364,8 @@ class Activos extends CI_Controller {
                 'com_ram'               => $datos['datos_computador']['com_ram'] ?? null,
                 'com_cpu'               => $datos['datos_computador']['com_cpu'] ?? null,
                 'com_disco'             => $datos['datos_computador']['com_disco'] ?? null,
-                'com_sistema_operativo' => $datos['datos_computador']['com_sistema_operativo'] ?? null
+                'com_sistema_operativo' => $datos['datos_computador']['com_sistema_operativo'] ?? null,
+                'com_id_sistema_operativo' => $datos['datos_computador']['com_id_sistema_operativo'] ?? null
             ];
             if (!empty($datos['datos_computador']['com_id'])) {
                 // actualizar si existe ID
@@ -382,7 +386,8 @@ class Activos extends CI_Controller {
                 'ser_sistema_operativo'=> $datos['datos_servidor']['ser_sistema_operativo'] ?? null,
                 'ser_cantidad_max_cpu' => $datos['datos_servidor']['ser_cantidad_max_cpu'] ?? null,
                 'ser_ranuras_ram'      => $datos['datos_servidor']['ser_ranuras_ram'] ?? null,
-                'ser_nombre'           => $datos['datos_servidor']['ser_nombre'] ?? null
+                'ser_nombre'           => $datos['datos_servidor']['ser_nombre'] ?? null,
+                'ser_id_sistema_operativo'=> $datos['datos_servidor']['ser_id_sistema_operativo'] ?? null
             ];
 
             if (!empty($datos['datos_servidor']['ser_id'])) {
@@ -490,6 +495,11 @@ class Activos extends CI_Controller {
     public function listaTipos() {
         $tipos = $this->ActivosModel->obtenerTipos();
         echo json_encode($tipos);
+    }
+    public function listaSistemaOperativo(){
+        $sistemaOperativo = $this->ActivosModel->obtenerSistemaOperativo() ;
+        echo json_encode($sistemaOperativo);
+
     }
     
 }
