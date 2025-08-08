@@ -133,7 +133,7 @@
             <b-form-group label="Clave nueva">
               <b-form-input
                 v-if="UsuarioSeleccionado.nombre_tipo === 'admin'"
-                v-model="UsuarioSeleccionado.usr_clave"
+                v-model="UsuarioSeleccionado.usr_claveNueva"
                 type="password"
                 placeholder="Dejar vacío si no desea cambiar la clave"
               />
@@ -294,10 +294,10 @@ export default {
       }
       // Solo si la clave no está vacía, la incluimos
       if (
-        this.UsuarioSeleccionado.usr_clave &&
-        this.UsuarioSeleccionado.usr_clave.trim() !== ''
+        this.UsuarioSeleccionado.usr_claveNueva &&
+        this.UsuarioSeleccionado.usr_claveNueva.trim() !== ''
       ) {
-        payload.usr_clave = this.UsuarioSeleccionado.usr_clave
+        payload.usr_clave = this.UsuarioSeleccionado.usr_claveNueva
       }
 
       try {

@@ -385,6 +385,9 @@ export default {
 .modo-oscuro .dropdown-item{
   color:#ffffff;
 }
+.modo-oscuro ::placeholder {
+  color:white;
+}
 .modo-oscuro .dropdown-item:hover, 
 .modo-oscuro .nav-link.show, 
 .modo-oscuro .container,

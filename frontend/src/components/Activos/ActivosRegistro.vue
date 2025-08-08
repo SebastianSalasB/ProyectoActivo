@@ -253,7 +253,7 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-form-group label="Dirección">
+        <b-form-group label="Ubicacion en sucursal">
           <b-form-input v-model="activo.direccion"  
                   :class="{ 'is-invalid': inputErrors[index]?.direccion }"
                   @input="validarCampo(index, 'direccion', activo.direccion)" />

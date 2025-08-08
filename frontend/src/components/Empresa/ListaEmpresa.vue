@@ -58,7 +58,7 @@
               <b-form-input v-model="sucursal.suc_direccion" />
             </b-col>
             <b-col md="1">
-              <label></label>
+              <label>Elimina</label>
               <b-button  variant="danger" size="sm" @click="ConfirmarEliminacionSucursal(sucursal)">
                 <i class="fa-solid fa-trash fa-lg " ></i>
               </b-button>

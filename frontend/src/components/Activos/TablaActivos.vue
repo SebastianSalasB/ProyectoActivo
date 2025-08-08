@@ -1038,5 +1038,22 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 6rem);
 
-}
+  }
+  .pagination .page-link {
+    background-color: #838383; /* Color de fondo */
+    color: white; /* Color del texto */
+  }
+
+  .pagination .page-link:hover {
+    background-color: #505050; /* Color de fondo al pasar el ratón */
+    color: white; /* Color del texto al pasar el ratón */
+  }
+  .pagination{
+    border-color: rgb(22, 22, 22);
+  }
+  .pagination .page-item.active .page-link {
+    border-color: rgb(34, 34, 34);
+    background-color: #505050; /* Color de fondo del enlace activo */
+    color: white; /* Color del texto del enlace activo */
+  }
 </style>

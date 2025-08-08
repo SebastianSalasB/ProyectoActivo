@@ -177,7 +177,7 @@ export default {
     },
     async fetchTipos() {
       try {
-        const res = await axios.get(`/tiposactivos`)
+        const res = await axios.get(`/TiposActivos`)
         this.tipos = res.data
       } catch (err) {
         console.error('Error al obtener tipos:', err)
