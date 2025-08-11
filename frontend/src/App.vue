@@ -182,19 +182,16 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 import Login from './components/Login/Login.vue'
 import ActivosRegistro from './components/Activos/ActivosRegistro.vue'
 import TablaActivos from './components/Activos/TablaActivos.vue'
-import Tipo from './components/TipoActivos/Tipo.vue'
+import Tipo from './components/TipoActivos/TIpo.vue'
 import RegistroEmpresa from './components/Empresa/RegistroEmpresa.vue'
 import ListaEmpresa from './components/Empresa/ListaEmpresa.vue'
 import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
-
-
 
 export default {
   components: { Login, ActivosRegistro, TablaActivos, Tipo, RegistroEmpresa, ListaEmpresa, ListaRespo, RegistroRespo },
