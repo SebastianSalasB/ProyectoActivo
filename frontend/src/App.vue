@@ -384,8 +384,7 @@ export default {
 .modo-oscuro .dropdown-menu,
 .modo-oscuro .modal-content {
   background-color: rgb(33, 37, 41) !important;
-  color: white !important;
-  right: 0;
+  color: white !important;  
 }
 .modo-oscuro .nav-link{
   color:white;
@@ -423,6 +422,7 @@ export default {
 }
 .modo-oscuro .nav-link:hover{
   color: rgb(201, 201, 201);
+  
 }
 
 .modo-oscuro .multiselect-search ,

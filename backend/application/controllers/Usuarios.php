@@ -255,6 +255,5 @@ class Usuarios extends CI_Controller
     public function listaT() {
         $listarT = $this->RespoModel->listaT();
         echo json_encode($listarT);
-    }
-        
+    }    
 }

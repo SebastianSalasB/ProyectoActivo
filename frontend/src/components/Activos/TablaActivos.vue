@@ -18,11 +18,9 @@
               </b-button>
             </b-input-group-append>
           </b-input-group>
-          
           <!-- Barra lateral izquierda -->
           <transition name="fade">
-            
-            <b-col v-if="mostrarFiltros">
+            <b-col v-if="mostrarFiltros" class="md-2">
               <p></p>
               <b-card class="shadow-sm " style="border: none;" >
                 <h5 class="mb-3" style="">Filtros</h5>              

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-container fluid="sm" id="NAG">
-      <h3>Registrar Empresa</h3>
+      <h2>Registrar Empresa</h2>
       <b-col class="row row-cols-2">
         <b-form-group label="Nombre de la Empresa" >
           <b-form-input v-model="empresa.emp_nombre" id="emp_nombre" name="emp_nombre" />
@@ -14,35 +14,30 @@
           <small v-if="errors.emp_direccion" class="text-danger">{{ errors.emp_direccion }}</small>
         </b-form-group>
       </b-col>
-      <b-form-group label="Sucursales" >
-        <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-3" >
-          <hr />
-          <b-form-group label="Nombre de Sucursal" >
-          <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
-          </b-form-group>
-          <b-form-group label="Dirección de Sucursal">
-            <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
-          </b-form-group>
-          <hr />
-          <b-button
-            v-if="empresa.sucursales.length > 1"
-            size="sm"
-            variant="danger"
-            @click="eliminarSucursal(index)"
-          ><i class="fa-solid fa-circle-xmark fa-lg"></i>   Eliminar</b-button>
-        </div>
-        <b-button size="sm" variant="primary" @click="añadirSucursal">
-         <i class="fa-solid fa-circle-plus fa-lg"></i>   Agregar otra sucursal
-        </b-button>
-        <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
-      </b-form-group>
-      <div class="text-center mt-4">
-        <b-button
-          id="Guarda"
-          @click="crearEmpresa"
-          style="background-color: rgb(97 221 166); color: white; border-radius: 18px; border: 2px solid var(--Primery, #42B883);">
-        <i class="fa-solid fa-floppy-disk fa-lg" ></i>   Guardar</b-button>
-      </div>
+        <b-form-group >
+          <h5> Sucursal</h5>
+          <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-2" >
+            <hr />
+            <b-form-group label="Nombre de Sucursal" >
+            <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
+            </b-form-group>
+            <b-form-group label="Dirección de Sucursal">
+              <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
+            </b-form-group>
+            <hr />
+            <b-button
+              v-if="empresa.sucursales.length > 1"
+              size="sm"
+              variant="danger"
+              @click="eliminarSucursal(index)"
+            ><i class="fa-solid fa-circle-xmark fa-lg"></i>   Eliminar</b-button>
+          </div>
+          <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
+        </b-form-group>
+        <b-button  variant="outline-primary" @click="añadirSucursal" class="me-2">
+          <i class="fa-solid fa-circle-plus fa-lg"></i>Agregar otra sucursal  </b-button>
+        <b-button id="Guarda" @click="crearEmpresa" variant="outline-success">
+          <i class="fa-solid fa-floppy-disk fa-lg" ></i>Guardar</b-button>
       <b-modal v-model="modalShow" title="Resultado del registro" ok-only ok-title="Aceptar">
         {{ mensaje }}
       </b-modal>

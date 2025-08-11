@@ -25,7 +25,7 @@
       id="tabla-usuarios"
       :items="usuariosPaginados"
       :fields="fields"
-      responsive hover
+      responsive hover 
       class="text-center custom-rounded-table"
     >
       <template #cell(usr_id)="data">
@@ -190,7 +190,6 @@ export default {
       ConfirmaEliminarModal: false,
       editarConfirmaModal: false,
       fields: [
-        { key: 'usr_id', label: 'ID' },
         { key: 'usr_rut', label: 'RUT' },
         { key: 'usr_nombre', label: 'Nombre' },
         { key: 'nombre_sucursal', label: 'Sucursal' },
@@ -224,7 +223,7 @@ export default {
         this.totalResponsables = data.Responsable.length
 
       } catch (error) {
-        console.error('Error al cargar responsables:', error)
+        console.error(error)
       }
       this.cargando= false
     },
