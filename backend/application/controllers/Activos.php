@@ -171,7 +171,6 @@ class Activos extends CI_Controller {
         }
         echo json_encode($resultado);
     }
-
     public function contarActivos($pagina = 1) {
         $limit = 8;
         $offset = ($pagina - 1) * $limit;
@@ -290,7 +289,7 @@ class Activos extends CI_Controller {
                 'com_ram'               => $activo['com_ram'],
                 'com_cpu'               => $activo['com_cpu'],
                 'com_disco'             => $activo['com_disco'],
-                'com_sistema_operativo' => $activo['com_sistema_operativo'],
+                'com_id_sistema_operativo' => $activo['com_sistema_operativo'],
                 'com_id_activo'         => $act_id,
                 'com_id_sistema_operativo' => $activo['com_sistema_operativo']
                 
@@ -309,12 +308,12 @@ class Activos extends CI_Controller {
                 'ser_ram'               => $activo['ser_ram'],
                 'ser_cpu'               => $activo['ser_cpu'],
                 'ser_disco'             => $activo['ser_disco'],
-                'ser_sistema_operativo' => $activo['ser_sistema_operativo'],
+                'ser_id_sistema_operativo' => $activo['ser_sistema_operativo'],
                 'ser_cantidad_max_cpu'  => $activo['ser_cantidad_max_cpu'],
                 'ser_ranuras_ram'       => $activo['ser_ranuras_ram'],
                 'ser_nombre'            => $activo['ser_nombre'],
                 'ser_id_activo'         => $act_id,
-                'ser_id_sistema_operativo' => $activo['ser_id_sistema_operativo']
+                'ser_id_sistema_operativo' => $activo['ser_sistema_operativo']
             ];
             
             // Solo insertar si alguno de los campos de ServidorDatos no está vacío
@@ -485,7 +484,7 @@ class Activos extends CI_Controller {
         echo json_encode($sucursal);
     }
     public function listaUsuarios() {
-        $usuarios = $this->db->get('activos.usuarios')->result();
+        $usuarios = $this->ActivosModel->listaUsuarios();
         echo json_encode($usuarios);
     }
     public function listS() {
@@ -496,10 +495,14 @@ class Activos extends CI_Controller {
         $tipos = $this->ActivosModel->obtenerTipos();
         echo json_encode($tipos);
     }
-    public function listaSistemaOperativo(){
-        $sistemaOperativo = $this->ActivosModel->obtenerSistemaOperativo() ;
+    public function listaSistemaOperativoComputadores(){
+        $sistemaOperativo = $this->ActivosModel->obtenerSistemaOperativoComputadores() ;
         echo json_encode($sistemaOperativo);
 
     }
-    
+    public function listaSistemaOperativoServidores(){
+        $sistemaOperativoServidores = $this->ActivosModel->obtenerSistemaOperativoServidores() ;
+        echo json_encode($sistemaOperativoServidores);
+
+    }
 }

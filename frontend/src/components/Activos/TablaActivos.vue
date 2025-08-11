@@ -330,9 +330,9 @@
           <b-col sm>
             <b-form-group label="Sistema Operativo">
               <b-form-select
-                v-model="selectedActivos.datos_computador.com_sistema_operativo"
-                :options="sistemasOperativosOpciones"
-                value-field="nombre"
+                v-model="selectedActivos.datos_computador.com_id_sistema_operativo"
+                :options="sistemaOperativoComputadoresOpcion"
+                value-field="id"
                 text-field="nombre"
                 placeholder="Seleccione un sistema operativo"
                 required
@@ -368,26 +368,9 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col sm>
-            <b-form-group label="Disco">
-              
-              <b-form-input
-                v-model="selectedActivos.datos_servidor.ser_disco"
-                required
-              />
-            </b-form-group>
-          </b-col>
-          <b-col sm>
-            <b-form-group label="Sistema Operativo">
-              <b-form-input
-                v-model="selectedActivos.datos_servidor.ser_sistema_operativo"
-                required
-              />
-            </b-form-group>
-          </b-col>
+          
           <b-col sm>
             <b-form-group label="Ranuras">
-              
               <b-form-input
                 v-model="selectedActivos.datos_servidor.ser_ranuras_ram"
                 required
@@ -401,6 +384,30 @@
                 required
               />
             </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col sm>
+            <b-form-group label="Disco">
+              <b-form-input
+                v-model="selectedActivos.datos_servidor.ser_disco"
+                required
+              />
+            </b-form-group>
+          </b-col>
+          <b-col sm>
+            <b-col sm>
+              <b-form-group label="Sistema Operativo">
+                <b-form-select
+                  v-model="selectedActivos.datos_servidor.ser_id_sistema_operativo"
+                  :options="sistemaOperativoServidorOpcion"
+                  value-field="id"
+                  text-field="nombre"
+                  placeholder="Seleccione un sistema operativo"
+                  required
+                />
+              </b-form-group>
+            </b-col>
           </b-col>
         </b-row>
       </div>
@@ -566,6 +573,7 @@ export default {
       empresa: [],
       usuariosDisponibles: [],
       sistemasOperativosDisponibles:[],
+      sistemaOperativoServidores:[],
       NombreApellido: [],
       mostrarFiltros: false,
       filtros: {
@@ -591,9 +599,6 @@ export default {
     // Computed properties
     empresaOpciones() {
       return this.empresa.map(e => ({ id: e.emp_id, nombre: e.emp_nombre }))
-    },
-    sistemasOperativosNombreVersion() {
-      return `${this.sistemasOperativosDisponibles.sio_nombre || ''} ${this.sistemasOperativosDisponibles.sio_version || ''}`
     },
     nombreTipoDisplay() {
       return this.selectedActivos.nombre_tipo || 'No definido'
@@ -680,12 +685,6 @@ export default {
         nombre: estado
       }))
     },
-    sistemasOperativosOpciones(){
-      return this.sistemasOperativosDisponibles.map(s=>({
-        id: s.sio_id, 
-        nombre: `${s.sio_nombre} ${s.sio_version}`
-      }))
-    },
     usuariosOpciones() {
       return this.usuariosDisponibles.map(u => ({
         id: u.usr_id_usuario,
@@ -717,6 +716,18 @@ export default {
     usuariosFiltrados() {
       return this.usuariosDisponibles.filter(u => u.usr_id_sucursal === this.sucursalSeleccionada)
     },
+    sistemaOperativoServidorOpcion(){
+      return this.sistemaOperativoServidores.map(u => ({
+        id: u.sio_id_ser,
+        nombre: `${u.sio_nombre_ser} ${u.sio_version_ser}`
+      }))
+    },
+    sistemaOperativoComputadoresOpcion(){
+      return this.sistemasOperativosDisponibles.map(u => ({
+        id: u.sio_id_com,
+        nombre: `${u.sio_nombre_com} ${u.sio_version_com}`
+      }))
+    }
   },
 
   watch: {
@@ -782,7 +793,6 @@ export default {
     },
     editarActivo(activo) {
       Object.assign(this.selectedActivos, activo)
-      console.log(this.selectedActivos)
       this.selectedActivos.act_id_tipo = Number(activo.act_id_tipo) || null
       this.selectedActivos.act_id_empresa = activo.emp_id || null
       const sucursal = this.sucursales.find(s => s.suc_id === activo.act_id_sucursal)
@@ -807,16 +817,23 @@ export default {
         console.error('Error cargando Tipos:', error)
       }
     },
-    async cargarsistemasOperativos(){
+    async cargarSistemasComputadoresOperativos(){
       try{
-        const res = await axios.get('/Activos/listaSistemaOperativo')
+        const res = await axios.get('/Activos/listaSistemaOperativoComputadores')
         this.sistemasOperativosDisponibles = res.data
-        console.log(this.sistemasOperativosDisponibles)
       } catch (error){
         console.error('Error cargando sistemas operativos')
       }
-    
     },
+    async cargarsistemasServidoresOperativos(){
+      try{
+        const res = await axios.get('/Activos/listaSistemaOperativoServidores')
+        this.sistemaOperativoServidores = res.data
+      } catch (error){
+        console.error('Error cargando sistemas operativos')
+      }
+    }
+    ,
     async cargarSucursales() {
       try {
         const res = await axios.get('/Activos/listaSucursal')
@@ -859,7 +876,6 @@ export default {
     },
     async confirmarEnvioMantencion() {
       const activo = this.activoParaMantencion
-
       if (!activo?.act_id || !activo?.act_id_usuario) {
         alert('Faltan datos para enviar a mantención.')
         return
@@ -921,13 +937,10 @@ export default {
         console.log('Archivo seleccionado:', file)
       }
     },
-
     confirmarEdicion() {
       this.editorConfirmaModal = true
     },
-
     async editar() {
-      console.log(this.selectedActivos)
       try {
         const payload = { ...this.selectedActivos }
         await axios.put(`/activos/ActualizarActivo/${this.selectedActivos.act_id}`, payload)
@@ -940,16 +953,13 @@ export default {
         this.editorConfirmaModal = false
       }
     },
-
     cancelarEditar() {
       this.modalShow = false
     },
-
     confirmarEliminar(activo) {
       this.selectedActivos.act_id = activo.act_id
       this.ConfirmaEliminadoModal = true
     },
-
     async eliminarActivos() {
       try {
         const payload = { ...this.selectedActivos }
@@ -964,7 +974,6 @@ export default {
         this.ConfirmaEliminadoModal = false
       }
     },
-
     async EmpresasConSucursales() {
       try {
         const [empresaRes, sucursalesRes] = await Promise.all([
@@ -984,7 +993,6 @@ export default {
       }
     }
   },
-
   mounted() {
     this.cargarActivos()
     this.cargarTipos()
@@ -993,11 +1001,11 @@ export default {
     this.cargarEstados()
     this.cargarEmpresa()
     this.contarActivos()
-    this.cargarsistemasOperativos()
+    this.cargarSistemasComputadoresOperativos()
+    this.cargarsistemasServidoresOperativos()
   }
 }
 </script>
-
 <style >
   /* Puedes agregar estilos específicos aquí */
   .fade-enter-active, .fade-leave-active {

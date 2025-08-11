@@ -3,7 +3,7 @@
   <b-row>
         <h3 class="mb-3" >Registro de Activos</h3>
     <b-col id="NAG" >
-      <div v-for="(activo, index) in Activo.activos":key="index" class=" rounded p-3 mb-3 "  >
+      <div v-for="(activo, index) in Activo.activos" :key="index" class=" rounded p-3 mb-3 "  >
         <b-row >
           <b-col sm>
             <b-form-group label="Empresa" >
@@ -12,7 +12,7 @@
                 v-model="empresaSeleccionada"
                 :options="empresasConSucursales.map(e => ({ value: e.emp_id, text: e.emp_nombre }))" 
                 :class="{ 'is-invalid' : inputErrors[index]?.empresa }"
-                @input="validarCampo(index, value)"
+                @input="validarCampo(index, 'empresa', empresaSeleccionada)"
               />
               <small v-if="errors.empresaSeleccionada" class="text-danger">falta empresa</small>       
             </b-form-group>
@@ -82,51 +82,55 @@
            
           <div v-if="activo.tipoactivo === 1"> <!-- Asume que 'Computador' tiene tip_id = 1 --> 
             <b-row>
-            <b-col sm>
-              <b-form-group label="RAM">
-                <b-form-input
-                  v-model="activo.com_ram" 
-                  :class="{ 'is-invalid': inputErrors[index]?.ram }"
-                  @change="validarCampo(index, 'ram', activo.com_ram)"
-                />
-                <small v-if="errors.com_ram" class="text-danger">{{ errors.com_ram }}</small>
-              </b-form-group>
-            </b-col>
-            <b-col sm>
-              <b-form-group label="CPU">
-                <b-form-input
-                  v-model="activo.com_cpu" 
-                  :class="{ 'is-invalid': inputErrors[index]?.cpu }"
-                  @input="validarCampo(index, 'cpu', activo.com_cpu)"
-                />
-                <small v-if="errors.com_cpu" class="text-danger">{{ errors.com_cpu }}</small>
-              </b-form-group>
-            </b-col>
-            <b-col sm>
-             <b-form-group label="Disco">
-                <b-form-input
-                  v-model="activo.com_disco" 
-                  :class="{ 'is-invalid': inputErrors[index]?.disco }"
-                  @input="validarCampo(index, 'disco', activo.com_disco)"
-                />
-                <small v-if="errors.com_disco" class="text-danger">{{ errors.com_disco }}</small>
-              </b-form-group>
-            </b-col>
-            <b-col sm>
-              <b-form-group label="Sistema Operativo">
-                <b-form-select
-                  v-model="activo.com_sistema_operativo" 
-                  :class="{ 'is-invalid': inputErrors[index]?.sistemaoperativo }"
-                  @input="validarCampo(index, 'cpu', activo.com_cpu)"
-                  :options="sistemaOperativo.map(e=> ({
-                    value : e.sio_id,
-                    label: `${e.sio_nombre} ${e.sio_} `
-                  }))"
-                />
-                <small v-if="errors.com_sistema_operativo" class="text-danger">{{ errors.com_sistema_operativo }}</small>
-              </b-form-group>
-            </b-col>
-          </b-row>
+              <b-row>
+                <b-col sm>
+                  <b-form-group label="RAM">
+                    <b-form-input
+                      v-model="activo.com_ram" 
+                      :class="{ 'is-invalid': inputErrors[index]?.ram }"
+                      @change="validarCampo(index, 'ram', activo.com_ram)"
+                    />
+                    <small v-if="errors.com_ram" class="text-danger">{{ errors.com_ram }}</small>
+                  </b-form-group>
+                </b-col>
+                <b-col sm>
+                  <b-form-group label="CPU">
+                    <b-form-input
+                      v-model="activo.com_cpu" 
+                      :class="{ 'is-invalid': inputErrors[index]?.cpu }"
+                      @input="validarCampo(index, 'cpu', activo.com_cpu)"
+                    />
+                    <small v-if="errors.com_cpu" class="text-danger">{{ errors.com_cpu }}</small>
+                  </b-form-group>
+                </b-col>
+               
+              </b-row>
+              <b-row>
+                <b-col sm>
+                  <b-form-group label="Disco">
+                    <b-form-input
+                      v-model="activo.com_disco" 
+                      :class="{ 'is-invalid': inputErrors[index]?.disco }"
+                      @input="validarCampo(index, 'disco', activo.com_disco)"
+                    />
+                    <small v-if="errors.com_disco" class="text-danger">{{ errors.com_disco }}</small>
+                  </b-form-group>
+                </b-col>
+                <b-col sm>
+                  <b-form-group label="Sistema Operativo">
+                    <b-form-select
+                      v-model="activo.com_sistema_operativo" 
+                      :class="{ 'is-invalid': inputErrors[index]?.sistemaoperativo }"
+                      @input="validarCampo(index, 'sistemaoperativo', activo.com_sistema_operativo)"
+                      :options="sistemaOperativoComputadoresOpcion"
+                      value-field="id"
+                      text-field="nombre"
+                    />
+                    <small v-if="errors.com_sistema_operativo" class="text-danger">{{ errors.com_sistema_operativo }}</small>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-row>
           </div>
           <div v-if="activo.tipoactivo === 2"> <!-- Asume que 'Servidor' tiene tip_id = 2 -->
             <b-row>
@@ -172,12 +176,11 @@
                 <b-form-group label="Sistema Operativo">
                   <b-form-select
                   v-model="activo.ser_sistema_operativo" 
-                  :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativo }"
-                  @input="validarCampo(index, 'sistemaOperativoServidor', activo.ser_sistema_operativo)"
-                  :options="sistemaOperativo.map(e=> ({
-                    value : e.sio_id,
-                    label: `${e.sio_nombre} ${e.sio_} `
-                  }))"
+                  :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativoServidores }"
+                  @input="validarCampo(index, 'sistemaOperativoServidores', activo.ser_sistema_operativo)"
+                  :options="sistemaOperativoServidorOpcion"
+                  value-field="id"
+                  text-field="nombre"
                   />
                 <small v-if="errors.ser_sistema_operativo" class="text-danger">{{ errors.ser_sistema_operativo }}</small>
                 </b-form-group>
@@ -348,6 +351,7 @@ export default {
       empresasConSucursales: [],
       usuariosDisponibles: [],
       sistemaOperativo:[],
+      sistemaOperativoServidores:[],
       empresaSeleccionada: '',
       sucursalSeleccionada: '',
       tiposDisponibles: [],
@@ -367,6 +371,18 @@ export default {
     },
     usuariosFiltrados() {
       return this.usuariosDisponibles.filter(u => u.usr_id_sucursal === this.sucursalSeleccionada)
+    },
+    sistemaOperativoComputadoresOpcion(){
+      return this.sistemaOperativo.map(u => ({
+        id: u.sio_id_com,
+        nombre: `${u.sio_nombre_com} ${u.sio_version_com}`
+      }))
+    },
+    sistemaOperativoServidorOpcion(){
+      return this.sistemaOperativoServidores.map(u => ({
+        id: u.sio_id_ser,
+        nombre: `${u.sio_nombre_ser} ${u.sio_version_ser}`
+      }))
     }
   },
   methods: {
@@ -378,7 +394,6 @@ export default {
           axios.get('/Activos/listaTipos')
         ])
         this.tiposDisponibles = tiposRes.data.filter(t => t.tip_estado === 'activo')
-
         const empresasActivas = empresaRes.data.filter(e => e.emp_estado === 'activo')
         this.empresasConSucursales = empresasActivas.map(empresa => {
           const sucursalesDeEmpresa = sucursalesRes.data.filter(
@@ -395,8 +410,16 @@ export default {
     },
     async cargarSistemasOperativos(){
       try{
-        const res = await axios.get('/Activos/listaSistemaOperativo')
-        this.sistemaOperativo = res.data
+        const res = await axios.get('/Activos/listaSistemaOperativoComputadores')
+        this.sistemaOperativo = res.data || []
+      } catch{
+        console.error('Error al cargar Sistema Operativos')
+      }
+    },
+     async cargarSistemasOperativosServidores(){
+      try{
+        const res = await axios.get('/Activos/listaSistemaOperativoServidores')
+        this.sistemaOperativoServidores = res.data || []
       } catch{
         console.error('Error al cargar Sistema Operativos')
       }
@@ -447,7 +470,7 @@ export default {
         case 'cpuServidor':
         case 'discoServidor':
         case 'ramServidor':
-        case 'sistemaOperativoServidor':
+        case 'sistemaOperativoServidores':
         case 'maxCpu':
           error[campo] = !valor;
           break;
@@ -461,17 +484,14 @@ export default {
     validadatos() {
       this.errors = {}
       let hasError = false
-
       if (!this.empresaSeleccionada) {
         this.errors.empresaSeleccionada = 'Seleccione una empresa'
         hasError = true
       }
-
       if (!this.sucursalSeleccionada) {
         this.errors.sucursalSeleccionada = 'Seleccione una sucursal'
         hasError = true
       }
-
       this.Activo.activos.forEach((activo, index) => {
         if (!activo.usuario_id) {
           this.errors.usuario_id = `Debe seleccionar un usuario`
@@ -513,7 +533,6 @@ export default {
           this.errors.fabricante = `El fabricante es obligatorio`
           hasError = true
         }
-
         if (activo.tipoactivo === 1) {
           if (!activo.com_ram) {
             this.errors.com_ram = `Debe seleccionar RAM para computador`
@@ -561,13 +580,11 @@ export default {
             hasError = true
           }
         }
-
         if (activo.tieneIp && (!activo.ips || activo.ips.some(ip => ip.trim() === ''))) {
           this.errors.ips = `Hay direcciones IP vacías`
           hasError = true
         }
       })
-
       return hasError
     },
     removeActivo(index) {
@@ -617,13 +634,11 @@ export default {
     },
     async GuardarActivo() {
       if (this.validadatos()) return
-
       this.Activo.activos = this.Activo.activos.map(activo => ({
         ...activo,
         sucursal_id: this.sucursalSeleccionada,
         empresa_id: this.empresaSeleccionada
       }))
-
       try {
         await axios.post('/Activos/CrearActivo', {
           activos: this.Activo.activos
@@ -642,6 +657,7 @@ export default {
     this.cargarEmpresaSucursalesTipo()
     this.cargarUsuarios()
     this.cargarSistemasOperativos()
+    this.cargarSistemasOperativosServidores()
   }
 }
 </script>

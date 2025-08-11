@@ -36,6 +36,13 @@ class RespoModel extends CI_Model
         $this->db->where('usr_id',$id);
         return $this->db->get('activos.usuarios')->result();
     }
+    public function getUsuarioPorId($id) {
+        return $this->db
+            ->select('usr_clave') // solo traemos la contraseña
+            ->where('usr_id', $id)
+            ->get('activos.usuarios') 
+            ->row();
+    }
     public function eliminarUsuario($id) {
         $data = ['usr_estado' => 'eliminado']; 
         $this->db->where('usr_id', $id);       

@@ -191,14 +191,8 @@ export default {
           axios.get('/Usuarios/listaE'),
           axios.get('/Usuarios/listaS')
         ]);
-        console.log('Empresas crudas:', resEmpresas.data);
-        console.log('Sucursales crudas:', resSucursales.data);
-
         this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo');
         this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo');
-
-        console.log('Empresas filtradas:', this.empresas);
-        console.log('Sucursales filtradas:', this.sucursales);
       } catch (error) {
         console.error('Error cargando empresas o sucursales:', error);
       }
@@ -259,7 +253,6 @@ export default {
 
       const dvEsperado = 11 - (suma % 11)
       const dvFinal = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString()
-      console.log(cuerpo,"-",dvFinal)
       return dv.toUpperCase() === dvFinal
     },
     validarEmail(correo) {
@@ -294,9 +287,7 @@ export default {
         case 'sucursal':
           error.sucursal = !valor
           break
-
       }
-
       this.inputErrors[index] = {
         ...this.inputErrors[index],
         ...error
@@ -304,7 +295,6 @@ export default {
     },
     validadatos() {
       let valido = true
-
       this.usuarios.activos.forEach((activo, index) => {
         const errores = {
           nombre: activo.user_nombre.trim() === '',
@@ -320,18 +310,14 @@ export default {
           empresa: !activo.user_id_empresa,
           sucursal: !activo.user_id_sucursal
         }
-
         this.inputErrors[index] = errores
-
         if (Object.values(errores).some(e => e)) {
           valido = false
         }
       })
-
       return valido
     },
     formatearRut(value, index) {
-
       let rut = value.replace(/[^\dkK]/g, '').toUpperCase()
       if (!rut) {
         this.usuarios.activos[index].user_rut = ''
@@ -348,16 +334,12 @@ export default {
         i -= 3
       }
       formateado = cuerpo.slice(0, i) + formateado
-
       this.usuarios.activos[index].user_rut = `${formateado}-${dv}`
-      
       this.usuarios.activos.user_rut=this.usuarios.activos[index].user_rut
-      console.log(this.usuarios.activos.user_rut)
       return this.usuarios.activos.user_rut
     },
     async GuardarUsuario() {
       if (!this.validadatos()) return
-
       const activosConDatos = this.usuarios.activos.map(activo => ({
         user_nombre: activo.user_nombre,
         user_apellido: activo.user_apellido,
@@ -369,22 +351,13 @@ export default {
         user_id_tipos: activo.tipoactivo ? 1 : 2,
         ...(activo.tipoactivo && activo.user_clave ? { user_clave: activo.user_clave } : {})
       }))
-      console.log(activosConDatos)
-
       try {
-        console.log("Payload que se envía al backend:", {
-          activos: activosConDatos
-        });
         const response = await axios.post(
           '/Usuarios/CrearUsuario',
           { activos: activosConDatos },
           { headers: { 'Content-Type': 'application/json' } }
         )
-        console.log(this.usuarios.activos)
-
-        console.log('Respuesta del servidor:', response.data)
         this.modalShow = true
-
         // Reiniciar formulario
         this.usuarios.activos = [
           {
@@ -417,7 +390,6 @@ export default {
     }
   },
   computed:{
-
   }
 }
 </script>

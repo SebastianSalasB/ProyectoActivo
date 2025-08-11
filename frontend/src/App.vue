@@ -5,83 +5,53 @@
     </div>
     <div v-else style="height: 100vh;">
       <!-- NAVBAR: solo móvil -->
-      <b-navbar  id="narbar-movil" v-if="isMobile" toggleable="md" class="shadow-sm" fixed="top">
-        <h2 class="">Sistema de Activos</h2>
-        <b-navbar-toggle id="hamburgesa" target="nav-collapse ">
-          <i class="fa-solid fa-bars fa-xl "></i>
+      <b-navbar id="narbar-movil" v-if="isMobile" toggleable="md" class="shadow-sm" fixed="top">
+        <h2>Sistema de Activos</h2>
+        <b-navbar-toggle id="hamburgesa" target="nav-collapse">
+          <i class="fa-solid fa-bars fa-xl"></i>
         </b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav ref="navCollapse" v-model="collapseVisible">
           <b-navbar-nav>
             <!-- Activos -->
-            <b-nav-item-dropdown 
-              class="ms-3 " 
-              text="Activos"
-              drop="down">
-              <b-dropdown-item 
-                @click="seleccionarVista('registro')">
+            <b-nav-item-dropdown class="ms-3" text="Activos" drop="down">
+              <b-dropdown-item @click="seleccionarVista('registro')">
                 <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Activos</span>
               </b-dropdown-item>
-              <b-dropdown-item 
-                @click="seleccionarVista('lista')">
+              <b-dropdown-item @click="seleccionarVista('lista')">
                 <i class="fa-solid fa-list"></i> <span class="small"> Lista de activos</span>
               </b-dropdown-item>
             </b-nav-item-dropdown>
             <!-- Tipo -->
-            <b-nav-item-dropdown 
-              text="Tipo" 
-              class="ms-3 " 
-              drop="down">
-              <b-dropdown-item
-                @click="seleccionarVista('tipo')">
+            <b-nav-item-dropdown text="Tipo" class="ms-3" drop="down">
+              <b-dropdown-item @click="seleccionarVista('tipo')">
                 <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registro / Lista</span>
               </b-dropdown-item>
             </b-nav-item-dropdown>
             <!-- Empresa -->
-            <b-nav-item-dropdown 
-              text="Empresa" 
-              class="ms-3 " 
-              drop="down">
-              <b-dropdown-item 
-                @click="seleccionarVista('Registro Empresa')">
+            <b-nav-item-dropdown text="Empresa" class="ms-3" drop="down">
+              <b-dropdown-item @click="seleccionarVista('Registro Empresa')">
                 <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Empresa</span>
               </b-dropdown-item>
-              <b-dropdown-item 
-                @click="seleccionarVista('Empresa')">
+              <b-dropdown-item @click="seleccionarVista('Empresa')">
                 <i class="fa-solid fa-list"></i> <span class="small"> Lista de empresa</span>
               </b-dropdown-item>
             </b-nav-item-dropdown>
             <!-- Usuarios -->
-            <b-nav-item-dropdown 
-              text="Usuarios" 
-              class="ms-3 " 
-              drop="down">
-              <b-dropdown-item 
-                @click="seleccionarVista('RegistroResponsable')">
+            <b-nav-item-dropdown text="Usuarios" class="ms-3" drop="down">
+              <b-dropdown-item @click="seleccionarVista('RegistroResponsable')">
                 <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Usuarios</span>
               </b-dropdown-item>
-              <b-dropdown-item 
-                @click="seleccionarVista('Responsable')">
+              <b-dropdown-item @click="seleccionarVista('Responsable')">
                 <i class="fa-solid fa-list"></i> <span class="small"> Lista de Usuarios</span>
               </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
           <b-navbar-nav class="ms-auto">
-            <!-- Botón de Ajustes -->
-            <b-nav-item
-              role="button"
-              aria-label="Ajustes de usuario"
-              @click="UsuariosAjustes = true"
-              variant="secondary"
-              class="d-flex align-items-center  ms-3" >
-              <i class="fa-solid fa-gear fa-lg "></i>
-              <span class="small" > Ajustes</span>
+            <b-nav-item role="button" aria-label="Ajustes de usuario" @click="UsuariosAjustes = true" class="d-flex align-items-center ms-3">
+              <i class="fa-solid fa-gear fa-lg"></i>
+              <span class="small"> Ajustes</span>
             </b-nav-item>
-            <!-- Botón de Cerrar sesión -->
-            <b-nav-item
-              role="button"
-              aria-label="Cerrar sesión"
-              @click="showConfirmLogout = true"
-              class="d-flex align-items-center ms-3" >
+            <b-nav-item role="button" aria-label="Cerrar sesión" @click="showConfirmLogout = true" class="d-flex align-items-center ms-3">
               <i class="fa-solid fa-right-from-bracket fa-lg text-danger me-1"></i>
               <span class="text-danger small">Cerrar sesión</span>
             </b-nav-item>
@@ -90,20 +60,18 @@
       </b-navbar>
 
       <!-- SIDEBAR: solo escritorio -->
-      <div v-if="!isMobile" class="d-flex flex-column flex-shrink-0 p-3 border-end" 
+      <div v-if="!isMobile" class="d-flex flex-column flex-shrink-0 p-3 border-end"
         :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" 
         style="width: 180px; height: 100vh; position: fixed; z-index: 1;">
         <span class="fs-4 text-center mb-4">Sistema de Activos</span>
-        <ul class="nav nav-pills flex-column mb-auto" >
+        <ul class="nav nav-pills flex-column mb-auto">
           <!-- Activos -->
           <li>
             <a class="nav-link" data-bs-toggle="collapse" href="#collapseActivos" role="button">Activos</a>
             <div class="collapse show" id="collapseActivos">
               <ul class="list-unstyled ps-3 small">
-                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'registro'">
-                  <i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
-                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'lista'">
-                  <i class="fa-solid fa-list"></i> Lista</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'registro'"><i class="fa-solid fa-pen-to-square"></i> Registro</a></li>
+                <li><a class="nav-link nav-link-li" @click.prevent="currentView = 'lista'"><i class="fa-solid fa-list"></i> Lista</a></li>
               </ul>
             </div>
           </li>
@@ -139,12 +107,10 @@
         </ul>
         <hr />
         <div>
-    <!-- Ajustes -->
           <b-button class="w-100 mb-2" variant="outline-secondary" @click="UsuariosAjustes = true">
-            <i class="fa-solid fa-gear "></i> Ajustes
+            <i class="fa-solid fa-gear"></i> Ajustes
           </b-button>
-    <!-- Cerrar sesion -->
-          <b-button class="w-100 mb-2" variant="outline-danger"  @click="showConfirmLogout = true">
+          <b-button class="w-100 mb-2" variant="outline-danger" @click="showConfirmLogout = true">
             <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
           </b-button>
         </div>
@@ -162,7 +128,7 @@
       </main>
 
       <!-- MODAL CONFIRMACIÓN LOGOUT -->
-      <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered >
+      <b-modal v-model="showConfirmLogout" title="¿Cerrar sesión?" centered>
         ¿Estás seguro que deseas cerrar tu sesión?
         <template #footer>
           <b-button variant="outline-secondary" @click="showConfirmLogout = false">Cancelar</b-button>
@@ -188,12 +154,25 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-form-group label="Clave (opcional)">
-            <b-form-input v-model="datosUsuariosRegistado.usr_claveNueva" type="password" placeholder="solo si deseas cambiarla" :class="{ 'is-invalid': inputErrors[0].clave }" @input="validarCampo('clave', datosUsuariosRegistado.usr_claveNueva)" />
+          <b-form-group label="Clave (Anterior)">
+            <b-form-input v-model="datosUsuariosRegistado.usr_claveAntigua" type="password" placeholder="" 
+              :class="{ 'is-invalid': inputErrors[0].claveAntigua }" 
+              @input="validarCampo('claveAntigua', datosUsuariosRegistado.usr_claveAntigua)" />
+            <b-form-text class="text-muted">solo si deseas cambiarla.</b-form-text>
+            </b-form-group>
+          <b-form-group label="Clave nueva">
+            <b-form-input v-model="datosUsuariosRegistado.usr_claveNueva" type="password" placeholder="" 
+              :class="{ 'is-invalid': inputErrors[0].clave }" 
+              @input="validarCampo('clave', datosUsuariosRegistado.usr_claveNueva)" />
             <b-form-text class="text-muted">Mínimo 8 caracteres, al menos una letra y un número.</b-form-text>
           </b-form-group>
+          <b-form-group label="Repetir clave nueva">
+            <b-form-input v-model="datosUsuariosRegistado.usr_claveNueva2" type="password" placeholder="" 
+              :class="{ 'is-invalid': inputErrors[0].clave }" 
+              @input="validarCampo('clave', datosUsuariosRegistado.usr_claveNueva2)" />
+          </b-form-group>
           <hr />
-          <b-form-checkbox v-model="modoOscuro" name="check-button" switch>Usar el modo oscuro</b-form-checkbox>
+          <b-form-checkbox v-model="modoOscuro" switch>Usar el modo oscuro</b-form-checkbox>
         </b-form>
         <template #footer>
           <b-button variant="secondary" @click="UsuariosAjustes = false">Cancelar</b-button>
@@ -209,23 +188,16 @@ import axios from 'axios'
 import Login from './components/Login/Login.vue'
 import ActivosRegistro from './components/Activos/ActivosRegistro.vue'
 import TablaActivos from './components/Activos/TablaActivos.vue'
-import Tipo from './components/TipoActivos/TIpo.vue'
+import Tipo from './components/TipoActivos/Tipo.vue'
 import RegistroEmpresa from './components/Empresa/RegistroEmpresa.vue'
 import ListaEmpresa from './components/Empresa/ListaEmpresa.vue'
 import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
 
+
+
 export default {
-  components: {
-    Login,
-    ActivosRegistro,
-    TablaActivos,
-    Tipo,
-    RegistroEmpresa,
-    ListaEmpresa,
-    ListaRespo,
-    RegistroRespo
-  },
+  components: { Login, ActivosRegistro, TablaActivos, Tipo, RegistroEmpresa, ListaEmpresa, ListaRespo, RegistroRespo },
   data() {
     return {
       currentView: 'lista',
@@ -242,8 +214,11 @@ export default {
   },
   computed: {
     nombreCompleto() {
-      return `${this.UsuariosRegistado.usr_nombre || ''} ${this.UsuariosRegistado.usr_apellido || ''}`
-    }
+      return `${this.UsuariosRegistado.usr_nombre || ''} ${this.UsuariosRegistado.usr_apellido || ''}`}
+  },
+  watch: {
+    modoOscuro(newVal) {
+      localStorage.setItem('modoOscuro', newVal)}
   },
   methods: {
     handleResize() {
@@ -252,13 +227,16 @@ export default {
     handleLoginSuccess() {
       this.isAuthenticated = true
       this.currentView = 'lista'
+      this.datosUsuarioRegistrado()
     },
     async datosUsuarioRegistrado() {
       try {
         const resUsuario = await axios.get('/Auth/ConfirmacionSession', { withCredentials: true });
-        this.UsuariosRegistado = resUsuario.data.user;
-        const res = await axios.get(`/Usuarios/DatosUsuario/${this.UsuariosRegistado.usr_id}`, { withCredentials: true });
-        this.datosUsuariosRegistado = res.data[0];
+        if (resUsuario.data.status === 'success') {
+          this.UsuariosRegistado = resUsuario.data.user;
+          const res = await axios.get(`/Usuarios/DatosUsuario/${this.UsuariosRegistado.usr_id}`, { withCredentials: true });
+          this.datosUsuariosRegistado = res.data[0];
+        }
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }
@@ -274,7 +252,10 @@ export default {
           errores.correo = !this.validarEmail(valor)
           break
         case 'telefono':
-          errores.telefono = valor.trim().length < 7
+          errores.telefono = !/^\d{9}$/.test(valor)
+          break
+        case 'claveAntigua':
+          errores.clave = valor && (valor.length < 8 || !/\d/.test(valor) || !/[A-Za-z]/.test(valor))
           break
         case 'clave':
           errores.clave = valor && (valor.length < 8 || !/\d/.test(valor) || !/[A-Za-z]/.test(valor))
@@ -284,22 +265,46 @@ export default {
     validarDatos() {
       this.validarCampo('correo', this.datosUsuariosRegistado.usr_correo)
       this.validarCampo('telefono', this.datosUsuariosRegistado.usr_telefono)
+      if (this.datosUsuariosRegistado.usr_claveAntigua) {
+        this.validarCampo('clave', this.datosUsuariosRegistado.usr_claveAntigua)
+      }
       if (this.datosUsuariosRegistado.usr_claveNueva) {
         this.validarCampo('clave', this.datosUsuariosRegistado.usr_claveNueva)
       }
-      const errores = this.inputErrors[0]
-      return !Object.values(errores).some(Boolean)
+      return !Object.values(this.inputErrors[0]).some(Boolean)
     },
     async guardarCambiosUsuario() {
       if (!this.validarDatos()) return
+
+      // Si quiere cambiar la clave, validar todo el proceso
+      if (this.datosUsuariosRegistado.usr_claveNueva || this.datosUsuariosRegistado.usr_claveNueva2) {
+        if (!this.datosUsuariosRegistado.usr_claveAntigua) {
+          alert('Debes ingresar tu clave actual para cambiarla')
+          return
+        }
+        if (this.datosUsuariosRegistado.usr_claveNueva !== this.datosUsuariosRegistado.usr_claveNueva2) {
+          alert('Las contraseñas nuevas no coinciden')
+          return
+        }
+      }
+
       const payload = {
         ...this.datosUsuariosRegistado,
-        usr_clave: this.datosUsuariosRegistado.usr_claveNueva || undefined
+        usr_claveAntigua: this.datosUsuariosRegistado.usr_claveAntigua || undefined,
+        usr_claveNueva: this.datosUsuariosRegistado.usr_claveNueva || undefined
       }
+      console.log(this.datosUsuariosRegistado.usr_claveAntigua)
+      console.log(this.datosUsuariosRegistado.usr_claveNueva)
+
       try {
-        const res = await axios.post(`/Usuarios/ActualizarUsuario/${this.datosUsuariosRegistado.usr_id}`, payload, {
+        const res = await axios.post(`/Usuarios/ActualizarPerfil/${this.datosUsuariosRegistado.usr_id}`, payload, {
           headers: { 'Content-Type': 'application/json' }
         })
+
+        if (res.data.status === 'clave_incorrecta') {
+          alert('La clave actual ingresada es incorrecta')
+          return
+        }
         if (res.data.status === 'updated') {
           alert('Usuario actualizado correctamente')
           this.UsuariosAjustes = false
@@ -310,14 +315,15 @@ export default {
         console.error('Error al guardar:', err)
         alert('Error de conexión al servidor')
       }
-    },
+    }
+    ,
     seleccionarVista(vista) {
       this.currentView = vista
       if (this.isMobile) {
-        this.collapseVisible = false
-        if (this.$refs.navCollapse?.hide) {
-          this.$refs.navCollapse.hide()
-        }
+        setTimeout(() => {
+          this.collapseVisible = false
+          this.$refs.navCollapse?.hide?.()
+        }, 150)
       }
     },
     limpiarErroresUsuario() {
@@ -334,21 +340,20 @@ export default {
         })
     }
   },
-  mounted() {
-    this.datosUsuarioRegistrado()
-    window.addEventListener('resize', this.handleResize)
+  async mounted() {
     this.handleResize()
+    await this.datosUsuarioRegistrado()
+    window.addEventListener('resize', this.handleResize)
     axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
       .then(res => {
         this.isAuthenticated = res.data.status === 'success'
-      })
+    })
   },
   unmounted() {
     window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>
-
 <style>
 .login-container {
   display: flex;

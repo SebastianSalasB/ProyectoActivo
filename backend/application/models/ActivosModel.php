@@ -7,12 +7,21 @@ class ActivosModel extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-    public function obtenerSistemaOperativo() {
+    public function obtenerSistemaOperativoComputadores() {
         $this->db->select('
-            s.*,
+            s.*
         ');
-        $this->db->from('activos.sistemas_operativos s');
-        $this->db->order_by('s.sio_id');
+        $this->db->from('activos.sistemas_operativos_com s');
+        $this->db->order_by('s.sio_id_com');
+        $query = $this->db->get();
+        return $query->result();
+    }
+     public function obtenerSistemaOperativoServidores() {
+        $this->db->select('
+            s.*
+        ');
+        $this->db->from('activos.sistemas_operativos_ser s');
+        $this->db->order_by('s.sio_id_ser');
         $query = $this->db->get();
         return $query->result();
     }
@@ -82,8 +91,6 @@ class ActivosModel extends CI_Model {
         $query = $this->db->get();
         return $query->result(); // OBJETOS, no arrays
     }
-
-
     public function contarActivos(){
         $this->db->from('activos.activos');
         $this->db->where('act_estado', 'activo'); // Solo cuenta los activos
@@ -193,6 +200,9 @@ class ActivosModel extends CI_Model {
     }
     public function listaSucursal() {
         return $this->db->get('activos.sucursales')->result();
+    }
+    public function listaUsuarios(){
+        return $this->db->get('activos.usuarios')->result();
     }
     public function obtenerTipos() {
         return $this->db->get('activos.tiposactivos')->result();

@@ -238,8 +238,6 @@ export default {
         this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo');
         this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo');
         this.sucursalesIDempresa = this.sucursales.map(s=> s.suc_id_empresa)
-   
-
       } catch (error) {
         console.error('Error cargando empresas o sucursales:', error);
       }
@@ -247,12 +245,9 @@ export default {
     formatearRut(rut) {
       if (!rut) return ''
       rut = rut.replace(/[^0-9kK]/g, '').toUpperCase()
-
       let cuerpo = rut.slice(0, -1)
       let dv = rut.slice(-1)
-
       if (cuerpo.length < 1) return rut
-
       // Formatear cuerpo con puntos
       let cuerpoFormateado = ''
       while (cuerpo.length > 3) {
@@ -260,7 +255,6 @@ export default {
         cuerpo = cuerpo.slice(0, -3)
       }
       cuerpoFormateado = cuerpo + cuerpoFormateado
-      console.log(`${cuerpoFormateado}-${dv}`)
       return `${cuerpoFormateado}-${dv}`
     },
     sucursalesFiltradas(empId) {
@@ -299,7 +293,6 @@ export default {
       ) {
         payload.usr_clave = this.UsuarioSeleccionado.usr_claveNueva
       }
-
       try {
         const res = await axios.post(
           `/Usuarios/ActualizarUsuario/${this.UsuarioSeleccionado.usr_id}`,
@@ -310,10 +303,8 @@ export default {
             }
           }
         )
-        console.log("Payload enviado:", JSON.stringify(payload))
         if (res.data.status === 'updated') {
           alert('Responsable actualizado correctamente')
-          console.log(res.data.message, res.data.usr_clave_hash)
           this.modalShow = false
           this.editarConfirmaModal = false
           this.cargarUsuario()
@@ -360,7 +351,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
   .custom-rounded-table {
     border-radius: 12px;

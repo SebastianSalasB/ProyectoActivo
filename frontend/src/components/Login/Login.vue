@@ -140,7 +140,6 @@ export default {
       this.intentadoEnviar = true;
       this.loginError = '';
       this.cargando = true;
-
       if (!this.campoRutValido || !this.campoPasswordValido) {
         this.loginError = 'Por favor, completa todos los campos correctamente.';
         this.cargando = false;
@@ -155,8 +154,6 @@ export default {
           withCredentials: true,
           validateStatus: () => true
         })
-        console.log(this.rutFormateado,  this.password)
-
         if (response.data.status === 'success') {
           this.loginError = '';
           this.rutFormateado = '';
