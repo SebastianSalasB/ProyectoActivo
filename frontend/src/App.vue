@@ -194,7 +194,10 @@ import ListaRespo from './components/Usuarios/ListaUsuarios.vue'
 import RegistroRespo from './components/Usuarios/RegistroUsuario.vue'
 
 export default {
-  components: { Login, ActivosRegistro, TablaActivos, Tipo, RegistroEmpresa, ListaEmpresa, ListaRespo, RegistroRespo },
+  components: {
+    Login, ActivosRegistro, TablaActivos, Tipo,
+    RegistroEmpresa, ListaEmpresa, ListaRespo, RegistroRespo
+  },
   data() {
     return {
       currentView: 'lista',
@@ -206,36 +209,41 @@ export default {
       datosUsuariosRegistado: {},
       modoOscuro: localStorage.getItem('modoOscuro') === 'true',
       isMobile: window.innerWidth < 768,
-      inputErrors: [{ correo: false, telefono: false, clave: false }]
+      inputErrors: [{ correo: false, telefono: false, clave: false }],
+      usuario: null
     }
   },
   computed: {
     nombreCompleto() {
-      return `${this.UsuariosRegistado.usr_nombre || ''} ${this.UsuariosRegistado.usr_apellido || ''}`}
+      return `${this.UsuariosRegistado.usr_nombre || ''} ${this.UsuariosRegistado.usr_apellido || ''}`
+    }
   },
   watch: {
     modoOscuro(newVal) {
-      localStorage.setItem('modoOscuro', newVal)}
+      localStorage.setItem('modoOscuro', newVal)
+      document.body.classList.toggle('modo-oscuro', newVal)
+    }
   },
   methods: {
     handleResize() {
       this.isMobile = window.innerWidth < 768
     },
-    handleLoginSuccess() {
+    handleLoginSuccess(usuario) {
+      this.usuario = usuario
       this.isAuthenticated = true
-      this.currentView = 'lista'
+      localStorage.setItem('usuario', JSON.stringify(usuario))
       this.datosUsuarioRegistrado()
     },
     async datosUsuarioRegistrado() {
       try {
-        const resUsuario = await axios.get('/Auth/ConfirmacionSession', { withCredentials: true });
+        const resUsuario = await axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
         if (resUsuario.data.status === 'success') {
-          this.UsuariosRegistado = resUsuario.data.user;
-          const res = await axios.get(`/Usuarios/DatosUsuario/${this.UsuariosRegistado.usr_id}`, { withCredentials: true });
-          this.datosUsuariosRegistado = res.data[0];
+          this.UsuariosRegistado = resUsuario.data.user
+          const res = await axios.get(`/Usuarios/DatosUsuario/${this.UsuariosRegistado.usr_id}`, { withCredentials: true })
+          this.datosUsuariosRegistado = res.data[0]
         }
       } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
+        console.error('Error al obtener los datos del usuario:', error)
       }
     },
     validarEmail(email) {
@@ -252,8 +260,6 @@ export default {
           errores.telefono = !/^\d{9}$/.test(valor)
           break
         case 'claveAntigua':
-          errores.clave = valor && (valor.length < 8 || !/\d/.test(valor) || !/[A-Za-z]/.test(valor))
-          break
         case 'clave':
           errores.clave = valor && (valor.length < 8 || !/\d/.test(valor) || !/[A-Za-z]/.test(valor))
           break
@@ -273,7 +279,6 @@ export default {
     async guardarCambiosUsuario() {
       if (!this.validarDatos()) return
 
-      // Si quiere cambiar la clave, validar todo el proceso
       if (this.datosUsuariosRegistado.usr_claveNueva || this.datosUsuariosRegistado.usr_claveNueva2) {
         if (!this.datosUsuariosRegistado.usr_claveAntigua) {
           alert('Debes ingresar tu clave actual para cambiarla')
@@ -290,8 +295,6 @@ export default {
         usr_claveAntigua: this.datosUsuariosRegistado.usr_claveAntigua || undefined,
         usr_claveNueva: this.datosUsuariosRegistado.usr_claveNueva || undefined
       }
-      console.log(this.datosUsuariosRegistado.usr_claveAntigua)
-      console.log(this.datosUsuariosRegistado.usr_claveNueva)
 
       try {
         const res = await axios.post(`/Usuarios/ActualizarPerfil/${this.datosUsuariosRegistado.usr_id}`, payload, {
@@ -312,8 +315,7 @@ export default {
         console.error('Error al guardar:', err)
         alert('Error de conexión al servidor')
       }
-    }
-    ,
+    },
     seleccionarVista(vista) {
       this.currentView = vista
       if (this.isMobile) {
@@ -331,20 +333,43 @@ export default {
         .finally(() => {
           this.showConfirmLogout = false
           setTimeout(() => {
-            this.isAuthenticated = false
-            this.currentView = 'login'
+            this.logout()
           }, 300)
         })
+    },
+    logout() {
+      this.usuario = null
+      this.isAuthenticated = false
+      localStorage.removeItem('usuario')
     }
   },
   async mounted() {
     this.handleResize()
-    await this.datosUsuarioRegistrado()
     window.addEventListener('resize', this.handleResize)
-    axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
-      .then(res => {
-        this.isAuthenticated = res.data.status === 'success'
-    })
+
+    // Aplicar modo oscuro al body
+    document.body.classList.toggle('modo-oscuro', this.modoOscuro)
+
+    // Restaurar usuario desde localStorage (evita parpadeo de login)
+    const usuarioGuardado = localStorage.getItem('usuario')
+    if (usuarioGuardado) {
+      this.usuario = JSON.parse(usuarioGuardado)
+      this.isAuthenticated = true
+    }
+
+    // Confirmar sesión con backend
+    try {
+      const res = await axios.get('/Auth/ConfirmacionSession', { withCredentials: true })
+      if (res.data.status === 'success') {
+        this.isAuthenticated = true
+        this.UsuariosRegistado = res.data.user
+        await this.datosUsuarioRegistrado()
+      } else {
+        this.logout()
+      }
+    } catch (error) {
+      console.error('Error verificando la sesión:', error)
+    }
   },
   unmounted() {
     window.removeEventListener('resize', this.handleResize)
@@ -430,6 +455,15 @@ export default {
 
 .modo-oscuro .placeholder{
   color: rgb(255, 255, 255);
+}
+body.modo-oscuro ,:root, [data-bs-theme=light] {
+  background-color: rgb(33,37,41);
+  color: #ffffff;
+}
+
+body.modo-claro , :root, [data-bs-theme=light]{
+  background-color: #ffffff;
+  color: #000000;
 }
 
 </style>
