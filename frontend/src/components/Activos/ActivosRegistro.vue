@@ -120,9 +120,9 @@
                   <b-form-group label="Sistema Operativo">
                     <b-form-select
                       v-model="activo.com_sistema_operativo" 
-                      :class="{ 'is-invalid': inputErrors[index]?.sistemaoperativo }"
-                      @input="validarCampo(index, 'sistemaoperativo', activo.com_sistema_operativo)"
-                      :options="sistemaOperativoComputadoresOpcion"
+                      :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativo }"
+                      @input="validarCampo(index, 'sistemaOperativo', activo.com_sistema_operativo)"
+                      :options="sistemaOperativoOpcion"
                       value-field="id"
                       text-field="nombre"
                     />
@@ -178,7 +178,7 @@
                   v-model="activo.ser_sistema_operativo" 
                   :class="{ 'is-invalid': inputErrors[index]?.sistemaOperativoServidores }"
                   @input="validarCampo(index, 'sistemaOperativoServidores', activo.ser_sistema_operativo)"
-                  :options="sistemaOperativoServidorOpcion"
+                  :options="sistemaOperativoOpcion"
                   value-field="id"
                   text-field="nombre"
                   />
@@ -351,7 +351,6 @@ export default {
       empresasConSucursales: [],
       usuariosDisponibles: [],
       sistemaOperativo:[],
-      sistemaOperativoServidores:[],
       empresaSeleccionada: '',
       sucursalSeleccionada: '',
       tiposDisponibles: [],
@@ -372,14 +371,8 @@ export default {
     usuariosFiltrados() {
       return this.usuariosDisponibles.filter(u => u.usr_id_sucursal === this.sucursalSeleccionada)
     },
-    sistemaOperativoComputadoresOpcion(){
+    sistemaOperativoOpcion(){
       return this.sistemaOperativo.map(u => ({
-        id: u.sio_id,
-        nombre: `${u.sio_nombre} ${u.sio_version}`
-      }))
-    },
-    sistemaOperativoServidorOpcion(){
-      return this.sistemaOperativoServidores.map(u => ({
         id: u.sio_id,
         nombre: `${u.sio_nombre} ${u.sio_version}`
       }))
@@ -412,14 +405,6 @@ export default {
       try{
         const res = await axios.get('/Activos/listaSistemaOperativo')
         this.sistemaOperativo = res.data || []
-      } catch{
-        console.error('Error al cargar Sistema Operativos')
-      }
-    },
-     async cargarSistemasOperativosServidores(){
-      try{
-        const res = await axios.get('/Activos/listaSistemaOperativo')
-        this.sistemaOperativoServidores = res.data || []
       } catch{
         console.error('Error al cargar Sistema Operativos')
       }
@@ -462,7 +447,7 @@ export default {
         case 'ram':
         case 'cpu':
         case 'disco':
-        case 'sistemaoperativo':
+        case 'sistemaOperativo':
           error[campo] = !valor;
           break;
 
@@ -470,7 +455,7 @@ export default {
         case 'cpuServidor':
         case 'discoServidor':
         case 'ramServidor':
-        case 'sistemaOperativoServidores':
+        case 'sistemaOperativo':
         case 'maxCpu':
           error[campo] = !valor;
           break;
