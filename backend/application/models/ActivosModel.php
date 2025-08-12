@@ -7,21 +7,12 @@ class ActivosModel extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-    public function obtenerSistemaOperativoComputadores() {
+    public function obtenerSistemaOperativo() {
         $this->db->select('
             s.*
         ');
-        $this->db->from('activos.sistemas_operativos_com s');
-        $this->db->order_by('s.sio_id_com');
-        $query = $this->db->get();
-        return $query->result();
-    }
-     public function obtenerSistemaOperativoServidores() {
-        $this->db->select('
-            s.*
-        ');
-        $this->db->from('activos.sistemas_operativos_ser s');
-        $this->db->order_by('s.sio_id_ser');
+        $this->db->from('activos.sistemas_operativos s');
+        $this->db->order_by('s.sio_id');
         $query = $this->db->get();
         return $query->result();
     }

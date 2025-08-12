@@ -374,14 +374,14 @@ export default {
     },
     sistemaOperativoComputadoresOpcion(){
       return this.sistemaOperativo.map(u => ({
-        id: u.sio_id_com,
-        nombre: `${u.sio_nombre_com} ${u.sio_version_com}`
+        id: u.sio_id,
+        nombre: `${u.sio_nombre} ${u.sio_version}`
       }))
     },
     sistemaOperativoServidorOpcion(){
       return this.sistemaOperativoServidores.map(u => ({
-        id: u.sio_id_ser,
-        nombre: `${u.sio_nombre_ser} ${u.sio_version_ser}`
+        id: u.sio_id,
+        nombre: `${u.sio_nombre} ${u.sio_version}`
       }))
     }
   },
@@ -410,7 +410,7 @@ export default {
     },
     async cargarSistemasOperativos(){
       try{
-        const res = await axios.get('/Activos/listaSistemaOperativoComputadores')
+        const res = await axios.get('/Activos/listaSistemaOperativo')
         this.sistemaOperativo = res.data || []
       } catch{
         console.error('Error al cargar Sistema Operativos')
@@ -418,7 +418,7 @@ export default {
     },
      async cargarSistemasOperativosServidores(){
       try{
-        const res = await axios.get('/Activos/listaSistemaOperativoServidores')
+        const res = await axios.get('/Activos/listaSistemaOperativo')
         this.sistemaOperativoServidores = res.data || []
       } catch{
         console.error('Error al cargar Sistema Operativos')

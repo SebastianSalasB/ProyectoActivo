@@ -495,14 +495,9 @@ class Activos extends CI_Controller {
         $tipos = $this->ActivosModel->obtenerTipos();
         echo json_encode($tipos);
     }
-    public function listaSistemaOperativoComputadores(){
-        $sistemaOperativo = $this->ActivosModel->obtenerSistemaOperativoComputadores() ;
+    public function listaSistemaOperativo(){
+        $sistemaOperativo = $this->ActivosModel->obtenerSistemaOperativo() ;
         echo json_encode($sistemaOperativo);
-
-    }
-    public function listaSistemaOperativoServidores(){
-        $sistemaOperativoServidores = $this->ActivosModel->obtenerSistemaOperativoServidores() ;
-        echo json_encode($sistemaOperativoServidores);
 
     }
 }
