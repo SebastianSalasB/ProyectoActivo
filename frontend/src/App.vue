@@ -1,10 +1,10 @@
 <template>
   <div :class="modoOscuro ? 'modo-oscuro' : 'modo-claro'">
-    <div v-if="loading" class="loading-container" :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" >
+    <div v-if="loading" class="loading-container">
       <b-spinner label=""></b-spinner>
     </div>
     <div v-else>
-      <div v-if="!isAuthenticated" class="login-container" :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" >
+      <div v-if="!isAuthenticated" class="login-container">
         <Login @login-success="handleLoginSuccess" />
       </div>
       <div v-else style="height: 100vh;">

@@ -18,7 +18,7 @@
   <!-- Tabla de responsables -->
   <b-container>
     <div v-if="cargando" class="cargando-overlay">
-      <b-spinner variant="primary" class="mb-2" />
+      <b-spinner variant="" class="mb-2" />
       <div>Cargando...</div>
     </div>
     <b-table

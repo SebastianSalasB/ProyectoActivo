@@ -22,12 +22,12 @@
           <transition name="fade">
             <b-col v-if="mostrarFiltros" class="col-md-3">
               <p></p>
-              <b-card class="shadow-sm " style="border: 1px" >
+              <b-card class="shadow-sm " style="border: 3px" >
                 <h5 class="mb-3" style="">Filtros <i class="fa-solid fa-arrow-up-wide-short"></i></h5>              
                 <!-- Filtro por Tipo -->
                 <ul class="nav ">
-                  <li > <i class="fa-solid fa-angle-right"></i> Tipo
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroTipo" role="button"></a>
+                  <li >
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroTipo" role="button" > <i class="fa-solid fa-angle-right"></i> Tipo</a>
                     <div class="collapse show" id="collapseFiltroTipo">
                       <ul class="list-unstyled ps-3 small">
                         <b-form-group class="checkbox-grid-2cols">
@@ -48,8 +48,8 @@
                 </ul>
                 <!-- Filtro por Empresa -->
                 <ul class="nav ">
-                  <li> <i class="fa-solid fa-angle-right"></i> Empresa
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEmpresa" role="button"></a>
+                  <li> 
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEmpresa" role="button" ><i class="fa-solid fa-angle-right"></i> Empresa</a>
                     <div class="collapse " id="collapseFiltroEmpresa">
                       <ul class="list-unstyled ps-3 small">
                         <b-form-group  class="checkbox-grid-2cols">
@@ -70,8 +70,8 @@
                 </ul>
                 <!-- Filtro por Sucursal -->
                 <ul class="nav ">
-                  <li><i class="fa-solid fa-angle-right"></i> Sucursal
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroSucursal" role="button"></a>
+                  <li>
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroSucursal" role="button" ><i class="fa-solid fa-angle-right"></i> Sucursal</a>
                     <div class="collapse " id="collapseFiltroSucursal">
                       <ul class="list-unstyled ps-3 small">
                         <b-form-group label="" class="checkbox-grid-2cols">
@@ -92,8 +92,8 @@
                 </ul>
                 <!-- Filtro por Estado -->
                  <ul class="nav ">
-                  <li><i class="fa-solid fa-angle-right"></i> Estado
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEstado" role="button"></a>
+                  <li>
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEstado" role="button" ><i class="fa-solid fa-angle-right"></i> Estado</a>
                     <div class="collapse show" id="collapseFiltroEstado">
                       <ul class="list-unstyled ps-3 small">
                         <b-form-group label="" class="checkbox-grid-2cols">
