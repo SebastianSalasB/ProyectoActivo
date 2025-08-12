@@ -241,8 +241,5 @@ export default {
 .h5 {
   color: #000;
 }
-.modal-title {
-  color: #000;
-}
 
 </style>
