@@ -20,73 +20,107 @@
           </b-input-group>
           <!-- Barra lateral izquierda -->
           <transition name="fade">
-            <b-col v-if="mostrarFiltros" class="md-2">
+            <b-col v-if="mostrarFiltros" class="col-md-3">
               <p></p>
-              <b-card class="shadow-sm " style="border: none;" >
-                <h5 class="mb-3" style="">Filtros</h5>              
+              <b-card class="shadow-sm " style="border: 1px" >
+                <h5 class="mb-3" style="">Filtros <i class="fa-solid fa-arrow-up-wide-short"></i></h5>              
                 <!-- Filtro por Tipo -->
-                <b-form-group label="Tipo" class="checkbox-grid-2cols">
-                  <b-form-checkbox-group
-                    v-model="filtros.Tipos"
-                    :options="TiposOpciones"
-                    value-field="id"
-                    text-field="nombre"
-                    stacked 
-                    :aria-describedby="ariaDescribedby"
-                    switches
-                    style="flex-wrap: wrap !important; justify-content: flex-start !important;"
-                  />
-                </b-form-group>
-                <hr />
+                <ul class="nav ">
+                  <li > <i class="fa-solid fa-angle-right"></i> Tipo
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroTipo" role="button"></a>
+                    <div class="collapse show" id="collapseFiltroTipo">
+                      <ul class="list-unstyled ps-3 small">
+                        <b-form-group class="checkbox-grid-2cols">
+                          <b-form-checkbox-group
+                            v-model="filtros.Tipos"
+                            :options="TiposOpciones"
+                            value-field="id"
+                            text-field="nombre"
+                            stacked 
+                            :aria-describedby="ariaDescribedby"
+                            switches
+                            style="flex-wrap: wrap !important; justify-content: flex-start !important;"
+                          />
+                        </b-form-group>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
                 <!-- Filtro por Empresa -->
-                <b-form-group label="Empresa" class="checkbox-grid-2cols">
-                  <b-form-checkbox-group
-                    v-model="filtros.empresa"
-                    :options="empresaOpciones"
-                    value-field="id"
-                    text-field="nombre"
-                    stacked
-                    :aria-describedby="ariaDescribedby"
-                    switches
-                   
-                  />
-                </b-form-group>
-                <hr />
+                <ul class="nav ">
+                  <li> <i class="fa-solid fa-angle-right"></i> Empresa
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEmpresa" role="button"></a>
+                    <div class="collapse " id="collapseFiltroEmpresa">
+                      <ul class="list-unstyled ps-3 small">
+                        <b-form-group  class="checkbox-grid-2cols">
+                          <b-form-checkbox-group
+                            v-model="filtros.empresa"
+                            :options="empresaOpciones"
+                            value-field="id"
+                            text-field="nombre"
+                            stacked
+                            :aria-describedby="ariaDescribedby"
+                            switches
+                            
+                          />
+                        </b-form-group>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
                 <!-- Filtro por Sucursal -->
-                <b-form-group label="Sucursal" class="checkbox-grid-2cols">
-                  <b-form-checkbox-group
-                    v-model="filtros.sucursales"
-                    :options="sucursalesOpciones"
-                    value-field="id"
-                    text-field="nombre"
-                    stacked
-                    :aria-describedby="ariaDescribedby"
-                    switches
-                   
-                  />
-                </b-form-group>
-                <hr />
+                <ul class="nav ">
+                  <li><i class="fa-solid fa-angle-right"></i> Sucursal
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroSucursal" role="button"></a>
+                    <div class="collapse " id="collapseFiltroSucursal">
+                      <ul class="list-unstyled ps-3 small">
+                        <b-form-group label="" class="checkbox-grid-2cols">
+                          <b-form-checkbox-group
+                            v-model="filtros.sucursales"
+                            :options="sucursalesOpciones"
+                            value-field="id"
+                            text-field="nombre"
+                            stacked
+                            :aria-describedby="ariaDescribedby"
+                            switches
+                          
+                          />
+                        </b-form-group>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
                 <!-- Filtro por Estado -->
-                <b-form-group label="Estado" class="checkbox-grid-2cols">
-                  <b-form-checkbox-group
-                    v-model="filtros.estados"
-                    :options="estadosOpciones"
-                    value-field="id"
-                    text-field="nombre"
-                    stacked
-                    :aria-describedby="ariaDescribedby"
-                    switches
-                   
-                  />
-                </b-form-group>
+                 <ul class="nav ">
+                  <li><i class="fa-solid fa-angle-right"></i> Estado
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEstado" role="button"></a>
+                    <div class="collapse show" id="collapseFiltroEstado">
+                      <ul class="list-unstyled ps-3 small">
+                        <b-form-group label="" class="checkbox-grid-2cols">
+                          <b-form-checkbox-group
+                            v-model="filtros.estados"
+                            :options="estadosOpciones"
+                            value-field="id"
+                            text-field="nombre"
+                            stacked
+                            :aria-describedby="ariaDescribedby"
+                            switches
+                          
+                          />
+                        </b-form-group>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+                
                 <b-row>
                   <b-col sm>
-                    <b-button size="sm" class="mb-3" variant="danger" @click="limpiarFiltros">
+                    <b-button size="sm" class="mb-3 w-100" variant="danger" @click="limpiarFiltros">
                       <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
                     </b-button>
                   </b-col>
                   <b-col sm>
-                    <b-button size="sm" class="mb-3" variant="secondary"  @click="mostrarFiltros = false">
+                    <b-button size="sm" class="mb-3 w-100" variant="secondary"  @click="mostrarFiltros = false">
                       <i class="fa-solid fa-xmark"></i> Ocultar filtros
                     </b-button>
                   </b-col>
@@ -96,7 +130,7 @@
             </b-col>
           </transition> 
           <!-- Tabla de resultados -->
-        <b-col :md="mostrarFiltros ? 10 : 12" style="padding: 20px;">
+        <b-col :md="mostrarFiltros ? 9 : 12" style="padding: 20px;">
           <div v-if="cargando" class="cargando-overlay pl-1">
                 <b-spinner variant="primary" class="mb-2" />
                 <div>Cargando...</div>
@@ -1052,11 +1086,6 @@ export default {
     font-weight: bold;
     font-size: 1.2rem;
     color: #007bff; 
-  }
-  .checkbox-grid-2cols {
-  display: grid;
-  grid-template-columns: repeat(2, 6rem);
-
   }
   .pagination .page-link {
     background-color: #838383; /* Color de fondo */

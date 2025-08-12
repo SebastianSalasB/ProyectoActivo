@@ -1,8 +1,7 @@
 <template>
   <div :class="modoOscuro ? 'modo-oscuro' : 'modo-claro'">
     <div v-if="loading" class="loading-container">
-      <b-spinner label="Cargando..."></b-spinner>
-      <p>Cargando sesión...</p>
+      <b-spinner label=""></b-spinner>
     </div>
     <div v-else>
       <div v-if="!isAuthenticated" class="login-container">
@@ -211,7 +210,7 @@ export default {
       UsuariosRegistado: {},
       datosUsuariosRegistado: {},
       modoOscuro: localStorage.getItem('modoOscuro') === 'true',
-      isMobile: window.innerWidth < 768,
+      isMobile: window.innerWidth < 1025,
       inputErrors: [{ correo: false, telefono: false, clave: false }],
       usuario: null
     }
