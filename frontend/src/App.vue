@@ -460,12 +460,14 @@ export default {
   color: rgb(255, 255, 255);
 }
 
-body.modo-oscuro ,:root, [data-bs-theme=light] {
+.modo-oscuro body ,
+.modo-oscuro  :root, [data-bs-theme=light] {
   background-color: rgb(33,37,41);
   color: #ffffff;
 }
 
-body.modo-claro , :root, [data-bs-theme=light]{
+body.modo-claro , 
+.modo-claro :root, [data-bs-theme=light]{
   background-color: #ffffff;
   color: #000000;
 }
