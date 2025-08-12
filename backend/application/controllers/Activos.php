@@ -286,20 +286,20 @@ class Activos extends CI_Controller {
 
             // Datos de computadora
             $ComputadoresDatos = [
-                'com_ram'               => $activo['com_ram'],
-                'com_cpu'               => $activo['com_cpu'],
-                'com_disco'             => $activo['com_disco'],
-                'com_id_sistema_operativo' => $activo['com_sistema_operativo'],
-                'com_id_activo'         => $act_id,
-                'com_id_sistema_operativo' => $activo['com_sistema_operativo']
-                
+                'com_ram'                   => $activo['com_ram'],
+                'com_cpu'                   => $activo['com_cpu'],
+                'com_disco'                 => $activo['com_disco'],
+                'com_id_sistema_operativo'  => $activo['com_id_sistema_operativo'],
+                'com_id_activo'             => $act_id
             ];
 
             // Solo insertar si alguno de los campos de Computadores Datos no está vacío
             if (
-                !empty($ComputadoresDatos['com_ram']) || !empty($ComputadoresDatos['com_cpu']) || 
-                !empty($ComputadoresDatos['com_disco']) || !empty($ComputadoresDatos['com_sistema_operativo'])
-                ) {
+                !empty($ComputadoresDatos['com_ram']) || 
+                !empty($ComputadoresDatos['com_cpu']) || 
+                !empty($ComputadoresDatos['com_disco']) || 
+                !empty($ComputadoresDatos['com_id_sistema_operativo']) 
+            ) {
                     $this->ActivosModel->insertarComputador($ComputadoresDatos);
             }
 
@@ -313,15 +313,15 @@ class Activos extends CI_Controller {
                 'ser_ranuras_ram'       => $activo['ser_ranuras_ram'],
                 'ser_nombre'            => $activo['ser_nombre'],
                 'ser_id_activo'         => $act_id,
-                'ser_id_sistema_operativo' => $activo['ser_sistema_operativo']
             ];
             
             // Solo insertar si alguno de los campos de ServidorDatos no está vacío
             if (
-                !empty($ServidorDatos['ser_ram']) || !empty($ServidorDatos['ser_cpu']) || !empty($ServidorDatos['ser_disco']) ||
-                !empty($ServidorDatos['ser_sistema_operativo']) || !empty($ServidorDatos['ser_cantidad_max_cpu']) ||
-                !empty($ServidorDatos['ser_ranuras_ram']) || !empty($ServidorDatos['ser_nombre'])
-            ) {
+                !empty($ServidorDatos['ser_ram']) || 
+                !empty($ServidorDatos['ser_cpu']) || 
+                !empty($ServidorDatos['ser_disco']) ||
+                !empty($ServidorDatos['ser_id_sistema_operativo']) 
+            ){
                 $this->ActivosModel->insertarServidor($ServidorDatos);
             }
             
@@ -359,18 +359,16 @@ class Activos extends CI_Controller {
         $computadoraLista = true;
         if (isset($datos['datos_computador'])) {
             $compuData = [
-                'com_id_activo'         => $id,
-                'com_ram'               => $datos['datos_computador']['com_ram'] ?? null,
-                'com_cpu'               => $datos['datos_computador']['com_cpu'] ?? null,
-                'com_disco'             => $datos['datos_computador']['com_disco'] ?? null,
-                'com_sistema_operativo' => $datos['datos_computador']['com_sistema_operativo'] ?? null,
+                'com_id_activo'            => $id,
+                'com_ram'                  => $datos['datos_computador']['com_ram'] ?? null,
+                'com_cpu'                  => $datos['datos_computador']['com_cpu'] ?? null,
+                'com_disco'                => $datos['datos_computador']['com_disco'] ?? null,
                 'com_id_sistema_operativo' => $datos['datos_computador']['com_id_sistema_operativo'] ?? null
             ];
+
             if (!empty($datos['datos_computador']['com_id'])) {
-                // actualizar si existe ID
                 $computadoraLista = $this->CompuModel->ActualizaComputador($datos['datos_computador']['com_id'], $compuData);
             } else {
-                // crear si no existe
                 $computadoraLista = $this->CompuModel->insertarComputador($compuData);
             }
         }
@@ -382,11 +380,10 @@ class Activos extends CI_Controller {
                 'ser_ram'              => $datos['datos_servidor']['ser_ram'] ?? null,
                 'ser_cpu'              => $datos['datos_servidor']['ser_cpu'] ?? null,
                 'ser_disco'            => $datos['datos_servidor']['ser_disco'] ?? null,
-                'ser_sistema_operativo'=> $datos['datos_servidor']['ser_sistema_operativo'] ?? null,
+                'ser_id_sistema_operativo'=> $datos['datos_servidor']['ser_id_sistema_operativo'] ?? null,
                 'ser_cantidad_max_cpu' => $datos['datos_servidor']['ser_cantidad_max_cpu'] ?? null,
                 'ser_ranuras_ram'      => $datos['datos_servidor']['ser_ranuras_ram'] ?? null,
                 'ser_nombre'           => $datos['datos_servidor']['ser_nombre'] ?? null,
-                'ser_id_sistema_operativo'=> $datos['datos_servidor']['ser_id_sistema_operativo'] ?? null
             ];
 
             if (!empty($datos['datos_servidor']['ser_id'])) {

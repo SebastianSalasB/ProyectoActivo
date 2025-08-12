@@ -283,7 +283,7 @@
         </b-col>
         <!-- usuario -->
         <b-col md="6" class="mb-2">
-          <label>Usuario</label>
+          <label>Responsable</label>
           <b-form-select
             v-model="selectedActivos.nombre_usuario"
             :options="usuariosOpciones"
@@ -638,11 +638,11 @@ export default {
     fields() {
       return [
         { key: 'act_id', label: 'ID', thClass: 'actID', tdClass: 'actID' },
-        { key: 'nombre_usuario', label: 'Nombre', thClass: '', tdClass: 'usuario' },
+        { key: 'nombre_usuario', label: 'Resposable', thClass: '', tdClass: 'usuario' },
         { key: 'nombre_empresa', label: 'Empresa', class: 'd-none d-lg-table-cell' },
         { key: 'nombre_sucursal', label: 'Sucursal/Tipo', thClass: '', tdClass: 'tipo' },
         { key: 'act_fecha_registro', label: 'Fecha', class: 'd-none d-lg-table-cell' },
-        { key: 'act_descripcion', label: 'Descricion', class: 'd-none d-lg-table-cell' },
+        { key: 'act_marca', label: 'Marca', class: 'd-none d-lg-table-cell' },
         { key: 'acciones', label: '', thClass: 'text-center', tdClass: 'acciones', style: "color: black; right: 0;" },
         { key: 'act_estado', label: '', thClass: 'text-center', tdClass: 'estados' }
       ]

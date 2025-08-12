@@ -642,7 +642,6 @@ export default {
     this.cargarEmpresaSucursalesTipo()
     this.cargarUsuarios()
     this.cargarSistemasOperativos()
-    this.cargarSistemasOperativosServidores()
   }
 }
 </script>

@@ -2,14 +2,15 @@
   <!-- Barra de búsqueda -->
   <b-navbar toggleable="lg" class="mb-4">
     <b-container>
-      <h6 style="text-align: left;" >Buscar Usuario</h6>
+      <b-navbar-brand>
+        <h6 class="mb-0">Buscar Usuario</h6>
+      </b-navbar-brand>
       <b-form class="d-flex ms-auto" @submit.prevent>
         <b-form-input 
           v-model="Buscador"
           class="me-2"
           type="search"
           placeholder="Buscar por nombre, apellido o RUT..."
-          
         />
       </b-form>
     </b-container>
@@ -18,9 +19,10 @@
   <!-- Tabla de responsables -->
   <b-container>
     <div v-if="cargando" class="cargando-overlay">
-      <b-spinner variant="" class="mb-2" />
+      <b-spinner class="mb-2" />
       <div>Cargando...</div>
     </div>
+
     <b-table
       id="tabla-usuarios"
       :items="usuariosPaginados"
@@ -28,25 +30,21 @@
       responsive hover 
       class="text-center custom-rounded-table"
     >
-      <template #cell(usr_id)="data">
-        <div>
-          <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
-        </div>
+      <template #cell(usr_id)="{ value }">
+        <span style="font-size: 1rem;">{{ value }}</span>
       </template>       
-      <template #cell(usr_nombre)="data"> 
-        <div>
-          <span>{{ data.item.usr_nombre }}</span>
-        </div>
-        <div>
-          <span style="font-size: 0.80rem; text-align: start;">{{ data.item.usr_apellido }}</span>
-        </div>
+
+      <template #cell(usr_nombre)="{ item }"> 
+        <div>{{ item.usr_nombre }}</div>
+        <small>{{ item.usr_apellido }}</small>
       </template>
-      <template #cell(acciones)="data">
-        <b-button size="sm" variant="outline-success" class="me-1" @click="editarUsuario(data.item)">
-          <i class="fa-solid fa-pen-to-square fa-lg "></i>
+
+      <template #cell(acciones)="{ item }">
+        <b-button size="sm" variant="outline-success" class="me-1" @click="editarUsuario(item)">
+          <i class="fa-solid fa-pen-to-square fa-lg"></i>
         </b-button>
-        <b-button size="sm" variant="outline-danger" @click="confirmDelete(data.item)">
-          <i class="fa-solid fa-trash fa-lg "></i>
+        <b-button size="sm" variant="outline-danger" @click="confirmDelete(item)">
+          <i class="fa-solid fa-trash fa-lg"></i>
         </b-button>
       </template>
     </b-table>
@@ -63,76 +61,97 @@
       last-number
       size="md"
     />
+
     <!-- Modal de edición -->
-    <b-modal 
-      v-model="modalShow" title="Editar Usuario" size="lg" hide-footer>
-      <b-form >
+    <b-modal v-model="modalShow" title="Editar Usuario" size="lg" hide-footer>
+      <b-form>
         <b-row>
-          <!-- Nombre -->
           <b-col md="6" class="mb-2">            
             <b-form-group label="Nombre">
-              <b-form-input  v-model="UsuarioSeleccionado.usr_nombre" required />
+              <b-form-input 
+                v-model="UsuarioSeleccionado.usr_nombre" 
+                :class="{ 'is-invalid': inputErrors.nombre }" 
+                @blur="validarCampo('nombre', UsuarioSeleccionado.usr_nombre)"
+                required 
+              />
             </b-form-group>
           </b-col>
-          <!-- Apellido -->
+
           <b-col md="6" class="mb-2">            
             <b-form-group label="Apellido">
-              <b-form-input  v-model="UsuarioSeleccionado.usr_apellido" required />
+              <b-form-input 
+                v-model="UsuarioSeleccionado.usr_apellido" 
+                :class="{ 'is-invalid': inputErrors.apellido }" 
+                @blur="validarCampo('apellido', UsuarioSeleccionado.usr_apellido)"
+                required 
+              />
             </b-form-group>
           </b-col>
-          <!-- Correo -->
+
           <b-col md="6" class="mb-2">            
             <b-form-group label="Correo">
-              <b-form-input  type="email" v-model="UsuarioSeleccionado.usr_correo" required />
+              <b-form-input  
+                type="email" 
+                v-model="UsuarioSeleccionado.usr_correo" 
+                :class="{ 'is-invalid': inputErrors.correo }" 
+                @blur="validarCampo('correo', UsuarioSeleccionado.usr_correo)"
+                required 
+              />
             </b-form-group>
           </b-col>
-          <!-- Teléfono -->
+
           <b-col md="6" class="mb-2">            
             <b-form-group label="Teléfono">
-              <b-form-input  v-model="UsuarioSeleccionado.usr_telefono" required />
+              <b-form-input  
+                v-model="UsuarioSeleccionado.usr_telefono" 
+                :class="{ 'is-invalid': inputErrors.telefono }" 
+                @blur="validarCampo('telefono', UsuarioSeleccionado.usr_telefono)"
+                required 
+              />
             </b-form-group>
           </b-col>
-          <!-- RUT -->
+
           <b-col md="6" class="mb-2">            
             <b-form-group label="RUT">
               <b-form-input          
                 v-model="UsuarioSeleccionado.usr_rut"
                 @blur="UsuarioSeleccionado.usr_rut = formatearRut(UsuarioSeleccionado.usr_rut)"
                 placeholder="Ej: 20.356.341-8"
+                :class="{ 'is-invalid': inputErrors.rut }" 
               />
             </b-form-group>
           </b-col>
-          <!-- Empresa -->
+
           <b-col md="6" class="mb-2">
-            <b-form-group label="Empresa" >
+            <b-form-group label="Empresa">
               <b-form-select 
                 v-model="UsuarioSeleccionado.usr_id_empresa"
-                placeholder="selecciona empresa"
                 :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
+                :class="{ 'is-invalid': inputErrors.empresa }" 
               />
             </b-form-group>
           </b-col>
-          <!-- Sucursal -->
+
           <b-col md="6" class="mb-2">
-            <b-form-group label="Sucursal" >
-              <b-form-select style="color: black;"
+            <b-form-group label="Sucursal">
+              <b-form-select
                 placeholder="Seleccione sucursal"
                 v-model="UsuarioSeleccionado.usr_id_sucursal"
-                :options="sucursalesFiltradas(UsuarioSeleccionado.usr_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"         
+                :options="sucursalesFiltradas(UsuarioSeleccionado.usr_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
+                :class="{ 'is-invalid': inputErrors.sucursal }" 
               />
             </b-form-group>
           </b-col>
-          <!-- Tipo Usuario -->
+
           <b-col md="6" class="mb-2">
             <b-form-group label="Tipo Usuario">
-              <b-form-input  v-model="UsuarioSeleccionado.nombre_tipo" disabled />
+              <b-form-input v-model="UsuarioSeleccionado.nombre_tipo" disabled />
             </b-form-group>
           </b-col>
-          <!-- Clave nueva -->
-          <b-col v-if="UsuarioSeleccionado.nombre_tipo=== 'admin'" md="6" class="mb-2">
+
+          <b-col v-if="UsuarioSeleccionado.nombre_tipo === 'admin'" md="6" class="mb-2">
             <b-form-group label="Clave nueva">
               <b-form-input
-                v-if="UsuarioSeleccionado.nombre_tipo === 'admin'"
                 v-model="UsuarioSeleccionado.usr_claveNueva"
                 type="password"
                 placeholder="Dejar vacío si no desea cambiar la clave"
@@ -140,35 +159,41 @@
             </b-form-group>
           </b-col>
         </b-row>
+
         <div class="text-end mt-3">
-          <b-button variant="outline-success" class="me-2" @click="confirmacionEditar"><i class="fa-solid fa-floppy-disk fa-lg" ></i>   Guardar</b-button>
-          <b-button variant="outline-secondary" @click="cancelarEditar"><i class="fa-solid fa-circle-xmark fa-lg"></i>    Cancelar</b-button>
+          <b-button variant="outline-success" class="me-2" @click="confirmacionEditar">
+            <i class="fa-solid fa-floppy-disk fa-lg"></i> Guardar
+          </b-button>
+          <b-button variant="outline-secondary" @click="cancelarEditar">
+            <i class="fa-solid fa-circle-xmark fa-lg"></i> Cancelar
+          </b-button>
         </div>
       </b-form>
     </b-modal>
-    <!-- Modal de confirmación de edición -->
-    <b-modal style="color: black;"
+
+    <!-- Modal confirmación edición -->
+    <b-modal
       v-model="editarConfirmaModal"
       title="Confirmar modificación"
       @ok="actualizarUsuario"
       ok-title="Sí, guardar cambios"
       cancel-title="Cancelar"
-      ok-variant="success" 
+      ok-variant="success"
     >
       ¿Estás seguro de que deseas guardar los cambios?
     </b-modal>
-    <!-- Modal de confirmación de eliminación -->
+
+    <!-- Modal confirmación eliminación -->
     <b-modal 
       v-model="ConfirmaEliminarModal"
       title="Confirmar eliminación"
       @ok="EliminarUsuario"
       ok-title="Sí, eliminar"
       cancel-title="Cancelar"
-      ok-variant="danger" 
+      ok-variant="danger"
     >
       ¿Estás seguro de que deseas eliminar este responsable?
     </b-modal>
-
   </b-container>
 </template>
 
@@ -179,9 +204,8 @@ export default {
   data() {
     return {
       usuarios: [],
-      sucursales:[],
-      empresas:[],
-      totalResponsables: 0,
+      sucursales: [],
+      empresas: [],
       paginaActual: 1,
       porPagina: 9,
       Buscador: '',
@@ -195,13 +219,13 @@ export default {
         { key: 'nombre_sucursal', label: 'Sucursal' },
         { key: 'acciones', label: 'Acciones' }
       ],
-      cargando:false
+      cargando: false,
+      inputErrors: {}
     }
   },
   computed: {
     filtrarUsuarios() {
       if (!this.Buscador) return this.usuarios
-
       return this.usuarios.filter(respo =>
         Object.values(respo).some(val =>
           String(val).toLowerCase().includes(this.Buscador.toLowerCase())
@@ -210,8 +234,7 @@ export default {
     },
     usuariosPaginados() {
       const inicio = (this.paginaActual - 1) * this.porPagina
-      const fin = inicio + this.porPagina
-      return this.filtrarUsuarios.slice(inicio, fin)
+      return this.filtrarUsuarios.slice(inicio, inicio + this.porPagina)
     }
   },
   methods: {
@@ -219,26 +242,22 @@ export default {
       this.cargando = true
       try {
         const { data } = await axios.get(`/Usuarios/listarResponsable`)
-        this.usuarios = data.Responsable       
-        this.totalResponsables = data.Responsable.length
-
+        this.usuarios = data.Responsable
       } catch (error) {
         console.error(error)
       }
-      this.cargando= false
+      this.cargando = false
     },
     async cargarEmpresasYSucursales() {
       try {
-        const [resEmpresas, resSucursales,resUsuarios] = await Promise.all([
+        const [resEmpresas, resSucursales] = await Promise.all([
           axios.get('/Usuarios/listaE'),
-          axios.get('/Usuarios/listaS'),
-          axios.get('/Usuarios/listarResponsable')
-        ]);
-        this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo');
-        this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo');
-        this.sucursalesIDempresa = this.sucursales.map(s=> s.suc_id_empresa)
+          axios.get('/Usuarios/listaS')
+        ])
+        this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo')
+        this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo')
       } catch (error) {
-        console.error('Error cargando empresas o sucursales:', error);
+        console.error('Error cargando empresas o sucursales:', error)
       }
     },
     formatearRut(rut) {
@@ -246,25 +265,76 @@ export default {
       rut = rut.replace(/[^0-9kK]/g, '').toUpperCase()
       let cuerpo = rut.slice(0, -1)
       let dv = rut.slice(-1)
-      if (cuerpo.length < 1) return rut
-      // Formatear cuerpo con puntos
       let cuerpoFormateado = ''
       while (cuerpo.length > 3) {
         cuerpoFormateado = '.' + cuerpo.slice(-3) + cuerpoFormateado
         cuerpo = cuerpo.slice(0, -3)
       }
-      cuerpoFormateado = cuerpo + cuerpoFormateado
-      return `${cuerpoFormateado}-${dv}`
+      return `${cuerpo}${cuerpoFormateado}-${dv}`
     },
     sucursalesFiltradas(empId) {
       if (!empId) return []
       return this.sucursales.filter(s => String(s.suc_id_empresa) === String(empId))
     },
-    EmpresasFiltradas(){
-      if(!this.UsuarioSeleccionado.usr_id_sucursal) return []
+    validarRut(rut) {
+      if (!rut) return false
+      const cleanRut = rut.replace(/[^\dkK]/g, '').toUpperCase()
+      if (cleanRut.length < 2) return false
+      const cuerpo = cleanRut.slice(0, -1)
+      const dv = cleanRut.slice(-1)
+      let suma = 0, multiplo = 2
+      for (let i = cuerpo.length - 1; i >= 0; i--) {
+        suma += parseInt(cuerpo[i]) * multiplo
+        multiplo = multiplo < 7 ? multiplo + 1 : 2
+      }
+      const dvEsperado = 11 - (suma % 11)
+      const dvFinal = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString()
+      return dv.toUpperCase() === dvFinal
+    },
+    validarEmail(correo) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)
+    },
+    validarCampo(campo, valor) {
+      const errores = { ...this.inputErrors }
+      switch (campo) {
+        case 'nombre':
+        case 'apellido':
+          errores[campo] = valor.trim() === ''
+          break
+        case 'rut':
+          errores.rut = !this.validarRut(valor)
+          break
+        case 'correo':
+          errores.correo = !this.validarEmail(valor)
+          break
+        case 'telefono':
+          errores.telefono = valor.trim().length < 7
+          break
+        case 'empresa':
+          errores.empresa = !valor
+          break
+        case 'sucursal':
+          errores.sucursal = !valor
+          break
+      }
+      this.inputErrors = errores
+    },
+    validadatos() {
+      const u = this.UsuarioSeleccionado
+      this.inputErrors = {
+        nombre: u.usr_nombre.trim() === '',
+        apellido: u.usr_apellido.trim() === '',
+        rut: !this.validarRut(u.usr_rut),
+        correo: !this.validarEmail(u.usr_correo),
+        telefono: u.usr_telefono.trim().length < 7,
+        empresa: !u.usr_id_empresa,
+        sucursal: !u.usr_id_sucursal
+      }
+      return !Object.values(this.inputErrors).some(e => e)
     },
     editarUsuario(respo) {
       this.UsuarioSeleccionado = { ...respo }
+      this.inputErrors = {}
       this.modalShow = true
     },
     cancelarEditar() {
@@ -275,6 +345,7 @@ export default {
       this.editarConfirmaModal = true
     },
     async actualizarUsuario() {
+      if (!this.validadatos()) return
       const payload = {
         usr_nombre: this.UsuarioSeleccionado.usr_nombre,
         usr_apellido: this.UsuarioSeleccionado.usr_apellido,
@@ -285,23 +356,11 @@ export default {
         usr_id_sucursal: this.UsuarioSeleccionado.usr_id_sucursal,
         usr_estado: this.UsuarioSeleccionado.usr_estado
       }
-      // Solo si la clave no está vacía, la incluimos
-      if (
-        this.UsuarioSeleccionado.usr_claveNueva &&
-        this.UsuarioSeleccionado.usr_claveNueva.trim() !== ''
-      ) {
+      if (this.UsuarioSeleccionado.usr_claveNueva?.trim()) {
         payload.usr_clave = this.UsuarioSeleccionado.usr_claveNueva
       }
       try {
-        const res = await axios.post(
-          `/Usuarios/ActualizarUsuario/${this.UsuarioSeleccionado.usr_id}`,
-          payload,
-          {
-            headers: {
-              'Content-Type': 'application/json'  
-            }
-          }
-        )
+        const res = await axios.post(`/Usuarios/ActualizarUsuario/${this.UsuarioSeleccionado.usr_id}`, payload)
         if (res.data.status === 'updated') {
           alert('Responsable actualizado correctamente')
           this.modalShow = false
@@ -339,9 +398,6 @@ export default {
   watch: {
     Buscador() {
       this.paginaActual = 1
-    },
-    paginaActual() {
-      this.cargarUsuario()
     }
   },
   mounted() {
@@ -350,25 +406,26 @@ export default {
   }
 }
 </script>
+
 <style scoped>
-  .custom-rounded-table {
-    border-radius: 12px;
-    overflow: hidden; /* importante para que las esquinas internas también se redondeen */
-  }
-  .cargando-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #007bff;
-  }
+.custom-rounded-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.cargando-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #007bff;
+}
 </style>

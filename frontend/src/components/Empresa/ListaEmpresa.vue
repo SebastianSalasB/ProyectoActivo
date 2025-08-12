@@ -184,8 +184,7 @@ export default {
     },
     async GuardarEmpresa() {
       try {
-        const res = await axios.post(
-          `http://localhost/activos/Backend/index.php/EmpresaR/ActializarEmpresa/${this.seleccionarEmpresa.emp_id}`,
+        const res = await axios.post(`/EmpresaR/ActializarEmpresa/${this.seleccionarEmpresa.emp_id}`,
           this.seleccionarEmpresa
         )
         if (res.data.status === 'updated') {
