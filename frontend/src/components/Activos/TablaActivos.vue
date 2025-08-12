@@ -132,7 +132,7 @@
           <!-- Tabla de resultados -->
         <b-col :md="mostrarFiltros ? 9 : 12" style="padding: 20px;">
           <div v-if="cargando" class="cargando-overlay pl-1">
-                <b-spinner variant="primary" class="mb-2" />
+                <b-spinner variant="" class="mb-2" />
                 <div>Cargando...</div>
               </div>
             <b-table 
@@ -1071,22 +1071,7 @@ export default {
   td.tipo{
     text-align: start;
   }
-  .cargando-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #007bff; 
-  }
+  
   .pagination .page-link {
     background-color: #838383; /* Color de fondo */
     color: white; /* Color del texto */

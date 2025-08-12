@@ -1,10 +1,10 @@
 <template>
   <div :class="modoOscuro ? 'modo-oscuro' : 'modo-claro'">
-    <div v-if="loading" class="loading-container">
+    <div v-if="loading" class="loading-container" :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" >
       <b-spinner label=""></b-spinner>
     </div>
     <div v-else>
-      <div v-if="!isAuthenticated" class="login-container">
+      <div v-if="!isAuthenticated" class="login-container" :class="modoOscuro ? 'bg-dark text-white' : 'bg-light'" >
         <Login @login-success="handleLoginSuccess" />
       </div>
       <div v-else style="height: 100vh;">
@@ -460,9 +460,12 @@ export default {
 }
 
 .modo-oscuro body ,
-.modo-oscuro  :root, [data-bs-theme=light] {
+.modo-oscuro  :root, [data-bs-theme=light]{
   background-color: rgb(33,37,41);
   color: #ffffff;
+}
+.modo-oscuro .loading-container{
+  background-color: rgb(33,37,41);
 }
 
 body.modo-claro , 
@@ -470,5 +473,36 @@ body.modo-claro ,
   background-color: #ffffff;
   color: #000000;
 }
-
+.modo-oscuro .cargando-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #c5c5c5; 
+  }
+  .modo-claro .cargando-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #007bff; 
+  }
 </style>
