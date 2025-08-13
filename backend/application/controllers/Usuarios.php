@@ -41,7 +41,6 @@ class Usuarios extends CI_Controller
     }
     public function DatosUsuario($id = null) {
 
-        $this->setCorsHeaders(); 
         if ($id === null || !is_numeric($id)) {
             show_error('ID inválido', 400);
             return;
