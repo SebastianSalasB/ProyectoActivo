@@ -136,45 +136,42 @@ export default {
     validacionPassword(valor) {
       return typeof valor === 'string' && valor.length >= 6;
     },
-    async onSubmit(){ 
+    async onSubmit() {       
       this.intentadoEnviar = true;
       this.loginError = '';
       this.cargando = true;
-      if (!this.campoRutValido || !this.campoPasswordValido) {
+      if (!this.campoRutValido || !this.campoPasswordValido) { 
         this.loginError = 'Por favor, completa todos los campos correctamente.';
         this.cargando = false;
         return;
       }
-      try {
-        const response = await axios.post('/Auth/IniciarSession', {
-          rut: this.rutFormateado,
-          password: this.password
-        }, {
+      try { const response = await axios.post('/Auth/IniciarSession', {rut: this.rutFormateado, password: this.password}, 
+        {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
           validateStatus: () => true
         })
+
         if (response.data.status === 'success') {
           this.loginError = '';
           this.rutFormateado = '';
           this.password = '';
           this.$emit('login-success', response.data.user);
         } else if (response.data.message === 'Credenciales inválidas.') {
-          this.loginError = 'RUT o contraseña incorrectos.';
-        } else {
-          this.loginError = 'Error desconocido.';
+            this.loginError = 'RUT o contraseña incorrectos.';
+          } else {
+            this.loginError = 'Error desconocido.';
         }
       } catch (error) {
         this.loginError = 'Error de red o servidor.';
         console.error(error);
-      } 
-      finally {
+      }finally {
         this.cargando = false;
       }
-    },
+    }
   },
   mounted() {
-    // Puedes agregar aquí lógica si necesitas algo al montar el componente
+    
   }
 };
 </script>

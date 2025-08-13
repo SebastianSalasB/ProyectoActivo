@@ -33,17 +33,6 @@ class Usuarios extends CI_Controller
         
         }
     }
-    private function setCorsHeaders() {
-        header("Access-Control-Allow-Origin: http://localhost:3000");
-        header("Access-Control-Allow-Credentials: true");
-        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            http_response_code(200);
-            exit();
-        }
-    }
     public function listarResponsable() {
         // Obtiene los registros de responsables con paginación
         $responsables = $this->RespoModel->responsablesListado();
@@ -182,27 +171,37 @@ class Usuarios extends CI_Controller
             ]);
         }
     }
-    public function CrearUsuario(){
-        // Permitir CORS si es necesario
-        header('Access-Control-Allow-Origin: *');
-        header('Content-Type: application/json');
+    public function CrearUsuario() {
+        // 1️⃣ Configurar CORS
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        $allowed_origins = ['http://localhost:3000']; // frontend
+        if (in_array($origin, $allowed_origins)) {
+            header("Access-Control-Allow-Origin: $origin");
+            header("Access-Control-Allow-Credentials: true");
+        }
+        header("Access-Control-Allow-Headers: Content-Type, Authorization");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        header("Content-Type: application/json");
+
+        // 2️⃣ Responder preflight OPTIONS
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
             exit;
         }
-        // Obtener datos JSON
-        $input = json_decode(file_get_contents('php://input'), true);
 
+        // 3️⃣ Obtener datos JSON
+        $input = json_decode(file_get_contents('php://input'), true);
         if (!isset($input['activos']) || !is_array($input['activos'])) {
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Datos inválidos. Se esperaba un arreglo de activos.'
+                'message' => 'Datos inválidos. Se esperaba un arreglo de usuarios.'
             ]);
             return;
         }
+
+        // 4️⃣ Recorrer usuarios y validar
         $usuariosInsertados = 0;
         foreach ($input['activos'] as $user) {
-            // Validar campos obligatorios
             if (
                 empty($user['user_nombre']) ||
                 empty($user['user_apellido']) ||
@@ -212,41 +211,46 @@ class Usuarios extends CI_Controller
                 empty($user['user_id_sucursal'])
             ) {
                 log_message('error', 'Datos incompletos en usuario: ' . print_r($user, true));
-                continue;
+                continue; // saltar usuario inválido
             }
-            // Preparar datos
+
+            // 5️⃣ Preparar datos para insertar
             $data = [
-                'usr_nombre'        => $user['user_nombre'],
-                'usr_apellido'      => $user['user_apellido'],
-                'usr_correo'        => $user['user_correo'],
-                'usr_rut'           => $user['user_rut'],
-                'usr_telefono'      => $user['user_telefono'],
-                'usr_id_sucursal'   => $user['user_id_sucursal'],
-                'usr_estado'        => 'activo',
-                'usr_id_tipos'      => isset($user['user_id_tipos']) ? 1 : 2,
+                'usr_nombre'      => $user['user_nombre'],
+                'usr_apellido'    => $user['user_apellido'],
+                'usr_correo'      => $user['user_correo'],
+                'usr_rut'         => $user['user_rut'],
+                'usr_telefono'    => $user['user_telefono'],
+                'usr_id_sucursal' => $user['user_id_sucursal'],
+                'usr_estado'      => 'activo',
+                'usr_id_tipos'    => isset($user['user_id_tipos']) ? $user['user_id_tipos'] : 2,
             ];
-            // Incluir clave si es responsable
-            if (!empty(trim($data['usr_clave'] ?? ''))) {
-                $clavePlano = trim($data['usr_clave']);
-                $userData['usr_clave'] = password_hash($clavePlano, PASSWORD_BCRYPT);
+
+            // 6️⃣ Incluir clave si existe
+            if (!empty(trim($user['user_clave'] ?? ''))) {
+                $data['usr_clave'] = password_hash(trim($user['user_clave']), PASSWORD_BCRYPT);
             }
-            // Insertar en la base de datos
+
+            // 7️⃣ Insertar en la base de datos
             if ($this->RespoModel->insertarUsuario($data)) {
                 $usuariosInsertados++;
             }
         }
+
+        // 8️⃣ Respuesta final
         if ($usuariosInsertados > 0) {
             echo json_encode([
                 'status' => 'success',
-                'message' => "Se insertaron $usuariosInsertados usuario(s)"
+                'message' => "Se insertaron $usuariosInsertados usuario(s)."
             ]);
         } else {
             echo json_encode([
                 'status' => 'error',
-                'message' => 'No se insertó ningún usuario válido'
+                'message' => 'No se insertó ningún usuario válido.'
             ]);
         }
     }
+
     public function EliminarUsuario($id) {
         $result = $this->RespoModel->eliminarUsuario($id);
 

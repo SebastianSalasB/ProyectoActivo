@@ -106,6 +106,7 @@
                 v-model="UsuarioSeleccionado.usr_telefono" 
                 :class="{ 'is-invalid': inputErrors.telefono }" 
                 @blur="validarCampo('telefono', UsuarioSeleccionado.usr_telefono)"
+                maxlength="9"
                 required 
               />
             </b-form-group>

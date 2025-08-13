@@ -628,7 +628,6 @@ export default {
   },
 
   computed: {
-    // Computed properties
     empresaOpciones() {
       return this.empresa.map(e => ({ id: e.emp_id, nombre: e.emp_nombre }))
     },
@@ -761,15 +760,12 @@ export default {
       }))
     }
   },
-
   watch: {
     paginaActual() {
       this.cargarActivos()
     }
   },
-
   methods: {
-    // Methods
     async cargarActivos() {
       this.cargando = true
       try {
@@ -866,8 +862,7 @@ export default {
       } catch (error){
         console.error('Error cargando sistemas operativos')
       }
-    }
-    ,
+    },
     async cargarSucursales() {
       try {
         const res = await axios.get('/Activos/listaSucursal')

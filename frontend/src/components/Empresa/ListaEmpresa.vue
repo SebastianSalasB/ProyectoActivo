@@ -215,7 +215,6 @@ export default {
           alert('Empresa eliminada correctamente')
           this.cargarEmpresa() 
         }
-        
       } catch (err) {
         console.error('Error al eliminar:', err)
         this.cargarEmpresa() 

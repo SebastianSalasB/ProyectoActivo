@@ -140,11 +140,11 @@ export default {
     }
   },
   computed: {
-    // Aquí puedes agregar propiedades computadas si necesitas
+    
   },
   methods: {
     validadatos() {
-      if (!this.Tipo.Nombre || this.Tipo.Nombre.trim().length < 3) {
+      if (!this.Tipo.Nombre || this.Tipo.Nombre.trim().length < 2) {
         this.mensaje = 'El nombre del tipo debe tener al menos 3 caracteres.'
         return false
       }
@@ -159,15 +159,15 @@ export default {
         })
 
         if (res.data.status === 'success') {
-          this.mensaje = '✅ Tipo de Activo guardado con éxito'
+          this.mensaje = 'Tipo de Activo guardado con éxito'
           this.fetchTipos()   
           this.resetForm()    
         } else {
-          this.mensaje = '⚠️ Error al guardar tipo de activo'
+          this.mensaje = 'Error al guardar tipo de activo'
         }
       } catch (error) {
         console.error('Error en guardarTipo:', error)
-        this.mensaje = '❌ Error del servidor al guardar tipo'
+        this.mensaje = 'Error del servidor al guardar tipo'
       }
     },
     resetForm() {

@@ -124,8 +124,7 @@
           v-if="usuarios.activos.length > 1"
           variant="outline-danger"
           class="mt-2"
-          @click="eliminarActivo(index)"
-        >
+          @click="eliminarActivo(index)">
           <i class="fa-solid fa-circle-xmark fa-lg"></i>    Eliminar
         </b-button>
       </div>
@@ -201,7 +200,6 @@ export default {
     },
     onEmpresaChange(index, value) {
       this.usuarios.activos[index].user_id_empresa = value
-      // Al cambiar empresa, limpiar sucursal
       this.usuarios.activos[index].user_id_sucursal = null
       this.validarCampo(index, 'empresa', value)
       this.validarCampo(index, 'sucursal', null)
@@ -337,8 +335,11 @@ export default {
       return this.usuarios.activos.user_rut
     },
     async GuardarUsuario() {
-      if (!this.validadatos()) return
-      const activosConDatos = this.usuarios.activos.map(activo => ({
+      // Validar datos antes de enviar
+      if (!this.validadatos()) return;
+
+      // Preparar datos para el backend
+      const usuariosPayload = this.usuarios.activos.map(activo => ({
         user_nombre: activo.user_nombre,
         user_apellido: activo.user_apellido,
         user_rut: activo.user_rut,
@@ -348,43 +349,64 @@ export default {
         user_id_sucursal: activo.user_id_sucursal,
         user_id_tipos: activo.tipoactivo ? 1 : 2,
         ...(activo.tipoactivo && activo.user_clave ? { user_clave: activo.user_clave } : {})
-      }))
+      }));
+
       try {
+        // Enviar datos al backend
         const response = await axios.post(
           '/Usuarios/CrearUsuario',
-          { activos: activosConDatos },
-          { headers: { 'Content-Type': 'application/json' } }
-        )
-        this.modalShow = true
-        // Reiniciar formulario
-        this.usuarios.activos = [
-          {
-            user_nombre: '',
-            user_apellido: '',
-            user_rut: '',
-            user_correo: '',
-            user_telefono: '',
-            user_clave: '',
-            user_id_empresa: null,
-            user_id_sucursal: null,
-            tipoactivo: false
+          { activos: usuariosPayload },
+          { 
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true // si usas cookies/sesión
           }
-        ]
-        this.inputErrors = [
-          {
-            nombre: false,
-            apellido: false,
-            rut: false,
-            correo: false,
-            telefono: false,
-            clave: false,
-            empresa: false,
-            sucursal: false
-          }
-        ]
+        );
+        // Mostrar modal de éxito
+        this.modalShow = true;
+        // Reiniciar formulario de manera reactiva
+        this.reiniciaUsuarios();
+
       } catch (error) {
-        console.error('Error al registrar usuarios:', error)
+        console.error('Error al registrar usuarios:', error);
+
+        // Mostrar feedback al usuario con BootstrapVue Toast
+        if (this.$bvToast) {
+          this.$bvToast.toast('No se pudo registrar el/los usuario(s).', {
+            title: 'Error',
+            variant: 'danger',
+            solid: true,
+          });
+        }
       }
+    },
+    // reinicia el formulario de usuarios
+    reiniciaUsuarios() {
+      this.usuarios.activos = [
+        {
+          user_nombre: '',
+          user_apellido: '',
+          user_rut: '',
+          user_correo: '',
+          user_telefono: '',
+          user_clave: '',
+          user_id_empresa: null,
+          user_id_sucursal: null,
+          tipoactivo: false
+        }
+      ];
+
+      this.inputErrors = [
+        {
+          nombre: false,
+          apellido: false,
+          rut: false,
+          correo: false,
+          telefono: false,
+          clave: false,
+          empresa: false,
+          sucursal: false
+        }
+      ];
     }
   },
   computed:{
