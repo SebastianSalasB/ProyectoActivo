@@ -5,7 +5,7 @@ class Mantencion extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        
+
         $this->load->model('MantencionModel');
 
          // Librerías necesarias
@@ -36,7 +36,11 @@ class Mantencion extends CI_Controller {
         }
 
     }
-
+    public function TABLA($id) { 
+        $datos = $this->MantencionModel->obtenerMantencion($id);
+        log_message('error', 'Datos recibidos: ' . print_r($datos, true));
+        echo json_encode($datos);
+    }
     public function Mantencion() {
         $datos = json_decode(file_get_contents("php://input"), true);
 
@@ -45,19 +49,27 @@ class Mantencion extends CI_Controller {
             return;
         }
 
-        // Validaciones
-        if (empty($datos['man_id_activo']) || empty($datos['man_id_usuario']) || empty($datos['man_fecha'])) {
+        if (empty($datos['man_id_activo']) || empty($datos['man_id_usuario']) || empty($datos['man_fecha']) || empty($datos['man_descripcion'])) {
             echo json_encode(['status' => 'error', 'message' => 'Faltan campos obligatorios']);
             return;
         }
 
-        $insertar = $this->MantencionModel->Mantencion($datos);
+        try {
+            $insertar = $this->MantencionModel->Mantencion($datos);
 
-        if ($insertar) {
-            echo json_encode(['status' => 'success', 'message' => 'Mantención registrada']);
-
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error al insertar en la base de datos']);
+            if ($insertar) {
+                echo json_encode(['status' => 'success', 'message' => 'Mantención registrada']);
+            } else {
+                $dbError = $this->db->error();
+                log_message('error', 'Error DB mantencion: '.print_r($dbError, true));
+                echo json_encode(['status' => 'error', 'message' => 'Error al insertar en la base de datos', 'db_error' => $dbError]);
+            }
+        } catch (Exception $e) {
+            log_message('error', 'Excepción mantencion: '.$e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => 'Ocurrió un error en el servidor', 'exception' => $e->getMessage()]);
         }
     }
+
+
+
 }

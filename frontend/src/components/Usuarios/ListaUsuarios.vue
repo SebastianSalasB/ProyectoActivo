@@ -116,6 +116,7 @@
             <b-form-group label="RUT">
               <b-form-input          
                 v-model="UsuarioSeleccionado.usr_rut"
+                @input="inputErrors.rut = false" 
                 @blur="UsuarioSeleccionado.usr_rut = formatearRut(UsuarioSeleccionado.usr_rut)"
                 placeholder="Ej: 20.356.341-8"
                 :class="{ 'is-invalid': inputErrors.rut }" 
