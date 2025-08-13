@@ -7,10 +7,31 @@ class Usuarios extends CI_Controller
        
         parent::__construct();
         $this->load->model('RespoModel');
-        header("Access-Control-Allow-Origin: *");
+        
+        // Librerías necesarias
+        $this->load->library('session');
+        // Detectar origen automáticamente
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        $allowed_origins = ['http://localhost:3000']; 
+        if (!empty($origin)) {
+            header("Access-Control-Allow-Origin: $origin");
+            header("Access-Control-Allow-Credentials: true");
+        }
         header("Access-Control-Allow-Headers: Content-Type, Authorization");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Credentials: true");
+        header("Content-Type: application/json; charset=UTF-8");
+
+        // Manejo de preflight (OPTIONS)
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            exit; 
+        }
+        // Validar sesión
+        if (!$this->session->userdata('user')) {
+            http_response_code(401); // No autorizado
+            echo json_encode(['error' => 'Sesión expirada o no iniciada']);
+            exit;
+        
+        }
     }
     private function setCorsHeaders() {
         header("Access-Control-Allow-Origin: http://localhost:3000");
@@ -26,31 +47,23 @@ class Usuarios extends CI_Controller
     public function listarResponsable() {
         // Obtiene los registros de responsables con paginación
         $responsables = $this->RespoModel->responsablesListado();
-        // Obtiene el total de registros (para calcular páginas en el frontend)
-        $total = $this->RespoModel->contarResponsables();
         // Retorna los datos en formato JSON
-        echo json_encode([
-            'Responsable' => $responsables,
-            'total' => $total
-        ]);
+        echo json_encode($responsables);
     }
     public function DatosUsuario($id = null) {
-        $this->setCorsHeaders(); // 👈 agrega esto primero
 
+        $this->setCorsHeaders(); 
         if ($id === null || !is_numeric($id)) {
             show_error('ID inválido', 400);
             return;
         }
-
         $datos = $this->RespoModel->DatosUsuario($id);
-
         if (!$datos) {
             $this->output
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['error' => 'Usuario no encontrado']));
             return;
         }
-
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($datos));
@@ -69,7 +82,6 @@ class Usuarios extends CI_Controller
             echo json_encode(['error' => 'ID inválido']);
             return;
         }
-
         $userData = [
             'usr_nombre'      => $data['usr_nombre']     ?? null,
             'usr_apellido'    => $data['usr_apellido']   ?? null,

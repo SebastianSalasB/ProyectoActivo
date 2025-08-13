@@ -153,7 +153,6 @@ export default {
     },
     async guardarTipo() {
       if (!this.validadatos()) return
-
       try {
         const res = await axios.post(`/TiposActivos/CrearTipo`, {
           tip_descripcion: this.Tipo.Nombre.trim()
@@ -161,8 +160,8 @@ export default {
 
         if (res.data.status === 'success') {
           this.mensaje = '✅ Tipo de Activo guardado con éxito'
-          this.fetchTipos()   // Refrescar lista
-          this.resetForm()    // Limpiar campos
+          this.fetchTipos()   
+          this.resetForm()    
         } else {
           this.mensaje = '⚠️ Error al guardar tipo de activo'
         }

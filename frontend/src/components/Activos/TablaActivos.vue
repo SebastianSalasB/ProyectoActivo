@@ -843,7 +843,9 @@ export default {
     },
     async cargarTipos() {
       try {
-        const res = await axios.get('/Activos/listaTipo')
+        const res = await axios.get('/Activos/listaTipo', {
+          withCredentials: true
+        })
         this.Tipos = res.data
       } catch (error) {
         console.error('Error cargando Tipos:', error)
@@ -884,7 +886,9 @@ export default {
     },
     async cargarEmpresa() {
       try {
-        const res = await axios.get('/Activos/listaEmpresa')
+        const res = await axios.get('/Activos/listaEmpresa', {
+          withCredentials: true
+        })
         this.empresa = res.data.filter(e => e.emp_estado === 'activo')
       } catch (error) {
         console.error('Error cargando empresas:', error)

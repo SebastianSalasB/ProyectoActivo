@@ -241,23 +241,30 @@ export default {
     async cargarUsuario() {
       this.cargando = true
       try {
-        const { data } = await axios.get(`/Usuarios/listarResponsable`)
-        this.usuarios = data.Responsable
+        const res= await axios.get('/Usuarios/listarResponsable')
+        this.usuarios = res.data
       } catch (error) {
-        console.error(error)
+        console.error('Error cargando sucursales:', error)
       }
+
       this.cargando = false
     },
-    async cargarEmpresasYSucursales() {
+    async cargarSucursales() {
       try {
-        const [resEmpresas, resSucursales] = await Promise.all([
-          axios.get('/Usuarios/listaE'),
-          axios.get('/Usuarios/listaS')
-        ])
-        this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo')
-        this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo')
+        const res = await axios.get('/Activos/listaSucursal')
+        this.sucursales = res.data
       } catch (error) {
-        console.error('Error cargando empresas o sucursales:', error)
+        console.error('Error cargando sucursales:', error)
+      }
+    },
+    async cargarEmpresa() {
+      try {
+        const res = await axios.get('/Activos/listaEmpresa', {
+          withCredentials: true
+        })
+        this.empresas = res.data.filter(e => e.emp_estado === 'activo')
+      } catch (error) {
+        console.error('Error cargando empresas:', error)
       }
     },
     formatearRut(rut) {
@@ -402,7 +409,8 @@ export default {
   },
   mounted() {
     this.cargarUsuario()
-    this.cargarEmpresasYSucursales()
+    this.cargarSucursales()
+    this.cargarEmpresa()
   }
 }
 </script>

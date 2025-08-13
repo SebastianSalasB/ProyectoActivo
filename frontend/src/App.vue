@@ -410,6 +410,9 @@ export default {
 .modo-oscuro .nav-link{
   color:white;
 }
+.modo-oscuro h6{
+  color: white;
+}
 .modo-oscuro .dropdown-item{
   color:#ffffff;
 }

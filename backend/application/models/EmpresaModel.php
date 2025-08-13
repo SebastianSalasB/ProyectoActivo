@@ -32,11 +32,8 @@ class EmpresaModel extends CI_Model {
         ');
         $this->db->from('activos.empresas e');
         $this->db->join('activos.sucursales s', 's.suc_id_empresa = e.emp_id');
-
         $this->db->where('s.suc_estados', 'activo');
         $this->db->where('e.emp_estado', 'activo');
-        
-
         $query = $this->db->get();
         $result = $query->result();
 
@@ -45,7 +42,6 @@ class EmpresaModel extends CI_Model {
 
         foreach ($result as $row) {
             $emp_id = $row->emp_id;
-
             if (!isset($empresas[$emp_id])) {
                 $empresas[$emp_id] = [
                     'emp_id' => $row->emp_id,
@@ -54,14 +50,12 @@ class EmpresaModel extends CI_Model {
                     'sucursales' => []
                 ];
             }
-
             $empresas[$emp_id]['sucursales'][] = [
                 'suc_id' => $row->suc_id,
                 'suc_nombre' => $row->suc_nombre,
                 'suc_direccion' => $row->suc_direccion
             ];
         }
-
         return array_values($empresas); // Reindexa como array normal
     }
     public function optenerTipos() {

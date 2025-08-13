@@ -12,8 +12,36 @@ class EmpresaR extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+
         $this->load->model('EmpresaModel');
         $this->load->model('RespoModel');  
+
+         // Librerías necesarias
+        $this->load->library('session');
+
+        // Detectar origen automáticamente
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        $allowed_origins = ['http://localhost:3000']; 
+        if (!empty($origin)) {
+            header("Access-Control-Allow-Origin: $origin");
+            header("Access-Control-Allow-Credentials: true");
+        }
+        header("Access-Control-Allow-Headers: Content-Type, Authorization");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Content-Type: application/json; charset=UTF-8");
+
+        // Manejo de preflight (OPTIONS)
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            exit; 
+        }
+
+        // Validar sesión
+        if (!$this->session->userdata('user')) {
+            http_response_code(401); // No autorizado
+            echo json_encode(['error' => 'Sesión expirada o no iniciada']);
+            exit;
+        
+        }
     }
     public function index() {
         $empresas = $this->EmpresaModel->EmpresaSucursales();

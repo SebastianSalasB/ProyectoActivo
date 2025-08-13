@@ -187,10 +187,8 @@ export default {
   methods: {
     async cargarEmpresasYSucursales() {
       try {
-        const [resEmpresas, resSucursales] = await Promise.all([
-          axios.get('/Usuarios/listaE'),
-          axios.get('/Usuarios/listaS')
-        ]);
+        const resEmpresas = await axios.get('/Activos/listaEmpresa')
+        const resSucursales = await axios.get('/Activos/listaSucursal')
         this.empresas = resEmpresas.data.filter(e => e.emp_estado === 'activo');
         this.sucursales = resSucursales.data.filter(s => s.suc_estados === 'activo');
       } catch (error) {

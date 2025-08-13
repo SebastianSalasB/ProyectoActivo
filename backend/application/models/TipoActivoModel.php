@@ -9,6 +9,8 @@ class TipoActivoModel extends CI_Model {
     }
     public function obtenerTipos() {
         $this->db->where('tip_estado', 'activo');
+        
+        $this->db->order_by('tip_id');
         $query = $this->db->get('activos.tiposactivos'); 
         return $query->result();
     }
