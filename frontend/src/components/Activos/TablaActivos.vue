@@ -194,7 +194,12 @@
                   >
                     <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
                   </b-dropdown-item>
-
+                  <b-dropdown-item 
+                    v-if="data.item.act_estado === 'activo'"
+                    @click="abrirModaldarDeBaja(data.item)"
+                  >
+                    <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Dar de baja
+                  </b-dropdown-item>
                   <!-- Activar: si está eliminado, baja o mantenimiento -->
                   <b-dropdown-item 
                     v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
@@ -514,8 +519,8 @@
   <b-modal v-model="editorConfirmaModal" title="Confirmar modificación" @ok="editar" ok-title="Sí, guardar cambios" cancel-title="Cancelar" ok-variant="success">
     ¿Estás seguro de que deseas guardar los cambios al activo?
   </b-modal>
-  <!-- Modal para enviar a mantención o dar de baja -->
-  <b-modal v-model="mantencionModal" title="Enviar a mantención o Dar de Baja" @ok="confirmarEnvioMantencion" ok-title="Mantención" cancel-title="Cancelar" ok-variant="primary">
+  <!-- Modal para enviar a mantención-->
+  <b-modal v-model="mantencionModal" title="Enviar a mantención " @ok="confirmarEnvioMantencion" ok-title="Mantención" cancel-title="Cancelar" ok-variant="primary">
     <div class="mb-3">
       ¿Estás seguro de que deseas mandar a mantención el activo?
     </div>
@@ -533,7 +538,30 @@
             required
           />
         </b-col>
+      </b-col>
+    </div>
+  </b-modal>
+  <!-- Modal para enviar a dar de baja -->
+  <b-modal v-model="darDeBajaActivoModal" title="Dar de Baja" @ok="darDeBajaActivo" ok-title="Dar de baja" cancel-title="Cancelar" ok-variant="primary">
+    <div class="mb-3">
+      ¿Estás seguro de que deseas dar de baja el activo?
+    </div>
+    <div class="d-flex justify-content-end">
+      <b-col>
+        <label>Descripción por la cual se da de baja</label>
+        <b-col md="6" class="mb-2">
+          <label>Usuario</label>
+          <b-form-select
+            v-model="selectedActivos.nombre_usuario"
+            :options="usuariosOpciones"
+            value-field="id"
+            text-field="nombre"
+            placeholder="Seleccione un usuario"
+            required
+          />
+        </b-col>
         <b-col>
+          <label > descripción</label>
           <b-form-textarea v-model="selectedActivos.bjs_descripcion" />
         </b-col>
         <p></p>
@@ -547,11 +575,6 @@
           />
         </b-col>
         <p></p>
-        <b-col>
-          <b-button variant="danger" @click="darDeBajaActivo">
-            Dar de Baja
-          </b-button>
-        </b-col>
       </b-col>
     </div>
   </b-modal>
@@ -597,6 +620,7 @@ export default {
       ConfirmaEliminadoModal: false,
       editorConfirmaModal: false,
       mantencionModal: false,
+      darDeBajaActivoModal:false,
       activoParaMantencion: null,
       filtroModal: false,
       Tipos: [],
@@ -905,6 +929,10 @@ export default {
       this.activoParaMantencion = activo
       this.mantencionModal = true
     },
+    abrirModaldarDeBaja(activo) {
+      this.activoParaMantencion = activo
+      this.darDeBajaActivoModal = true
+    },
     async confirmarEnvioMantencion() {
       const activo = this.activoParaMantencion
       if (!activo?.act_id || !activo?.act_id_usuario) {
@@ -958,7 +986,7 @@ export default {
       } catch (error) {
         console.error('Error al dar de baja:', error)
       } finally {
-        this.mantencionModal = false
+        this.darDeBajaActivoModal = false
         this.activoParaMantencion = null
       }
     },

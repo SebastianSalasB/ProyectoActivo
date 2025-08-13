@@ -291,13 +291,11 @@ export default {
           return
         }
       }
-
       const payload = {
         ...this.datosUsuariosRegistado,
         usr_claveAntigua: this.datosUsuariosRegistado.usr_claveAntigua || undefined,
         usr_claveNueva: this.datosUsuariosRegistado.usr_claveNueva || undefined
       }
-
       try {
         const res = await axios.post(`/Usuarios/ActualizarPerfil/${this.datosUsuariosRegistado.usr_id}`, payload, {
           headers: { 'Content-Type': 'application/json' }

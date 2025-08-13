@@ -98,7 +98,10 @@ class Usuarios extends CI_Controller
                 }
 
                 if (!password_verify($data['usr_claveAntigua'], $usuarioActual->usr_clave)) {
-                    echo json_encode(['error' => 'La clave antigua no es correcta']);
+                    echo json_encode([
+                        'status' => 'clave_incorrecta',
+                        'message' => 'No se pudo actualizar el usuario'
+                    ]);
                     return;
                 }
             }
@@ -171,7 +174,7 @@ class Usuarios extends CI_Controller
         }
     }
     public function CrearUsuario() {
-        // 1️⃣ Configurar CORS
+        // Configurar CORS
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
         $allowed_origins = ['http://localhost:3000']; // frontend
         if (in_array($origin, $allowed_origins)) {
@@ -182,13 +185,13 @@ class Usuarios extends CI_Controller
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         header("Content-Type: application/json");
 
-        // 2️⃣ Responder preflight OPTIONS
+        // Responder preflight OPTIONS
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
             exit;
         }
 
-        // 3️⃣ Obtener datos JSON
+        // Obtener datos JSON
         $input = json_decode(file_get_contents('php://input'), true);
         if (!isset($input['activos']) || !is_array($input['activos'])) {
             echo json_encode([
@@ -198,7 +201,7 @@ class Usuarios extends CI_Controller
             return;
         }
 
-        // 4️⃣ Recorrer usuarios y validar
+        // Recorrer usuarios y validar
         $usuariosInsertados = 0;
         foreach ($input['activos'] as $user) {
             if (
@@ -213,7 +216,7 @@ class Usuarios extends CI_Controller
                 continue; // saltar usuario inválido
             }
 
-            // 5️⃣ Preparar datos para insertar
+            //  Preparar datos para insertar
             $data = [
                 'usr_nombre'      => $user['user_nombre'],
                 'usr_apellido'    => $user['user_apellido'],
@@ -225,18 +228,18 @@ class Usuarios extends CI_Controller
                 'usr_id_tipos'    => isset($user['user_id_tipos']) ? $user['user_id_tipos'] : 2,
             ];
 
-            // 6️⃣ Incluir clave si existe
+            // Incluir clave si existe
             if (!empty(trim($user['user_clave'] ?? ''))) {
                 $data['usr_clave'] = password_hash(trim($user['user_clave']), PASSWORD_BCRYPT);
             }
 
-            // 7️⃣ Insertar en la base de datos
+            // Insertar en la base de datos
             if ($this->RespoModel->insertarUsuario($data)) {
                 $usuariosInsertados++;
             }
         }
 
-        // 8️⃣ Respuesta final
+        // Respuesta final
         if ($usuariosInsertados > 0) {
             echo json_encode([
                 'status' => 'success',
