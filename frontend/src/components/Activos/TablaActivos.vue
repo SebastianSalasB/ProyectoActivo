@@ -1,265 +1,278 @@
 <template>
-  <!-- filtro -->
-  <b-container fluid>
+  <!-- Contenedor principal -->
+  <b-container fluid class=" min-vh-100 p-4">
     <b-row>
       <!-- Barra de búsqueda -->
-      <b-navbar md="2" toggleable="" type="" variant="" class="mb-4">
-          <h3>Buscar Activos</h3>
-          <b-input-group class="mt-2">
-            <b-form-input 
-              v-model="Buscador" 
-              type="search" 
-              placeholder="Buscar por palabra clave..." 
-              @input="paginaActual = 1"  
-            />
-            <b-input-group-append v-if="!mostrarFiltros">
-              <b-button variant="outline-secondary" @click="mostrarFiltros = true">
-                <i class="fa-solid fa-filter fa-sm"></i> filtros
+      <b-col cols="12" class="mb-4">
+        <h3 class="font-weight-bold mb-3">Buscar Activos</h3>
+        <b-input-group>
+          <b-form-input 
+            v-model="Buscador" 
+            type="search" 
+            placeholder="Buscar por palabra clave..." 
+            class="rounded shadow-sm"
+            @input="paginaActual = 1"
+          />
+          <b-input-group-append v-if="!mostrarFiltros">
+            <b-button 
+              variant="outline-primary" 
+              class="rounded shadow-sm"
+              @click="mostrarFiltros = true"
+            >
+              <i class="fa-solid fa-filter fa-sm mr-1"></i> Filtros
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-col>
+
+      <!-- Barra lateral de filtros -->
+      <transition name="fade">
+        <b-col v-if="mostrarFiltros" md="3" class="p-3 rounded shadow-sm">
+          <h5 class=" font-weight-bold mb-3">Filtros <i class="fa-solid fa-arrow-up-wide-short"></i></h5>
+          
+          <!-- Filtro por Tipo -->
+          <div class="mb-3">
+            <a class="font-weight-medium d-flex align-items-center" data-bs-toggle="collapse" href="#collapseFiltroTipo">
+              <i class="fa-solid fa-angle-right mr-1"></i> Tipo
+            </a>
+            <div class="collapse show" id="collapseFiltroTipo">
+              <b-form-group class="mt-2">
+                <b-form-checkbox-group
+                  v-model="filtros.Tipos"
+                  :options="TiposOpciones"
+                  value-field="id"
+                  text-field="nombre"
+                  stacked
+                  switches
+                >
+                  <b-col cols="6" v-for="option in TiposOpciones" :key="option.id">
+                    <b-form-checkbox :value="option.id">{{ option.nombre }}</b-form-checkbox>
+                  </b-col>
+                </b-form-checkbox-group>
+              </b-form-group>
+            </div>
+          </div>
+
+          <!-- Filtro por Empresa -->
+          <div class="mb-3">
+            <a class=" font-weight-medium d-flex align-items-center" data-bs-toggle="collapse" href="#collapseFiltroEmpresa">
+              <i class="fa-solid fa-angle-right mr-1"></i> Empresa
+            </a>
+            <div class="collapse" id="collapseFiltroEmpresa">
+              <b-form-group class="mt-2">
+                <b-form-checkbox-group
+                  v-model="filtros.empresa"
+                  :options="empresaOpciones"
+                  value-field="id"
+                  text-field="nombre"
+                  stacked
+                  switches
+                >
+                  <b-col cols="6" v-for="option in empresaOpciones" :key="option.id">
+                    <b-form-checkbox :value="option.id">{{ option.nombre }}</b-form-checkbox>
+                  </b-col>
+                </b-form-checkbox-group>
+              </b-form-group>
+            </div>
+          </div>
+
+          <!-- Filtro por Sucursal -->
+          <div class="mb-3">
+            <a class=" font-weight-medium d-flex align-items-center" data-bs-toggle="collapse" href="#collapseFiltroSucursal">
+              <i class="fa-solid fa-angle-right mr-1"></i> Sucursal
+            </a>
+            <div class="collapse" id="collapseFiltroSucursal">
+              <b-form-group class="mt-2">
+                <b-form-checkbox-group
+                  v-model="filtros.sucursales"
+                  :options="sucursalesOpciones"
+                  value-field="id"
+                  text-field="nombre"
+                  stacked
+                  switches
+                >
+                  <b-col cols="6" v-for="option in sucursalesOpciones" :key="option.id">
+                    <b-form-checkbox :value="option.id">{{ option.nombre }}</b-form-checkbox>
+                  </b-col>
+                </b-form-checkbox-group>
+              </b-form-group>
+            </div>
+          </div>
+
+          <!-- Filtro por Estado -->
+          <div class="mb-3">
+            <a class="font-weight-medium d-flex align-items-center" data-bs-toggle="collapse" href="#collapseFiltroEstado">
+              <i class="fa-solid fa-angle-right mr-1"></i> Estado
+            </a>
+            <div class="collapse show" id="collapseFiltroEstado">
+              <b-form-group class="mt-2">
+                <b-form-checkbox-group
+                  v-model="filtros.estados"
+                  :options="estadosOpciones"
+                  value-field="id"
+                  text-field="nombre"
+                  stacked
+                  switches
+                >
+                  <b-col cols="6" v-for="option in estadosOpciones" :key="option.id">
+                    <b-form-checkbox :value="option.id">{{ option.nombre }}</b-form-checkbox>
+                  </b-col>
+                </b-form-checkbox-group>
+              </b-form-group>
+            </div>
+          </div>
+
+          <!-- Botones de filtros -->
+          <b-row>
+            <b-col sm="6">
+              <b-button 
+                size="sm" 
+                variant="danger" 
+                class="w-100 rounded shadow-sm mb-2"
+                @click="limpiarFiltros"
+              >
+                <i class="fa-solid fa-brush fa-sm mr-1"></i> Limpiar Filtros
               </b-button>
-            </b-input-group-append>
-          </b-input-group>
-          <!-- Barra lateral izquierda -->
-          <transition name="fade">
-            <b-col v-if="mostrarFiltros" class="col-md-3">
-              <p></p>
-              <b-card class="shadow-sm" >
-                <h5 class="mb-3">Filtros <i class="fa-solid fa-arrow-up-wide-short"></i></h5>              
-                <!-- Filtro por Tipo -->
-                <ul class="nav">
-                  <li>
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroTipo" role="button"><i class="fa-solid fa-angle-right"></i> Tipo</a>
-                    <div class="collapse show" id="collapseFiltroTipo">
-                      <ul class="list-unstyled ps-3 small">
-                        <b-form-group class="checkbox-grid-2cols">
-                          <b-form-checkbox-group
-                            v-model="filtros.Tipos"
-                            :options="TiposOpciones"
-                            value-field="id"
-                            text-field="nombre"
-                            stacked 
-                            :aria-describedby="ariaDescribedby"
-                            switches
-                            style="flex-wrap: wrap !important; justify-content: flex-start !important;"
-                          />
-                        </b-form-group>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-                <!-- Filtro por Empresa -->
-                <ul class="nav">
-                  <li> 
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEmpresa" role="button"><i class="fa-solid fa-angle-right"></i> Empresa</a>
-                    <div class="collapse" id="collapseFiltroEmpresa">
-                      <ul class="list-unstyled ps-3 small">
-                        <b-form-group class="checkbox-grid-2cols">
-                          <b-form-checkbox-group
-                            v-model="filtros.empresa"
-                            :options="empresaOpciones"
-                            value-field="id"
-                            text-field="nombre"
-                            stacked
-                            :aria-describedby="ariaDescribedby"
-                            switches
-                          />
-                        </b-form-group>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-                <!-- Filtro por Sucursal -->
-                <ul class="nav">
-                  <li>
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroSucursal" role="button"><i class="fa-solid fa-angle-right"></i> Sucursal</a>
-                    <div class="collapse" id="collapseFiltroSucursal">
-                      <ul class="list-unstyled ps-3 small">
-                        <b-form-group label="" class="checkbox-grid-2cols">
-                          <b-form-checkbox-group
-                            v-model="filtros.sucursales"
-                            :options="sucursalesOpciones"
-                            value-field="id"
-                            text-field="nombre"
-                            stacked
-                            :aria-describedby="ariaDescribedby"
-                            switches
-                          />
-                        </b-form-group>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-                <!-- Filtro por Estado -->
-                <ul class="nav">
-                  <li>
-                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseFiltroEstado" role="button"><i class="fa-solid fa-angle-right"></i> Estado</a>
-                    <div class="collapse show" id="collapseFiltroEstado">
-                      <ul class="list-unstyled ps-3 small">
-                        <b-form-group label="" class="checkbox-grid-2cols">
-                          <b-form-checkbox-group
-                            v-model="filtros.estados"
-                            :options="estadosOpciones"
-                            value-field="id"
-                            text-field="nombre"
-                            stacked
-                            :aria-describedby="ariaDescribedby"
-                            switches
-                          />
-                        </b-form-group>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-                
-                <b-row>
-                  <b-col sm>
-                    <b-button size="sm" class="mb-3 w-100" variant="danger" @click="limpiarFiltros">
-                      <i class="fa-solid fa-brush fa-sm"></i> Limpiar Filtros
-                    </b-button>
-                  </b-col>
-                  <b-col sm>
-                    <b-button size="sm" class="mb-3 w-100" variant="secondary" @click="mostrarFiltros = false">
-                      <i class="fa-solid fa-xmark"></i> Ocultar filtros
-                    </b-button>
-                  </b-col>
-                </b-row>
-              </b-card>
-              <p></p>
             </b-col>
-          </transition> 
-          <!-- Tabla de resultados -->
-          <b-col :md="mostrarFiltros ? 9 : 12" style="padding: 20px;">
-            <b-card class="shadow-sm" >
-              <div v-if="cargando" class="cargando-overlay pl-1">
-                <b-spinner variant="" class="mb-2" />
-                <div>Cargando...</div>
-              </div>
-              <b-table 
-                :items="activosPaginados" 
-                :fields="fields" 
-                hover 
-              > 
-                <template #cell(act_id)="data">
-                  <div>
-                    <span style="font-size: 1rem; margin-top: 25px; text-align: start; padding: 0.2rem 0.2rem;">{{ data.value }}</span>
-                  </div>
-                </template>
-                <template #cell(nombre_usuario)="data"> 
-                  <div>
-                    <span>{{ data.item.nombre_usuario }}</span>
-                  </div>
-                  <div>
-                    <span style="font-size: 0.80rem; text-align: start;">{{ data.item.apellido_usuario }}</span>
-                  </div>
-                </template>              
-                <template #cell(nombre_sucursal)="data">
-                  <div>
-                    <span style="font-size: 0.80rem; text-align: start;">{{ data.item.nombre_sucursal }}</span>
-                  </div>
-                  <div>
-                    <span style="font-size: 0.60rem; text-align: start;">{{ data.item.nombre_tipo }}</span>
-                  </div>
-                </template>
-                <template #cell(act_fecha_registro)="data">
-                  <span class="d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
-                </template>              
-                <template #cell(acciones)="data">
-                  <b-dropdown size="sm"
-                      variant="outline-success" no-caret right
-                      style="margin-top: 12px;"
-                  >
-                    <template #button-content>
-                      <i class="fa-solid fa-gear fa-xl"></i>
-                    </template>
-                    <!-- Editar: solo si NO está en baja ni eliminado -->
-                    <b-dropdown-item 
-                      v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
-                      @click="editarActivo(data.item)"
-                    >
-                      <i class="fa-solid fa-pen-to-square" style="color: #258f24; margin-right: 6px;"></i> Editar
-                    </b-dropdown-item>
+            <b-col sm="6">
+              <b-button 
+                size="sm" 
+                variant="secondary" 
+                class="w-100 rounded shadow-sm mb-2"
+                @click="mostrarFiltros = false"
+              >
+                <i class="fa-solid fa-xmark mr-1"></i> Ocultar Filtros
+              </b-button>
+            </b-col>
+          </b-row>
+        </b-col>
+      </transition>
 
-                    <!-- Eliminar: solo si NO está en baja ni eliminado -->
-                    <b-dropdown-item 
-                      v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
-                      @click="confirmarEliminar(data.item)"
-                    >
-                      <i class="fa-solid fa-trash" style="color: #8e0101; margin-right: 6px;"></i> Eliminar
-                    </b-dropdown-item>
-
-                    <!-- Mantención: solo si está activo -->
-                    <b-dropdown-item 
-                      v-if="data.item.act_estado === 'activo'"
-                      @click="abrirModalMantencion(data.item)"
-                    >
-                      <i class="fa-solid fa-screwdriver-wrench" style="color: #e3d21c; margin-right: 6px;"></i> Mantención
-                    </b-dropdown-item>
-                    <b-dropdown-item 
-                      v-if="data.item.act_estado === 'activo'"
-                      @click="abrirModaldarDeBaja(data.item)"
-                    >
-                      <i class="fa-solid fa-ban" style="color: #c02626; margin-right: 6px;"></i> Dar de baja
-                    </b-dropdown-item>
-                    <!-- Activar: si está eliminado, baja o mantenimiento -->
-                    <b-dropdown-item 
-                      v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
-                      @click="activarActivo(data.item)" 
-                    >
-                      <i class="fa-solid fa-toggle-on" style="color: #007bff; margin-right: 6px;"></i> Activar
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </template>
-                <template #cell(act_estado)="data">
-                  <div>
-                    <i
-                      v-if="data.item.act_estado === 'activo'"
-                      class="fa-solid fa-circle-check text-success"
-                      title="activo"
-                      style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                    ></i>
-                    <i
-                      v-else-if="data.item.act_estado === 'eliminado'"
-                      class="fa-solid fa-circle-xmark text-danger"
-                      title="Eliminado"
-                      style="font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                    ></i>
-                    <i
-                      v-else-if="data.item.act_estado === 'baja'"
-                      class="fa-solid fa-ban" 
-                      title="Baja"
-                      style="color: #ff4747; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                    ></i>
-                    <i 
-                      v-else-if="data.item.act_estado === 'mantenimiento'" 
-                      class="fa-solid fa-circle-exclamation" 
-                      title="mantenimiento" 
-                      style="color: #ffe852; font-size: 0.870rem; padding: 0.2rem 0.2rem;"
-                    ></i>
-                    <i
-                      v-else
-                      class="fa-solid fa-circle-question text-secondary"
-                      title="Desconocido"
-                      style="font-size: 0.870em; padding: 0.2rem 0.2rem;"
-                    ></i>
-                  </div> 
-                </template>
-              </b-table> 
-              <div class="overflow-auto">
-                <b-pagination
-                  v-model="paginaActual"
-                  :total-rows="filtrarActivos.length"
-                  :per-page="porPagina"       
-                  align="center"
-                  class="my-3"
-                  first-number
-                  last-number
-                  size="md"
-                />
+      <!-- Tabla de resultados -->
+      <b-col :md="mostrarFiltros ? 9 : 12" class="p-3">
+        <b-card class="shadow-sm rounded">
+          <div v-if="cargando" class="d-flex align-items-center justify-content-center p-3">
+            <b-spinner variant="primary" class="mr-2" />
+            <span class="">Cargando...</span>
+          </div>
+          <b-table 
+            :items="activosPaginados" 
+            :fields="fields" 
+            hover 
+            responsive
+            class="rounded"
+          >
+            <template #cell(act_id)="data">
+              <span class=" font-size-sm">{{ data.value }}</span>
+            </template>
+            <template #cell(nombre_usuario)="data"> 
+              <div>
+                <span class=" font-weight-medium">{{ data.item.nombre_usuario }}</span>
+                <div class="font-size-xs">{{ data.item.apellido_usuario }}</div>
               </div>
-            </b-card>
-          </b-col>
-        </b-navbar>            
-      </b-row>
-    </b-container>
+            </template>
+            <template #cell(nombre_sucursal)="data">
+              <div>
+                <span class=" font-size-xs">{{ data.item.nombre_sucursal }}</span>
+                <div class="font-size-xs">{{ data.item.nombre_tipo }}</div>
+              </div>
+            </template>
+            <template #cell(act_fecha_registro)="data">
+              <span class=" font-size-sm d-none d-lg-inline">{{ data.item.act_fecha_registro }}</span>
+            </template>
+            <template #cell(acciones)="data">
+              <b-dropdown 
+                size="sm" 
+                variant="outline-success" 
+                no-caret 
+                right
+                class="mt-2"
+              >
+                <template #button-content>
+                  <i class="fa-solid fa-gear fa-lg text-success"></i>
+                </template>
+                <b-dropdown-item 
+                  v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                  @click="editarActivo(data.item)"
+                >
+                  <i class="fa-solid fa-pen-to-square text-success mr-2"></i> Editar
+                </b-dropdown-item>
+                <b-dropdown-item 
+                  v-if="!['eliminado', 'baja'].includes(data.item.act_estado)"
+                  @click="confirmarEliminar(data.item)"
+                >
+                  <i class="fa-solid fa-trash text-danger mr-2"></i> Eliminar
+                </b-dropdown-item>
+                <b-dropdown-item 
+                  v-if="data.item.act_estado === 'activo'"
+                  @click="abrirModalMantencion(data.item)"
+                >
+                  <i class="fa-solid fa-screwdriver-wrench text-warning mr-2"></i> Mantención
+                </b-dropdown-item>
+                <b-dropdown-item 
+                  v-if="data.item.act_estado === 'activo'"
+                  @click="abrirModaldarDeBaja(data.item)"
+                >
+                  <i class="fa-solid fa-ban text-danger mr-2"></i> Dar de baja
+                </b-dropdown-item>
+                <b-dropdown-item 
+                  v-if="['eliminado', 'baja', 'mantenimiento'].includes(data.item.act_estado)"
+                  @click="activarActivo(data.item)"
+                >
+                  <i class="fa-solid fa-toggle-on  mr-2"></i> Activar
+                </b-dropdown-item>
+              </b-dropdown>
+            </template>
+            <template #cell(act_estado)="data">
+              <div>
+                <i
+                  v-if="data.item.act_estado === 'activo'"
+                  class="fa-solid fa-circle-check text-success"
+                  title="Activo"
+                  style="font-size: 0.9rem;"
+                ></i>
+                <i
+                  v-else-if="data.item.act_estado === 'eliminado'"
+                  class="fa-solid fa-circle-xmark text-danger"
+                  title="Eliminado"
+                  style="font-size: 0.9rem;"
+                ></i>
+                <i
+                  v-else-if="data.item.act_estado === 'baja'"
+                  class="fa-solid fa-ban text-danger"
+                  title="Baja"
+                  style="font-size: 0.9rem;"
+                ></i>
+                <i 
+                  v-else-if="data.item.act_estado === 'mantenimiento'" 
+                  class="fa-solid fa-circle-exclamation text-warning"
+                  title="Mantenimiento"
+                  style="font-size: 0.9rem;"
+                ></i>
+                <i
+                  v-else
+                  class="fa-solid fa-circle-question text-secondary"
+                  title="Desconocido"
+                  style="font-size: 0.9rem;"
+                ></i>
+              </div>
+            </template>
+          </b-table>
+          <b-pagination
+            v-model="paginaActual"
+            :total-rows="filtrarActivos.length"
+            :per-page="porPagina"
+            align="center"
+            class="mt-3"
+            first-number
+            last-number
+            size="md"
+            variant="primary"
+          />
+        </b-card>
+      </b-col>
+    </b-row>
+
     <!-- Modal de edición -->
     <b-modal
       v-model="modalShow"
@@ -267,234 +280,232 @@
       size="xl"
       centered
       hide-footer
+      class="shadow-lg rounded"
     >
       <b-container fluid>
         <b-row>
-          <!-- Empresas -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Empresa" :invalid-feedback="errors.act_id_empresa">
               <b-form-select
                 v-model="selectedActivos.act_id_empresa"
                 :options="empresaOpciones"
                 value-field="id"
                 text-field="nombre"
-                placeholder="Selecciona una empresa"
+                class="rounded"
                 :state="errors.act_id_empresa ? false : null"
                 required
               />
             </b-form-group>
           </b-col>
-          <!-- Sucursal -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Sucursal" :invalid-feedback="errors.act_id_sucursal">
               <b-form-select
                 v-model="selectedActivos.act_id_sucursal"
                 :options="sucursalesOpciones"
                 value-field="id"
                 text-field="nombre"
-                placeholder="Seleccione una sucursal"
+                class="rounded"
                 :state="errors.act_id_sucursal ? false : null"
                 required
               />
             </b-form-group>
           </b-col>
-          <!-- Usuario -->
-          <b-col md="6" class="mb-2">
-            <label>Responsable</label>
+          <b-col md="6" class="mb-3">
+            <label class="font-weight-medium">Responsable</label>
             <b-form-select
               v-model="selectedActivos.nombre_usuario"
               :options="usuariosOpciones"
               value-field="id"
               text-field="nombre"
-              placeholder="Seleccione un usuario"
+              class="rounded"
               required
             />
-        </b-col>
-          <!-- Fecha Registro -->
-          <b-col md="6" class="mb-2">
+          </b-col>
+          <b-col md="6" class="mb-3">
             <b-form-group label="Fecha Registro" :invalid-feedback="errors.act_fecha_registro">
               <b-form-input 
                 type="date" 
                 v-model="selectedActivos.act_fecha_registro" 
+                class="rounded"
                 :state="errors.act_fecha_registro ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <!-- Marca -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Marca" :invalid-feedback="errors.act_marca">
               <b-form-input 
                 v-model="selectedActivos.act_marca" 
+                class="rounded"
                 :state="errors.act_marca ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <!-- Modelo -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Modelo" :invalid-feedback="errors.act_modelo">
               <b-form-input 
                 v-model="selectedActivos.act_modelo" 
+                class="rounded"
                 :state="errors.act_modelo ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <!-- Fabricante -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Fabricante" :invalid-feedback="errors.act_fabricante">
               <b-form-input 
                 v-model="selectedActivos.act_fabricante" 
+                class="rounded"
                 :state="errors.act_fabricante ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <!-- N° de Serie -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="N° de Serie" :invalid-feedback="errors.act_numero_serie">
               <b-form-input 
                 v-model="selectedActivos.act_numero_serie" 
+                class="rounded"
                 :state="errors.act_numero_serie ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <!-- Ubicación -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Ubicación" :invalid-feedback="errors.act_ubicacion">
               <b-form-input 
                 v-model="selectedActivos.act_ubicacion" 
+                class="rounded"
                 :state="errors.act_ubicacion ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <!-- Tipo -->
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Tipo">
-              <b-form-input :value="nombreTipoDisplay" disabled />
+              <b-form-input :value="nombreTipoDisplay" disabled class="rounded" />
             </b-form-group>
           </b-col>
         </b-row>
+
         <!-- Datos especiales según tipo de activo -->
-        <div v-if="selectedActivos.act_id_tipo === 1">
-          <!-- Computador -->
+        <div v-if="selectedActivos.act_id_tipo === 1" class="mt-3">
           <b-row>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="RAM" :invalid-feedback="errors.com_ram">
                 <b-form-input
                   v-model="selectedActivos.datos_computador.com_ram"
+                  class="rounded"
                   :state="errors.com_ram ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="CPU" :invalid-feedback="errors.com_cpu">
                 <b-form-input
                   v-model="selectedActivos.datos_computador.com_cpu"
+                  class="rounded"
                   :state="errors.com_cpu ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Disco" :invalid-feedback="errors.com_disco">
                 <b-form-input
                   v-model="selectedActivos.datos_computador.com_disco"
+                  class="rounded"
                   :state="errors.com_disco ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Sistema Operativo">
-              <b-form-select
-                v-model="selectedActivos.datos_computador.com_id_sistema_operativo"
-                :options="sistemaOperativoComputadoresOpcion"
-                value-field="id"
-                text-field="nombre"
-                placeholder="Seleccione un sistema operativo"
-                required
-              />
-            </b-form-group>
+                <b-form-select
+                  v-model="selectedActivos.datos_computador.com_id_sistema_operativo"
+                  :options="sistemaOperativoComputadoresOpcion"
+                  value-field="id"
+                  text-field="nombre"
+                  class="rounded"
+                  required
+                />
+              </b-form-group>
             </b-col>
           </b-row>
         </div>
-        <div v-if="selectedActivos.act_id_tipo === 2">
-          <!-- Servidor -->
+
+        <div v-if="selectedActivos.act_id_tipo === 2" class="mt-3">
           <b-row>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Nombre" :invalid-feedback="errors.ser_nombre">
                 <b-form-input 
                   v-model="selectedActivos.datos_servidor.ser_nombre" 
+                  class="rounded"
                   :state="errors.ser_nombre ? false : null"
                   required 
                 />
               </b-form-group>
             </b-col>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="RAM" :invalid-feedback="errors.ser_ram">
                 <b-form-input
                   v-model="selectedActivos.datos_servidor.ser_ram"
+                  class="rounded"
                   :state="errors.ser_ram ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="CPU" :invalid-feedback="errors.ser_cpu">
                 <b-form-input
                   v-model="selectedActivos.datos_servidor.ser_cpu"
+                  class="rounded"
                   :state="errors.ser_cpu ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Disco" :invalid-feedback="errors.ser_disco">
                 <b-form-input
                   v-model="selectedActivos.datos_servidor.ser_disco"
+                  class="rounded"
                   :state="errors.ser_disco ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Sistema Operativo">
                 <b-form-select
                   v-model="selectedActivos.datos_servidor.ser_id_sistema_operativo"
                   :options="sistemaOperativoServidorOpcion"
                   value-field="id"
                   text-field="nombre"
-                  placeholder="Seleccione un sistema operativo"
+                  class="rounded"
                   required
                 />
               </b-form-group>
             </b-col>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Ranuras" :invalid-feedback="errors.ser_ranuras_ram">
                 <b-form-input
                   v-model="selectedActivos.datos_servidor.ser_ranuras_ram"
+                  class="rounded"
                   :state="errors.ser_ranuras_ram ? false : null"
                   required
                 />
               </b-form-group>
             </b-col>
-          </b-row>
-          <b-row>
-            <b-col md="6" class="mb-2">
+            <b-col md="6" class="mb-3">
               <b-form-group label="Cantidad Max CPU" :invalid-feedback="errors.ser_cantidad_max_cpu">
                 <b-form-input
                   v-model="selectedActivos.datos_servidor.ser_cantidad_max_cpu"
+                  class="rounded"
                   :state="errors.ser_cantidad_max_cpu ? false : null"
                   required
                 />
@@ -502,21 +513,24 @@
             </b-col>
           </b-row>
         </div>
+
         <!-- Factura, descripción y IPs -->
         <b-row class="mt-3">
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Factura" :invalid-feedback="errors.act_factura">
               <b-form-input 
                 v-model="selectedActivos.act_factura" 
+                class="rounded"
                 :state="errors.act_factura ? false : null"
                 required 
               />
             </b-form-group>
           </b-col>
-          <b-col md="6" class="mb-2">
+          <b-col md="6" class="mb-3">
             <b-form-group label="Descripción" :invalid-feedback="errors.act_descripcion">
               <b-form-textarea 
                 v-model="selectedActivos.act_descripcion" 
+                class="rounded"
                 :state="errors.act_descripcion ? false : null"
                 required 
               />
@@ -524,35 +538,37 @@
           </b-col>
           <b-col>
             <b-form-group label="Direcciones IP">
-              <div v-if="selectedActivos.direcciones_ip.length === 0" class="text-muted mb-2">
+              <div v-if="selectedActivos.direcciones_ip.length === 0" class="mb-2">
                 No hay direcciones IP registradas.
               </div>
               <div v-for="(ip, index) in selectedActivos.direcciones_ip" :key="index" class="mb-2">
                 <b-input-group>
-                  <b-form-input v-model="selectedActivos.direcciones_ip[index]" />
+                  <b-form-input v-model="selectedActivos.direcciones_ip[index]" class="rounded" />
                   <b-input-group-append>
-                    <b-button variant="outline-danger" @click="selectedActivos.direcciones_ip.splice(index, 1)">
+                    <b-button variant="outline-danger" class="rounded" @click="selectedActivos.direcciones_ip.splice(index, 1)">
                       <i class="fa-solid fa-circle-xmark fa-lg"></i> Eliminar
                     </b-button>
                   </b-input-group-append>
                 </b-input-group>
               </div>
-              <b-button variant="outline-primary" size="sm" @click="agregarIP">
+              <b-button variant="outline-primary" size="sm" class="mt-2 rounded" @click="agregarIP">
                 <i class="fa-solid fa-circle-plus fa-lg"></i> Agregar IP
               </b-button>
             </b-form-group>
-          </b-col>          
+          </b-col>
         </b-row>
 
         <!-- Tabla de Mantenciones -->
         <b-row class="mt-4">
           <b-col>
-            <h5>Mantenciones</h5>
+            <h5 class=" font-weight-bold">Mantenciones</h5>
             <b-table
               :items="mantencionesPaginados"
               :fields="tablaMantencion"
               hover
               small
+              bordered
+              class="rounded"
             />
           </b-col>
         </b-row>
@@ -560,25 +576,27 @@
         <!-- Botones -->
         <b-row class="mt-4">
           <b-col class="text-end">
-            <b-button variant="outline-success" class="me-2" @click="confirmarEdicion">
-              <i class="fa-solid fa-floppy-disk fa-lg"></i> Guardar
+            <b-button variant="outline-success" class="mr-2 rounded" @click="confirmarEdicion">
+              <i class="fa-solid fa-floppy-disk fa-lg mr-1"></i> Guardar
             </b-button>
-            <b-button variant="outline-secondary" @click="cancelarEditar">
-              <i class="fa-solid fa-circle-xmark fa-lg"></i> Cancelar
+            <b-button variant="outline-secondary" class="rounded" @click="cancelarEditar">
+              <i class="fa-solid fa-circle-xmark fa-lg mr-1"></i> Cancelar
             </b-button>
           </b-col>
         </b-row>
       </b-container>
     </b-modal>
-    
+
     <!-- Modal de confirmación de eliminación -->
-    <b-modal v-model="ConfirmaEliminadoModal" title="Confirmar eliminación" @ok="eliminarActivos" ok-title="Sí, eliminar" cancel-title="Cancelar" ok-variant="danger">
-      ¿Estás seguro de que deseas eliminar el activo? 
+    <b-modal v-model="ConfirmaEliminadoModal" title="Confirmar eliminación" @ok="eliminarActivos" ok-title="Sí, eliminar" cancel-title="Cancelar" ok-variant="danger" class="shadow-lg rounded">
+      ¿Estás seguro de que deseas eliminar el activo?
     </b-modal>
+
     <!-- Modal de confirmación de edición -->
-    <b-modal v-model="editorConfirmaModal" title="Confirmar modificación" @ok="editar" ok-title="Sí, guardar cambios" cancel-title="Cancelar" ok-variant="success">
+    <b-modal v-model="editorConfirmaModal" title="Confirmar modificación" @ok="editar" ok-title="Sí, guardar cambios" cancel-title="Cancelar" ok-variant="success" class="shadow-lg rounded">
       ¿Estás seguro de que deseas guardar los cambios al activo?
     </b-modal>
+
     <!-- Modal de Mantención -->
     <b-modal
       v-model="mantencionModal"
@@ -587,13 +605,12 @@
       ok-title="Mantención"
       cancel-title="Cancelar"
       ok-variant="primary"
+      class="shadow-lg rounded"
     >
       <b-form @submit.stop.prevent>
         <div class="mb-3">
           ¿Estás seguro de que deseas mandar a mantención el activo?
         </div>
-
-        <!-- Selección de usuario -->
         <b-form-group
           label="Usuario"
           :state="usuarioSeleccionadoParaMantencion !== null ? true : null"
@@ -604,12 +621,10 @@
             :options="usuariosOpciones"
             value-field="id"
             text-field="nombre"
-            placeholder="Seleccione un usuario"
+            class="rounded"
             required
           />
         </b-form-group>
-
-        <!-- Descripción de mantención -->
         <b-form-group
           label="Descripción"
           :state="selectedActivos.man_descripcion?.trim() ? true : null"
@@ -619,49 +634,48 @@
             v-model="selectedActivos.man_descripcion"
             placeholder="Descripción de la mantención"
             rows="3"
+            class="rounded"
             required
           />
         </b-form-group>
       </b-form>
     </b-modal>
-    <!-- Modal para enviar a dar de baja -->
-    <b-modal v-model="darDeBajaActivoModal" title="Dar de Baja" @ok="darDeBajaActivo" ok-title="Dar de baja" cancel-title="Cancelar" ok-variant="primary">
+
+    <!-- Modal para dar de baja -->
+    <b-modal v-model="darDeBajaActivoModal" title="Dar de Baja" @ok="darDeBajaActivo" ok-title="Dar de baja" cancel-title="Cancelar" ok-variant="primary" class="shadow-lg rounded">
       <div class="mb-3">
         ¿Estás seguro de que deseas dar de baja el activo?
       </div>
-      <div class="d-flex justify-content-end">
-        <b-col>
-          <label>Descripción por la cual se da de baja</label>
-          <b-col md="6" class="mb-2">
-            <label>Usuario</label>
-            <b-form-select
-              v-model="selectedActivos.nombre_usuario"
-              :options="usuariosOpciones"
-              value-field="id"
-              text-field="nombre"
-              placeholder="Seleccione un usuario"
-              required
-            />
-          </b-col>
-          <b-col>
-            <label>Descripción</label>
-            <b-form-textarea v-model="selectedActivos.bjs_descripcion" />
-          </b-col>
-          <p></p>
-          <b-col>
-            <label for="archivo">Selecciona un archivo de baja</label>
-            <input
-              id="archivo"
-              type="file"
-              class="form-control"
-              @change="cargarArchivo"
-            />
-          </b-col>
-          <p></p>
+      <b-col>
+        <label class="font-weight-medium">Descripción por la cual se da de baja</label>
+        <b-col md="6" class="mb-3">
+          <label>Usuario</label>
+          <b-form-select
+            v-model="selectedActivos.nombre_usuario"
+            :options="usuariosOpciones"
+            value-field="id"
+            text-field="nombre"
+            class="rounded"
+            required
+          />
         </b-col>
-      </div>
+        <b-col class="mb-3">
+          <label>Descripción</label>
+          <b-form-textarea v-model="selectedActivos.bjs_descripcion" class="rounded" />
+        </b-col>
+        <b-col class="mb-3">
+          <label for="archivo">Selecciona un archivo de baja</label>
+          <input
+            id="archivo"
+            type="file"
+            class="form-control rounded"
+            @change="cargarArchivo"
+          />
+        </b-col>
+      </b-col>
     </b-modal>
-  </template>
+  </b-container>
+</template>
 
 <script>
 import axios from 'axios';
@@ -706,8 +720,8 @@ export default {
         datos_computador: {},
         direcciones_ip: [],
         act_id_empresa: null,
-        ips: [], // Ensure this is initialized
-        man_descripcion:''
+        ips: [],
+        man_descripcion: ''
       },
       filtros: {
         Tipos: [],
@@ -733,6 +747,7 @@ export default {
       total: 0,
       totalActivos: 0,
       mantencionesPaginados: [],
+
       paginaMantenciones: 1,
       itemsPorPaginaMantenciones: 5,
       usuarioSeleccionadoParaMantencion: null,
@@ -749,14 +764,14 @@ export default {
     },
     fields() {
       return [
-        { key: 'act_id', label: 'ID', thClass: 'actID', tdClass: 'actID' },
-        { key: 'nombre_usuario', label: 'Responsable', thClass: '', tdClass: 'usuario' },
-        { key: 'nombre_empresa', label: 'Empresa', class: 'd-none d-lg-table-cell' },
-        { key: 'nombre_sucursal', label: 'Sucursal/Tipo', thClass: '', tdClass: 'tipo' },
-        { key: 'act_fecha_registro', label: 'Fecha', class: 'd-none d-lg-table-cell' },
-        { key: 'act_marca', label: 'Marca', class: 'd-none d-lg-table-cell' },
-        { key: 'acciones', label: '', thClass: 'text-center', tdClass: 'acciones', style: 'color: black; right: 0;' },
-        { key: 'act_estado', label: '', thClass: 'text-center', tdClass: 'estados' },
+        { key: 'act_id', label: 'ID', tdClass: 'actID' },
+        { key: 'nombre_usuario', label: 'Responsable', tdClass: 'usuario' },
+        { key: 'nombre_empresa', label: 'Empresa', thClass: ' d-none d-lg-table-cell', tdClass: 'd-none d-lg-table-cell' },
+        { key: 'nombre_sucursal', label: 'Sucursal/Tipo', tdClass: 'tipo' },
+        { key: 'act_fecha_registro', label: 'Fecha', thClass: ' d-none d-lg-table-cell', tdClass: 'd-none d-lg-table-cell' },
+        { key: 'act_marca', label: 'Marca', thClass: ' d-none d-lg-table-cell', tdClass: 'd-none d-lg-table-cell' },
+        { key: 'acciones', label: '', thClass: ' text-center', tdClass: 'acciones' },
+        { key: 'act_estado', label: '', thClass: ' text-center', tdClass: 'estados' },
       ];
     },
     tablaMantencion() {
@@ -1146,15 +1161,10 @@ export default {
       }
 
       try {
-        // Adjust URL to match CodeIgniter's expected route
         const res = await axios.get(`/Mantencion/TABLA/${this.selectedActivos.act_id}`, {
           withCredentials: true,
         });
-
-        // Ensure response data is an array
         this.mantenciones = Array.isArray(res.data) ? res.data : [];
-        
-        // Reset to page 1 and update paginated maintenance records
         this.paginaMantenciones = 1;
         this.actualizarMantencionesPaginadas();
       } catch (error) {
@@ -1252,49 +1262,46 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.1s;
+  transition: opacity 0.3s ease;
 }
-.custom-rounded-table {
-  border-radius: 12px;
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
-.dropdown-menu {
-  right: 0 !important;
+.font-size-sm {
+  font-size: 0.875rem;
 }
-.navbar-brand {
+.font-size-xs {
+  font-size: 0.75rem;
+}
+.table th, .table td {
+  vertical-align: middle;
+}
+.table .actID {
+  width: 50px;
+}
+.table .usuario {
+  width: 150px;
+}
+.table .tipo {
+  width: 200px;
+}
+.table .acciones, .table .estados {
+  width: 50px;
   text-align: center;
 }
-.estados {
-  width: 0px;
-  padding: 0.2rem 0.2rem;
-}
-.acciones {
-  width: 0 !important;
-}
-td.usuario {
-  width: 120px;
-}
-td.actID {
-  width: 30px;
-}
-td.tipo {
-  text-align: start;
-}
 .pagination .page-link {
-  background-color: #838383;
-  color: white;
+  background-color: #f8f9fa;
+  color: #343a40;
 }
 .pagination .page-link:hover {
-  background-color: #505050;
+  background-color: #007bff;
   color: white;
 }
-.pagination {
-  border-color: rgb(22, 22, 22);
-}
 .pagination .page-item.active .page-link {
-  border-color: rgb(34, 34, 34);
-  background-color: #505050;
+  background-color: #007bff;
+  border-color: #007bff;
   color: white;
 }
 </style>

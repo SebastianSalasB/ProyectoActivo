@@ -17,7 +17,7 @@
           <b-collapse id="nav-collapse" is-nav ref="navCollapse" v-model="collapseVisible">
             <b-navbar-nav>
               <!-- Activos -->
-              <b-nav-item-dropdown class="ms-3" text="Activos" drop="down">
+              <b-nav-item-dropdown class="ms-3" text="Activos" >
                 <b-dropdown-item @click="seleccionarVista('registro')">
                   <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Activos</span>
                 </b-dropdown-item>
@@ -26,13 +26,13 @@
                 </b-dropdown-item>
               </b-nav-item-dropdown>
               <!-- Tipo -->
-              <b-nav-item-dropdown text="Tipo" class="ms-3" drop="down">
+              <b-nav-item-dropdown text="Tipo" class="ms-3" >
                 <b-dropdown-item @click="seleccionarVista('tipo')">
                   <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registro / Lista</span>
                 </b-dropdown-item>
               </b-nav-item-dropdown>
               <!-- Empresa -->
-              <b-nav-item-dropdown text="Empresa" class="ms-3" drop="down">
+              <b-nav-item-dropdown text="Empresa" class="ms-3" >
                 <b-dropdown-item @click="seleccionarVista('Registro Empresa')">
                   <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Empresa</span>
                 </b-dropdown-item>
@@ -41,7 +41,7 @@
                 </b-dropdown-item>
               </b-nav-item-dropdown>
               <!-- Usuarios -->
-              <b-nav-item-dropdown text="Usuarios" class="ms-3" drop="down">
+              <b-nav-item-dropdown text="Usuarios" class="ms-3" >
                 <b-dropdown-item @click="seleccionarVista('RegistroResponsable')">
                   <i class="fa-solid fa-pen-to-square"></i> <span class="small"> Registrar Usuarios</span>
                 </b-dropdown-item>
