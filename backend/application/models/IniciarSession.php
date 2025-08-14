@@ -16,14 +16,14 @@ class IniciarSession extends CI_Model {
         $usuarios = $query->result();
 
         if (empty($usuarios)) {
-            return false; // No hay usuarios con ese RUT
+            return false; 
         }
         foreach ($usuarios as $usuario) {
             if (password_verify($password, $usuario->usr_clave)) {
-                return $usuario; // Retorna el usuario que coincide
+                return $usuario; 
             }
         }
-        return false; // Ninguna contraseña coincide
+        return false;
     }
 
 }

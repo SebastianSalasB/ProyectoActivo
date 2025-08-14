@@ -58,7 +58,7 @@ class ActivosModel extends CI_Model {
         $this->db->where('e.emp_estado', 'activo');
         $this->db->order_by('a.act_id');
 
-        // Filtro por texto de búsqueda
+        
         if (!empty($buscador)) {
             $this->db->like('a.act_nombre', $buscador);
         }
@@ -80,11 +80,11 @@ class ActivosModel extends CI_Model {
         }
 
         $query = $this->db->get();
-        return $query->result(); // OBJETOS, no arrays
+        return $query->result(); 
     }
     public function contarActivos(){
         $this->db->from('activos.activos');
-        $this->db->where('act_estado', 'activo'); // Solo cuenta los activos
+        $this->db->where('act_estado', 'activo'); 
         return $this->db->count_all_results();
     }
      public function activosPaginados($limit, $offset) {
@@ -104,7 +104,7 @@ class ActivosModel extends CI_Model {
         $this->db->join('activos.tiposactivos t', 't.tip_id = a.act_id_tipo');
         $this->db->join('activos.sucursales s', 's.suc_id = a.act_id_sucursal');
         $this->db->join('activos.empresas e', 'e.emp_id = s.suc_id_empresa');
-        $this->db->join('activos.direccionesip d', 'd.dip_id_activo = a.act_id', 'left'); // <-- JOIN con tabla de IPs
+        $this->db->join('activos.direccionesip d', 'd.dip_id_activo = a.act_id', 'left'); 
 
         $this->db->where('e.emp_estado','activo');
         $this->db->order_by('a.act_id');
@@ -161,19 +161,16 @@ class ActivosModel extends CI_Model {
         if (!$id) {
             return false;
         }
-
         $this->db->where('act_id', $id);
         return $this->db->update('activos.activos', ['act_estado' => 'activo']);
     }
     public function registrarBaja($datos) {
         $this->db->trans_start();
-
         $this->db->insert('activos.bajas', [
             'bjs_id_activo' => $datos['bjs_id_activo'],
             'bjs_id_usuario' => $datos['bjs_id_usuario'],
             'bjs_descripcion' => $datos['bjs_descripcion']
         ]);
-
         $this->db->where('act_id', $datos['bjs_id_activo']);
         $this->db->update('activos.activos', ['act_estado' => 'baja']);
 

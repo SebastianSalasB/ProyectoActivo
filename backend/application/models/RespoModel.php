@@ -5,10 +5,10 @@ class RespoModel extends CI_Model
 {
     public function responsablesListado() {
         $this->db->select('u.*,
-        e.emp_id as usr_id_empresa,
-        e.emp_nombre as nombre_empresa,
-        s.suc_nombre as nombre_sucursal,
-        t.tus_tipo as nombre_tipo');
+            e.emp_id as usr_id_empresa,
+            e.emp_nombre as nombre_empresa,
+            s.suc_nombre as nombre_sucursal,
+            t.tus_tipo as nombre_tipo');
         $this->db->from('activos.usuarios u');
         $this->db->join('activos.sucursales s', 's.suc_id = u.usr_id_sucursal', 'left');
         $this->db->join('activos.tipos_usuario t', 't.tus_id = u.usr_id_tipos', 'left');
@@ -22,7 +22,7 @@ class RespoModel extends CI_Model
     }
     public function contarResponsables(){
         $this->db->from('activos.usuarios');
-        $this->db->where('usr_estado', 'activo'); // Solo cuenta los activos
+        $this->db->where('usr_estado', 'activo'); 
         return $this->db->count_all_results();
     }
     public function insertarUsuario($data) {
@@ -38,7 +38,7 @@ class RespoModel extends CI_Model
     }
     public function getUsuarioPorId($id) {
         return $this->db
-            ->select('usr_clave') // solo traemos la contraseña
+            ->select('usr_clave') 
             ->where('usr_id', $id)
             ->get('activos.usuarios') 
             ->row();

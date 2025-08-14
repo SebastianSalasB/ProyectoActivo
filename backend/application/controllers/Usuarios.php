@@ -105,15 +105,13 @@ class Usuarios extends CI_Controller
                     return;
                 }
             }
-
             // Si pasa verificación, encriptar la nueva
             $clavePlano = trim($data['usr_claveNueva']);
             $userData['usr_clave'] = password_hash($clavePlano, PASSWORD_BCRYPT);
         } else {
             error_log("Clave no recibida o vacía");
         }
-
-        // Guardar cambios
+        
         if ($this->RespoModel->actualizaUsuario($id, $userData)) {
             echo json_encode([
                 'status' => 'updated',

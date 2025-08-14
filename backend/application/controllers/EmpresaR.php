@@ -1,13 +1,6 @@
 <?php
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if ($origin === 'http://localhost:3000') {
-    header("Access-Control-Allow-Origin: $origin");
-    header("Access-Control-Allow-Credentials: true");
-}
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
-header("Content-Type: application/json");
-#[\AllowDynamicProperties]
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class EmpresaR extends CI_Controller {
 
     public function __construct() {
@@ -43,23 +36,28 @@ class EmpresaR extends CI_Controller {
         
         }
     }
+
     public function index() {
         $empresas = $this->EmpresaModel->EmpresaSucursales();
         echo json_encode($empresas);
         
     }
+
     public function listU() {
         $usuarios = $this->RespoModel->listaU();
         echo json_encode($usuarios);
     }
+
     public function listS() {
         $sucursales = $this->RespoModel->listaS();
         echo json_encode($sucursales);
     }
+
     public function listT() {
         $tipos = $this->EmpresaModel->optenerTipos();
         echo json_encode($tipos);
     }
+
     public function CrearEmpresa() {
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -116,6 +114,7 @@ class EmpresaR extends CI_Controller {
             echo json_encode(['error' => 'Error al registrar empresa']);
         }
     }
+
     public function ActializarEmpresa($id){
         $datos = json_decode(file_get_contents('php://input'), true);
 
@@ -171,6 +170,7 @@ class EmpresaR extends CI_Controller {
             echo json_encode(['status' => 'error']);
         }
     }
+
     public function Eliminar($id) {
         $result = $this->EmpresaModel->eliminarEmpresa($id);
         if ($result) {
@@ -179,6 +179,7 @@ class EmpresaR extends CI_Controller {
             echo json_encode(['status' => 'error']);
         }
     } 
+    
     public function eliminarSucursal($id) {
         $deleted = $this->EmpresaModel->eliminarSucursal();
         if ($deleted) {

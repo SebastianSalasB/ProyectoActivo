@@ -37,7 +37,7 @@ class EmpresaModel extends CI_Model {
         $query = $this->db->get();
         $result = $query->result();
 
-        // Agrupar sucursales dentro de cada empresa
+        
         $empresas = [];
 
         foreach ($result as $row) {
@@ -56,7 +56,7 @@ class EmpresaModel extends CI_Model {
                 'suc_direccion' => $row->suc_direccion
             ];
         }
-        return array_values($empresas); // Reindexa como array normal
+        return array_values($empresas); 
     }
     public function optenerTipos() {
         return $this->db->get('activos.tiposactivos')->result();

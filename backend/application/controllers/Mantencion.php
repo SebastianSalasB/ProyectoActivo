@@ -36,11 +36,13 @@ class Mantencion extends CI_Controller {
         }
 
     }
+
     public function TABLA($id) { 
         $datos = $this->MantencionModel->obtenerMantencion($id);
         log_message('error', 'Datos recibidos: ' . print_r($datos, true));
         echo json_encode($datos);
     }
+    
     public function Mantencion() {
         $datos = json_decode(file_get_contents("php://input"), true);
 
