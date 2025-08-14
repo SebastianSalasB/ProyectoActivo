@@ -298,16 +298,21 @@
           </b-col>
           <!-- Usuario -->
           <b-col md="6" class="mb-2">
-            <label>Responsable</label>
-            <b-form-select
-              v-model="selectedActivos.nombre_usuario"
-              :options="usuariosOpciones"
-              value-field="id"
-              text-field="nombre"
-              placeholder="Seleccione un usuario"
-              required
-            />
-        </b-col>
+            <b-form-group
+              label="Responsable"
+              :state="selectedActivos.nombre_usuario ? true : null"
+              invalid-feedback="Por favor, seleccione un usuario."
+            >
+              <b-form-select
+                v-model="selectedActivos.nombre_usuario"
+                :options="usuariosOpciones"
+                value-field="id"
+                text-field="nombre"
+                placeholder="Seleccione un usuario"
+                required
+              />
+            </b-form-group>
+          </b-col>
           <!-- Fecha Registro -->
           <b-col md="6" class="mb-2">
             <b-form-group label="Fecha Registro" :invalid-feedback="errors.act_fecha_registro">
@@ -715,8 +720,8 @@ export default {
         datos_computador: {},
         direcciones_ip: [],
         act_id_empresa: null,
-        ips: [], // Ensure this is initialized
-        man_descripcion:''
+        ips: [],
+        man_descripcion: ''
       },
       filtros: {
         Tipos: [],
@@ -746,7 +751,6 @@ export default {
       itemsPorPaginaMantenciones: 5,
       usuarioSeleccionadoParaMantencion: null,
       isLoading: false,
-      
       mostrarModal: false,
       activoSeleccionado: null,
       fechaActivacion: ''
@@ -858,7 +862,7 @@ export default {
     usuariosOpciones() {
       return this.usuariosDisponibles.map(u => ({
         id: u.usr_id,
-        nombre: u.nombre_usuario || u.usr_nombre,
+        nombre: `${u.usr_nombre} ${u.usr_apellido}`,
       }));
     },
     usuariosNombreApellido() {
@@ -977,7 +981,6 @@ export default {
     },
     editarActivo(activo) {
       this.selectedActivos = {
-        ...this.selectedActivos,
         act_id: activo.act_id || null,
         act_id_usuario: activo.act_id_usuario || null,
         act_id_sucursal: activo.act_id_sucursal || null,
@@ -991,7 +994,7 @@ export default {
         act_descripcion: activo.act_descripcion || '',
         nombre_empresa: activo.nombre_empresa || null,
         nombre_tipo: activo.nombre_tipo || '',
-        nombre_usuario: activo.nombre_usuario || '',
+        nombre_usuario: activo.act_id_usuario || null, // Use act_id_usuario instead of nombre_usuario
         tipoactivo: activo.tipoactivo || null,
         bjs_descripcion: activo.bjs_descripcion || '',
         apellido_usuario: activo.apellido_usuario || '',
@@ -1006,6 +1009,7 @@ export default {
         com_procesador: activo.com_procesador || '',
         ser_nucleos: activo.ser_nucleos || '',
         ser_sistema_operativo: activo.ser_sistema_operativo || '',
+        man_descripcion: ''
       };
       const sucursal = this.sucursales.find(s => s.suc_id === activo.act_id_sucursal);
       this.selectedActivos.act_id_empresa = sucursal?.suc_id_empresa || null;
@@ -1119,27 +1123,26 @@ export default {
       }
     },
     abrirModalActivacion(activo) {
-      this.activoSeleccionado = activo
-      this.fechaActivacion = new Date().toISOString().slice(0,16) 
-      this.mostrarModal = true
+      this.activoSeleccionado = activo;
+      this.fechaActivacion = new Date().toISOString().slice(0, 10);
+      this.mostrarModal = true;
     },
-     async confirmarActivacion() {
-      console.log(this.fechaActivacion)
+    async confirmarActivacion() {
       try {
         const payload = {
           act_id: this.activoSeleccionado.act_id,
           man_fecha_salida: this.fechaActivacion
-        }
-        const res = await axios.post('/Activos/activar', payload)
+        };
+        const res = await axios.post('/Activos/activar', payload);
         if (res.data.status === 'activo') {
-          this.cargarActivos()
-          this.mostrarModal = false
+          this.cargarActivos();
+          this.mostrarModal = false;
         } else {
-          alert(res.data.message)
+          alert(res.data.message);
         }
       } catch (error) {
-        console.error(error)
-        alert('Error al activar el activo')
+        console.error(error);
+        alert('Error al activar el activo');
       }
     },
     async darDeBajaActivo() {
@@ -1169,17 +1172,11 @@ export default {
         this.actualizarMantencionesPaginadas();
         return;
       }
-
       try {
-        // Adjust URL to match CodeIgniter's expected route
         const res = await axios.get(`/Mantencion/TABLA/${this.selectedActivos.act_id}`, {
           withCredentials: true,
         });
-
-        // Ensure response data is an array
         this.mantenciones = Array.isArray(res.data) ? res.data : [];
-        
-        // Reset to page 1 and update paginated maintenance records
         this.paginaMantenciones = 1;
         this.actualizarMantencionesPaginadas();
       } catch (error) {
@@ -1217,6 +1214,32 @@ export default {
       }
     },
     cancelarEditar() {
+      this.selectedActivos = {
+        act_id: null,
+        act_id_usuario: null,
+        act_id_sucursal: null,
+        act_fecha_registro: '',
+        act_marca: '',
+        act_modelo: '',
+        act_fabricante: '',
+        act_numero_serie: '',
+        act_ubicacion: '',
+        act_factura: '',
+        act_descripcion: '',
+        nombre_empresa: null,
+        nombre_tipo: '',
+        nombre_usuario: '',
+        tipoactivo: null,
+        bjs_descripcion: '',
+        apellido_usuario: '',
+        nombre_sucursal: '',
+        datos_servidor: {},
+        datos_computador: {},
+        direcciones_ip: [],
+        act_id_empresa: null,
+        ips: [],
+        man_descripcion: ''
+      };
       this.modalShow = false;
     },
     confirmarEliminar(activo) {

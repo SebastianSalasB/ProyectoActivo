@@ -1,5 +1,4 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Activos extends CI_Controller {
 
@@ -23,10 +22,12 @@ class Activos extends CI_Controller {
         header("Access-Control-Allow-Headers: Content-Type, Authorization");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Content-Type: application/json; charset=UTF-8");
+
         // Manejo de preflight (OPTIONS)
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             exit; 
         }
+
         // Validar sesión
         if (!$this->session->userdata('user')) {
             http_response_code(401); // No autorizado
@@ -46,6 +47,7 @@ class Activos extends CI_Controller {
         // Obtener datos
         $activos = $this->ActivosModel->obtenerActivos();
         $contarActivo = $this->ActivosModel->contarActivos();
+
         $computadores = $this->CompuModel->obtenerComputador();
         $servidores = $this->ServerModel->obtenerServidor();
         $ips = $this->ActivosModel->obtenerIp();
@@ -111,11 +113,16 @@ class Activos extends CI_Controller {
         // Desactivar reportes innecesarios
         error_reporting(0); // Esto es para pruebas; luego puedes configurarlo mejor
         ini_set('display_errors', 0);
+
         // Leer entrada como JSON
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+       
+
         $buscador = $input['buscador'];
         $filtros = $input['filtros'];
+
         // Cargar modelo
         $activos = $this->ActivosModel->filtrar_activos($buscador, $filtros);
         $computadores = $this->CompuModel->obtenerComputador();
@@ -248,13 +255,16 @@ class Activos extends CI_Controller {
             'Activos' => $resultado,
             'total' => $contarActivo
         ]);
+        
     }
     public function CrearActivo() {
         $datos = json_decode(file_get_contents("php://input"), true);
+
         if (!$datos || !isset($datos['activos'])) {
             echo json_encode(['status' => 'error', 'message' => 'Datos no válidos']);
             return;
         }
+
         foreach ($datos['activos'] as $activo) {
             // Preparar solo los datos del activo
             $activosDatos = [
@@ -270,9 +280,11 @@ class Activos extends CI_Controller {
                 'act_numero_serie'   => $activo['numeroserie'],
                 'act_fabricante'     => $activo['fabricante']
             ];
+           
             $this->ActivosModel->insertarActivo($activosDatos);            
             // Insertar IPs si existen
-            $act_id = $this->db->insert_id(); // Esto debe ir inmediatamente después
+           $act_id = $this->db->insert_id(); // Esto debe ir inmediatamente después
+
             // Insertar IPs si existen
             if ($act_id && !empty($activo['ips']) && is_array($activo['ips'])) {
                 foreach ($activo['ips'] as $ip) {
@@ -284,6 +296,7 @@ class Activos extends CI_Controller {
                     }
                 }
             }
+
             // Datos de computadora
             $ComputadoresDatos = [
                 'com_ram'                   => $activo['com_ram'],
@@ -292,6 +305,7 @@ class Activos extends CI_Controller {
                 'com_id_sistema_operativo'  => $activo['com_id_sistema_operativo'],
                 'com_id_activo'             => $act_id
             ];
+
             // Solo insertar si alguno de los campos de Computadores Datos no está vacío
             if (
                 !empty($ComputadoresDatos['com_ram']) || 
@@ -301,6 +315,7 @@ class Activos extends CI_Controller {
             ) {
                     $this->ActivosModel->insertarComputador($ComputadoresDatos);
             }
+
             // Datos de servidor
             $ServidorDatos = [
                 'ser_ram'               => $activo['ser_ram'],
@@ -312,6 +327,7 @@ class Activos extends CI_Controller {
                 'ser_nombre'            => $activo['ser_nombre'],
                 'ser_id_activo'         => $act_id,
             ];
+            
             // Solo insertar si alguno de los campos de ServidorDatos no está vacío
             if (
                 !empty($ServidorDatos['ser_ram']) || 
@@ -321,7 +337,9 @@ class Activos extends CI_Controller {
             ){
                 $this->ActivosModel->insertarServidor($ServidorDatos);
             }
+            
         }
+
         if ($this->db->trans_status()) {
             echo json_encode(['status' => 'success']);
         } else {
@@ -359,6 +377,7 @@ class Activos extends CI_Controller {
                 'com_disco'                => $datos['datos_computador']['com_disco'] ?? null,
                 'com_id_sistema_operativo' => $datos['datos_computador']['com_id_sistema_operativo'] ?? null
             ];
+
             if (!empty($datos['datos_computador']['com_id'])) {
                 $computadoraLista = $this->CompuModel->ActualizaComputador($datos['datos_computador']['com_id'], $compuData);
             } else {
@@ -378,6 +397,7 @@ class Activos extends CI_Controller {
                 'ser_ranuras_ram'      => $datos['datos_servidor']['ser_ranuras_ram'] ?? null,
                 'ser_nombre'           => $datos['datos_servidor']['ser_nombre'] ?? null,
             ];
+
             if (!empty($datos['datos_servidor']['ser_id'])) {
                 $servidorLista = $this->ServerModel->ActualizaServidor($datos['datos_servidor']['ser_id'], $servidorDatos);
             } else {
@@ -388,12 +408,15 @@ class Activos extends CI_Controller {
         $ipLista = true;
         if (!empty($datos['direcciones_ip']) && is_array($datos['direcciones_ip'])) {
             // Eliminar IPs antiguas
+            
             $this->ActivosModel->eliminarIpActivo($id);
             // Insertar las nuevas
             foreach ($datos['direcciones_ip'] as $ip) {
                 if (!empty($ip)) {
-                    $this->ActivosModel->insertarIP(['dip_id_activo' => $id,'dip_ip' => $ip]);   
+                    $this->ActivosModel->insertarIP(['dip_id_activo' => $id,'dip_ip' => $ip]);
+                    
                 }
+                
             }
         }
         // Respuesta
@@ -414,17 +437,21 @@ class Activos extends CI_Controller {
     }
     public function activar() {
         $data = json_decode(file_get_contents("php://input"), true);
+
         if (!isset($data['act_id']) || !isset($data['man_fecha_salida'])) {
             echo json_encode(['status' => 'error', 'message' => 'Datos faltantes']);
             return;
         }
+
         $resultado = $this->ActivosModel->activarActivo($data['act_id']);
+
         if ($resultado) {
             $mantencionData = [
                 'man_id_activo' => $data['act_id'],
                 'man_fecha_salida' => $data['man_fecha_salida']
             ];
             $this->MantencionModel->MantencionFechaSalida($mantencionData);
+
             echo json_encode(['status' => 'activo']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'No se pudo activar']);
@@ -442,7 +469,9 @@ class Activos extends CI_Controller {
             echo json_encode(['status' => 'error', 'message' => 'Datos incompletos']);
             return;
         }
+
         $result = $this->ActivosModel->registrarBaja($data);
+
         if ($result) {
             echo json_encode(['status' => 'baja']);
         } else {
@@ -451,14 +480,17 @@ class Activos extends CI_Controller {
     }   
     public function listaTipo() {
         $tipo = $this->ActivosModel->obtenerTipos();
+
         echo json_encode($tipo);
     }
     public function listaActivos() {
         $activos = $this->ActivosModel->ListaActivos();
+
         echo json_encode($activos);
     }
     public function listaEmpresa() {
         $empresa = $this->ActivosModel->listEmpresa();
+
         echo json_encode($empresa);
     }
     public function listaSucursal() {
@@ -480,5 +512,6 @@ class Activos extends CI_Controller {
     public function listaSistemaOperativo(){
         $sistemaOperativo = $this->ActivosModel->obtenerSistemaOperativo() ;
         echo json_encode($sistemaOperativo);
+
     }
 }
