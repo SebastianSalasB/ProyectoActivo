@@ -1,135 +1,141 @@
 <template>
   <div>
+    
     <b-container fluid="sm" id="NAG">
-      <div
-        v-for="(activo, index) in usuarios.activos"
-        :key="index"
-        class="p-3 mb-3"
-      >
-        <!-- Nombres y Apellidos -->
-        <b-row>
-          <b-col sm>
-            <b-form-group label="Nombres">
-              <b-form-input 
-                v-model="activo.user_nombre"
-                :class="{ 'is-invalid': inputErrors[index]?.nombre }"
-                placeholder="Sebastian"
-                @input="validarCampo(index, 'nombre', activo.user_nombre)"
-              />
-            </b-form-group>
-          </b-col>
-
-          <b-col sm>
-            <b-form-group label="Apellidos">
-              <b-form-input 
-                v-model="activo.user_apellido"
-                :class="{ 'is-invalid': inputErrors[index]?.apellido }"
-                placeholder="Salas"
-                @input="validarCampo(index, 'apellido', activo.user_apellido)"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <!-- RUT y Correo -->
-        <b-row>
-          <b-col class="sm-2">
-            <div v-for="(usuario, index) in usuarios.activos" :key="index" class="mb-3">
-              <b-form-group label="RUT">
-              <b-form-input 
-                :value="activo.user_rut"
-                @input="formatearRut($event, index)"
-                :class="{ 'is-invalid': inputErrors[index]?.rut }"
-                placeholder="Ej: 20.356.341-8"
-              />
-              </b-form-group>
-            </div>
-          </b-col>
-          <b-col sm-2>
-            <b-form-group label="Correo">
-              <b-form-input 
-                v-model="activo.user_correo"
-                :class="{ 'is-invalid': inputErrors[index]?.correo }"
-                type="correo"
-                placeholder="ejemplo@correo.cl"
-                @input="validarCampo(index, 'correo', activo.user_correo)"
-                
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <!-- Teléfono y Clave -->
-        <b-row>
-          <b-col sm>
-            <b-form-group label="Teléfono">
-              <b-form-input 
-                v-model="activo.user_telefono"
-                :class="{ 'is-invalid': inputErrors[index]?.telefono }"
-                type="tel"
-                placeholder="+569 1234 5678"
-                maxlength="9"
-                @input="validarCampo(index, 'telefono', activo.user_telefono)"
-              />
-            </b-form-group>
-          </b-col>
+      <h1>Registro de Usuarios</h1>
+      <b-card class="shadow-sm">
+        <div
+          v-for="(activo, index) in usuarios.activos"
+          :key="index"
+          class="p-3 mb-3"
+        >
+          <!-- Nombres y Apellidos -->
           <b-row>
-            <b-col sm="1">
-              <b-form-group label="ADMIN">
-                <b-form-checkbox 
-                v-model="activo.tipoactivo" />
+            <b-col sm>
+              <b-form-group label="Nombres">
+                <b-form-input 
+                  v-model="activo.user_nombre"
+                  :class="{ 'is-invalid': inputErrors[index]?.nombre }"
+                  @input="validarCampo(index, 'nombre', activo.user_nombre)"
+                />
+                <b-form-invalid-feedback class="text-muted">EJ: Sebastian</b-form-invalid-feedback>
               </b-form-group>
-            </b-col>
-            <b-col v-if="activo.tipoactivo">
               
-              <b-form-group label="Clave">
-                  <b-form-input 
-                    v-model="activo.user_clave"
-                    :class="{ 'is-invalid': inputErrors[index]?.clave }"
-                    type="password"
-                    placeholder="Clave segura"
-                    @input="validarCampo(index, 'clave', activo.user_clave)"
-                  />
-                </b-form-group>
+            </b-col>
+
+            <b-col sm>
+              <b-form-group label="Apellidos">
+                <b-form-input 
+                  v-model="activo.user_apellido"
+                  :class="{ 'is-invalid': inputErrors[index]?.apellido }"
+                  @input="validarCampo(index, 'apellido', activo.user_apellido)"
+                />
+                <b-form-invalid-feedback class="text-muted">EJ: Salas</b-form-invalid-feedback>
+              </b-form-group>
             </b-col>
           </b-row>
-        </b-row>
-        <!-- Empresa y Sucursal -->
-        <b-row>
-          <b-col sm>
-            <b-form-group label="Empresa" >
-              <b-form-select 
-                v-model="activo.user_id_empresa"
-                :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
-                :class="{ 'is-invalid': inputErrors[index]?.empresa }"
-                @change="value => onEmpresaChange(index, value)"
-                placeholder="Seleccione empresa"
-              />
-            </b-form-group>
-          </b-col>
-
-          <b-col sm>
-            <b-form-group label="Sucursal" >
-              <b-form-select 
-                placeholder="Seleccione sucursal"
-                v-model="activo.user_id_sucursal"
-                :options="sucursalesFiltradas(activo.user_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
-                :class="{ 'is-invalid': inputErrors[index]?.sucursal }"
-                @change="val => { activo.user_id_sucursal = val; validarCampo(index, 'sucursal', val) }"
+          <!-- RUT y Correo -->
+          <b-row>
+            <b-col class="sm-2">
+              <div v-for="(usuario, index) in usuarios.activos" :key="index" class="mb-3">
+                <b-form-group label="RUT">
+                <b-form-input 
+                  :value="activo.user_rut"
+                  @input="formatearRut($event, index), validarCampo(index, 'rut', activo.user_correo)"
+                  :class="{ 'is-invalid': inputErrors[index]?.rut }"
+                />
+                <b-form-invalid-feedback class="text-muted">Ej: 20.356.341-8</b-form-invalid-feedback>
+                </b-form-group>
+              </div>
+            </b-col>
+            <b-col sm-2>
+              <b-form-group label="Correo">
+                <b-form-input 
+                  v-model="activo.user_correo"
+                  :class="{ 'is-invalid': inputErrors[index]?.correo }"
+                  type="correo"
+                  placeholder="ejemplo@correo.cl"
+                  @input="validarCampo(index, 'correo', activo.user_correo)"
+                />
+                <b-form-invalid-feedback class="text-muted">Ej: ejemplo@correo.cl</b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <!-- Teléfono y Clave -->
+          <b-row>
+            <b-col sm>
+              <b-form-group label="Teléfono">
+                <b-form-input 
+                  v-model="activo.user_telefono"
+                  :class="{ 'is-invalid': inputErrors[index]?.telefono }"
+                  type="tel"
+                  maxlength="9"
+                  @input="validarCampo(index, 'telefono', activo.user_telefono)"
+                />
+                <b-form-invalid-feedback class="text-muted">Ej: 9 1234 5678</b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+            <b-row>
+              <b-col sm="1">
+                <b-form-group label="ADMIN">
+                  <b-form-checkbox 
+                  v-model="activo.tipoactivo" />
+                </b-form-group>
+              </b-col>
+              <b-col v-if="activo.tipoactivo">
                 
-                :disabled="!activo.user_id_empresa"
-              />
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-button
-          v-if="usuarios.activos.length > 1"
-          variant="outline-danger"
-          class="mt-2"
-          @click="eliminarActivo(index)">
-          <i class="fa-solid fa-circle-xmark fa-lg"></i>    Eliminar
-        </b-button>
-      </div>
-      <b-button @click="anadirActivo" variant="outline-primary" class="me-2"><i class="fa-solid fa-circle-plus fa-lg "></i>    Agregar otro usuario</b-button>
-      <b-button @click="GuardarUsuario" variant="outline-success"><i class="fa-solid fa-floppy-disk fa-lg" ></i>     Guardar</b-button>
+                <b-form-group label="Clave">
+                    <b-form-input 
+                      v-model="activo.user_clave"
+                      :class="{ 'is-invalid': inputErrors[index]?.clave }"
+                      type="password"
+                      @input="validarCampo(index, 'clave', activo.user_clave)"
+                    />
+                <b-form-invalid-feedback class="text-muted">Mínimo 8 caracteres, al menos una letra y un número.</b-form-invalid-feedback>
+                  </b-form-group>
+              </b-col>
+            </b-row>
+          </b-row>
+          <!-- Empresa y Sucursal -->
+          <b-row>
+            <b-col sm>
+              <b-form-group label="Empresa" >
+                <b-form-select 
+                  v-model="activo.user_id_empresa"
+                  :options="empresas.map(e => ({ value: e.emp_id, text: e.emp_nombre }))"
+                  :class="{ 'is-invalid': inputErrors[index]?.empresa }"
+                  @change="value => onEmpresaChange(index, value)"
+                  placeholder="Seleccione empresa"
+                />
+              </b-form-group>
+            </b-col>
+
+            <b-col sm>
+              <b-form-group label="Sucursal" >
+                <b-form-select 
+                  placeholder="Seleccione sucursal"
+                  v-model="activo.user_id_sucursal"
+                  :options="sucursalesFiltradas(activo.user_id_empresa).map(s => ({ value: s.suc_id, text: s.suc_nombre }))"
+                  :class="{ 'is-invalid': inputErrors[index]?.sucursal }"
+                  @change="val => { activo.user_id_sucursal = val; validarCampo(index, 'sucursal', val) }"
+                  
+                  :disabled="!activo.user_id_empresa"
+                />
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-button
+            v-if="usuarios.activos.length > 1"
+            variant="outline-danger"
+            class="mt-2"
+            @click="eliminarActivo(index)">
+            <i class="fa-solid fa-circle-xmark fa-lg"></i>    Eliminar
+          </b-button>
+        </div>
+        <b-button @click="anadirActivo" variant="outline-primary" class="me-2"><i class="fa-solid fa-circle-plus fa-lg "></i>    Agregar otro usuario</b-button>
+        <b-button @click="GuardarUsuario" variant="outline-success"><i class="fa-solid fa-floppy-disk fa-lg" ></i>     Guardar</b-button>
+
+      </b-card>
     </b-container>
 
     <!-- Modal de éxito -->

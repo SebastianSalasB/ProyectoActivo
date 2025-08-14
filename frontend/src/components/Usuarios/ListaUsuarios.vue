@@ -22,33 +22,33 @@
       <b-spinner class="mb-2" />
       <div>Cargando...</div>
     </div>
+    <b-card class="shadow-sm">
+      <b-table
+        id="tabla-usuarios"
+        :items="usuariosPaginados"
+        :fields="fields"
+        responsive hover 
+        class="text-center custom-rounded-table"
+      >
+        <template #cell(usr_id)="{ value }">
+          <span style="font-size: 1rem;">{{ value }}</span>
+        </template>       
 
-    <b-table
-      id="tabla-usuarios"
-      :items="usuariosPaginados"
-      :fields="fields"
-      responsive hover 
-      class="text-center custom-rounded-table"
-    >
-      <template #cell(usr_id)="{ value }">
-        <span style="font-size: 1rem;">{{ value }}</span>
-      </template>       
+        <template #cell(usr_nombre)="{ item }"> 
+          <div>{{ item.usr_nombre }}</div>
+          <small>{{ item.usr_apellido }}</small>
+        </template>
 
-      <template #cell(usr_nombre)="{ item }"> 
-        <div>{{ item.usr_nombre }}</div>
-        <small>{{ item.usr_apellido }}</small>
-      </template>
-
-      <template #cell(acciones)="{ item }">
-        <b-button size="sm" variant="outline-success" class="me-1" @click="editarUsuario(item)">
-          <i class="fa-solid fa-pen-to-square fa-lg"></i>
-        </b-button>
-        <b-button size="sm" variant="outline-danger" @click="confirmDelete(item)">
-          <i class="fa-solid fa-trash fa-lg"></i>
-        </b-button>
-      </template>
-    </b-table>
-
+        <template #cell(acciones)="{ item }">
+          <b-button size="sm" variant="outline-success" class="me-1" @click="editarUsuario(item)">
+            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+          </b-button>
+          <b-button size="sm" variant="outline-danger" @click="confirmDelete(item)">
+            <i class="fa-solid fa-trash fa-lg"></i>
+          </b-button>
+        </template>
+      </b-table>
+    </b-card>
     <!-- Paginación -->
     <b-pagination
       v-model="paginaActual"

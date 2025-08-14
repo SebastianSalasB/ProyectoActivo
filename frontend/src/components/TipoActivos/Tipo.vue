@@ -25,24 +25,26 @@
     <!-- Tabla de Tipos -->
     <b-col>
       <b-container>
-        <b-table hover small responsive
-          :items="tipos"
-          :fields="fields"
-          class="w-100 custom-rounded-table"
-          style="text-align: center;"
-          >
-          <template #cell(tip_descripcion)="data">
-            {{ data.item.tip_descripcion }}
-          </template>
-          <template #cell(actions)="data">
-            <b-button size="sm" variant="outline-success"  class="me-1" @click="EditarModal(data.item)">
-              <i class="fa-solid fa-pen-to-square fa-lg "></i>
-            </b-button>
-            <b-button size="sm" variant="outline-danger" @click="confirmacionEliminado(data.item)">
-              <i class="fa-solid fa-trash fa-lg"></i>
-            </b-button>
-          </template>
-        </b-table>
+        <b-card class="shadow-sm">
+          <b-table hover small responsive
+            :items="tipos"
+            :fields="fields"
+            class="w-100 custom-rounded-table"
+            style="text-align: center;"
+            >
+            <template #cell(tip_descripcion)="data">
+              {{ data.item.tip_descripcion }}
+            </template>
+            <template #cell(actions)="data">
+              <b-button size="sm" variant="outline-success"  class="me-1" @click="EditarModal(data.item)">
+                <i class="fa-solid fa-pen-to-square fa-lg "></i>
+              </b-button>
+              <b-button size="sm" variant="outline-danger" @click="confirmacionEliminado(data.item)">
+                <i class="fa-solid fa-trash fa-lg"></i>
+              </b-button>
+            </template>
+          </b-table>
+        </b-card>
       </b-container>
       <!-- Detalles -->
       <b-card v-if="selectedTipo" class="mt-4 w-100">

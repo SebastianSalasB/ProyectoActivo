@@ -2,45 +2,47 @@
   <div>
     <b-container fluid="sm" id="NAG">
       <h2>Registrar Empresa</h2>
-      <b-col class="row row-cols-2">
-        <b-form-group label="Nombre de la Empresa" >
-          <b-form-input v-model="empresa.emp_nombre" id="emp_nombre" name="emp_nombre" />
-          <small v-if="errors.emp_nombre" class="text-danger">{{ errors.emp_nombre }}</small>
-        </b-form-group>
-        <b-form-group label="Dirección de la Empresa" >
-          <b-form-input 
-          v-model="empresa.emp_direccion" 
-          id="emp_direccion" name="emp_direccion" />
-          <small v-if="errors.emp_direccion" class="text-danger">{{ errors.emp_direccion }}</small>
-        </b-form-group>
-      </b-col>
-        <b-form-group >
-          <h5> Sucursal</h5>
-          <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-2" >
-            <hr />
-            <b-form-group label="Nombre de Sucursal" >
-            <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
-            </b-form-group>
-            <b-form-group label="Dirección de Sucursal">
-              <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
-            </b-form-group>
-            <hr />
-            <b-button
-              v-if="empresa.sucursales.length > 1"
-              size="sm"
-              variant="danger"
-              @click="eliminarSucursal(index)"
-            ><i class="fa-solid fa-circle-xmark fa-lg"></i>   Eliminar</b-button>
-          </div>
-          <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
-        </b-form-group>
-        <b-button  variant="outline-primary" @click="añadirSucursal" class="me-2">
-          <i class="fa-solid fa-circle-plus fa-lg"></i>Agregar otra sucursal  </b-button>
-        <b-button id="Guarda" @click="crearEmpresa" variant="outline-success">
-          <i class="fa-solid fa-floppy-disk fa-lg" ></i>Guardar</b-button>
-      <b-modal v-model="modalShow" title="Resultado del registro" ok-only ok-title="Aceptar">
-        {{ mensaje }}
-      </b-modal>
+      <b-card class="shadow-sm">
+        <b-col class="row row-cols-2">
+          <b-form-group label="Nombre de la Empresa" >
+            <b-form-input v-model="empresa.emp_nombre" id="emp_nombre" name="emp_nombre" />
+            <small v-if="errors.emp_nombre" class="text-danger">{{ errors.emp_nombre }}</small>
+          </b-form-group>
+          <b-form-group label="Dirección de la Empresa" >
+            <b-form-input 
+            v-model="empresa.emp_direccion" 
+            id="emp_direccion" name="emp_direccion" />
+            <small v-if="errors.emp_direccion" class="text-danger">{{ errors.emp_direccion }}</small>
+          </b-form-group>
+        </b-col>
+          <b-form-group >
+            <h5> Sucursal</h5>
+            <div v-for="(sucursal, index) in empresa.sucursales" :key="index" class=" p-3 mb-2" >
+              <hr />
+              <b-form-group label="Nombre de Sucursal" >
+              <b-form-input v-model="sucursal.suc_nombre" :name="`suc_nombre${index}`" />
+              </b-form-group>
+              <b-form-group label="Dirección de Sucursal">
+                <b-form-input v-model="sucursal.suc_direccion" :name="`suc_direccion${index}`" />
+              </b-form-group>
+              <hr />
+              <b-button
+                v-if="empresa.sucursales.length > 1"
+                size="sm"
+                variant="danger"
+                @click="eliminarSucursal(index)"
+              ><i class="fa-solid fa-circle-xmark fa-lg"></i>   Eliminar</b-button>
+            </div>
+            <small v-if="errors.sucursales" class="text-danger">{{ errors.sucursales }}</small>
+          </b-form-group>
+          <b-button  variant="outline-primary" @click="añadirSucursal" class="me-2">
+            <i class="fa-solid fa-circle-plus fa-lg"></i>Agregar otra sucursal  </b-button>
+          <b-button id="Guarda" @click="crearEmpresa" variant="outline-success">
+            <i class="fa-solid fa-floppy-disk fa-lg" ></i>Guardar</b-button>
+        <b-modal v-model="modalShow" title="Resultado del registro" ok-only ok-title="Aceptar">
+          {{ mensaje }}
+        </b-modal>
+      </b-card>
     </b-container>
   </div>
 </template>

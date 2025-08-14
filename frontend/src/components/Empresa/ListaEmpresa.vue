@@ -15,20 +15,22 @@
   </b-navbar>
   <!-- Tabla de empresas -->
   <b-container >
-    <b-table 
-      class="custom-rounded-table" 
-      :items="filtrarComputadoras" 
-      :fields="fields" 
-      responsive hover >
-      <template #cell(acciones)="data">
-        <b-button  variant="outline-success" size="sm" class="me-1" @click="editarEmpresa(data.item)">
-          <i class="fa-solid fa-pen-to-square fa-lg" ></i>
-        </b-button>
-        <b-button  variant="outline-danger" size="sm" @click="ConfirmarEliminacion(data.item)">
-          <i class="fa-solid fa-trash fa-lg " ></i>
-        </b-button>
-      </template>
-    </b-table>
+    <b-card class="shadow-sm">
+      <b-table 
+        class="custom-rounded-table" 
+        :items="filtrarComputadoras" 
+        :fields="fields" 
+        responsive hover >
+        <template #cell(acciones)="data">
+          <b-button  variant="outline-success" size="sm" class="me-1" @click="editarEmpresa(data.item)">
+            <i class="fa-solid fa-pen-to-square fa-lg" ></i>
+          </b-button>
+          <b-button  variant="outline-danger" size="sm" @click="ConfirmarEliminacion(data.item)">
+            <i class="fa-solid fa-trash fa-lg " ></i>
+          </b-button>
+        </template>
+      </b-table>
+    </b-card>
     <!-- Modal de edición -->
     <b-modal v-model="modalShow" title="Editar Empresa" size="lg" hide-footer>
       <b-form >
